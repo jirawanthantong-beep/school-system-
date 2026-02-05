@@ -58,3 +58,36 @@ function enter(){
 }
 </body>
 </html>
+<script>
+const subjects=[
+"ไทย","คณิต","วิทย์","อังกฤษ","สังคม","ประวัติ",
+"สุข","พละ","ศิลปะ","ดนตรี","การงาน","คอม","จีน"
+];
+
+function showGrade(){
+let html="<div class='card'><h3>คะแนนนักเรียน</h3><table><tr><th>วิชา</th><th>เก็บ70</th><th>สอบ30</th><th>รวม</th><th>เกรด</th></tr>";
+let gpa=0;
+
+subjects.forEach(s=>{
+ let keep=Math.floor(Math.random()*70);
+ let exam=Math.floor(Math.random()*30);
+ let sum=keep+exam;
+ let grade="F",point=0;
+
+ if(sum>=80){grade="A";point=4}
+ else if(sum>=75){grade="B+";point=3.5}
+ else if(sum>=70){grade="B";point=3}
+ else if(sum>=65){grade="C+";point=2.5}
+ else if(sum>=60){grade="C";point=2}
+ else if(sum>=55){grade="D+";point=1.5}
+ else if(sum>=50){grade="D";point=1}
+
+ gpa+=point;
+ html+=`<tr><td>${s}</td><td>${keep}</td><td>${exam}</td><td>${sum}</td><td>${grade}</td></tr>`;
+});
+
+gpa=(gpa/subjects.length).toFixed(2);
+html+=`</table><h2>GPA : ${gpa}</h2></div>`;
+document.body.innerHTML+=html;
+}
+</script>
