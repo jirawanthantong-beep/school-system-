@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html>
 <head>
 <meta charset="UTF-8">
@@ -7,121 +6,71 @@
 
 <style>
 body{
-font-family:Arial;
-background:#f2f2f2;
-padding:20px;
+  font-family: Arial;
+  background:#f2f2f2;
+  padding:20px;
 }
 
 .card{
-background:white;
-padding:15px;
-border-radius:10px;
-max-width:800px;
-margin:auto;
+  background:white;
+  padding:20px;
+  border-radius:10px;
+  max-width:500px;
+  margin:auto;
 }
 
-table{
-width:100%;
-border-collapse:collapse;
-margin-top:10px;
-}
-
-th,td{
-border:1px solid #ccc;
-padding:8px;
-text-align:center;
-}
-
-input{
-width:60px;
+input,button{
+  width:100%;
+  padding:10px;
+  margin:5px 0;
 }
 
 button{
-margin-top:10px;
-padding:10px;
-border:none;
-background:#4caf50;
-color:white;
-border-radius:6px;
+  background:#4CAF50;
+  color:white;
+  border:none;
+}
+
+h2{
+  text-align:center;
+}
+
+#result{
+  margin-top:15px;
+  font-weight:bold;
 }
 </style>
+
 </head>
 
 <body>
 
 <div class="card">
+<h2>Student Grade System</h2>
 
-<h2>ระบบดูเกรดนักเรียน</h2>
+<input id="name" placeholder="Student name">
+<input id="score" type="number" placeholder="Score">
 
-<table id="tbl">
-<tr>
-<th>วิชา</th>
-<th>เก็บ70</th>
-<th>สอบ30</th>
-<th>รวม</th>
-<th>เกรด</th>
-</tr>
-</table>
+<button onclick="check()">Check Grade</button>
 
-<button onclick="calc()">คำนวณเกรด</button>
-
-<h3 id="gpa"></h3>
-
+<div id="result"></div>
 </div>
 
 <script>
+function check(){
+let name = document.getElementById("name").value;
+let score = document.getElementById("score").value;
+let grade="";
 
-const subjects=[
-"ไทย","คณิต","วิทย์","อังกฤษ","สังคม",
-"ประวัติ","สุข","พละ","ศิลปะ","ดนตรี",
-"การงาน","คอม"
-];
+if(score>=80) grade="A";
+else if(score>=70) grade="B";
+else if(score>=60) grade="C";
+else if(score>=50) grade="D";
+else grade="F";
 
-const tbl=document.getElementById("tbl");
-
-subjects.forEach(s=>{
-tbl.innerHTML+=`
-<tr>
-<td>${s}</td>
-<td><input type=number max=70></td>
-<td><input type=number max=30></td>
-<td class=t></td>
-<td class=g></td>
-</tr>`;
-});
-
-function grade(x){
-if(x>=80)return 4;
-if(x>=70)return 3;
-if(x>=60)return 2;
-if(x>=50)return 1;
-return 0;
+document.getElementById("result").innerHTML =
+name+" got grade "+grade;
 }
-
-function calc(){
-let rows=document.querySelectorAll("tr");
-let sum=0,c=0;
-
-rows.forEach((r,i)=>{
-if(i==0)return;
-
-let a=r.children[1].children[0].value||0;
-let b=r.children[2].children[0].value||0;
-
-let total=Number(a)+Number(b);
-r.children[3].innerHTML=total;
-
-let g=grade(total);
-r.children[4].innerHTML=g;
-
-sum+=g;
-c++;
-});
-
-document.getElementById("gpa").innerHTML=
-"GPA : "+(sum/c).toFixed(2);
-}
-
 </script>
 
 </body>
