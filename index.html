@@ -2,167 +2,45 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>ICE School v4</title>
+<title>ICE School</title>
 
 <style>
-body{font-family:tahoma;background:#f2f2ff}
-.card{background:white;padding:10px;margin:10px;border-radius:10px}
-table{border-collapse:collapse;width:100%;font-size:11px}
-th,td{border:1px solid #aaa;padding:4px;text-align:center}
-th{background:#d7d0ff}
-input{width:45px}
-button{background:#5b3cff;color:white;border:none;padding:6px}
+body{font-family:tahoma;background:#f2f2ff;margin:0}
+header{background:#4b4bbd;color:white;padding:15px;font-size:22px}
+.menu{background:white;padding:10px}
+.menu a{margin-right:15px;text-decoration:none;color:#333;font-weight:bold}
+.card{background:white;margin:15px;padding:15px;border-radius:10px}
+button{padding:8px 15px;border:none;background:#4b4bbd;color:white;border-radius:6px}
 </style>
 </head>
 
 <body>
 
-<div class=card>
-<h3>International Center for Excellence</h3>
-<input id=login placeholder="เลขประจำตัว / ADMIN">
-<button onclick=enter()>Login</button>
+<header>🏫 ICE School System</header>
+
+<div class="menu">
+<a href="#">Home</a>
+<a href="#">Login</a>
+<a href="#">GPA</a>
+<a href="#">News</a>
+<a href="#">Admin</a>
 </div>
 
-<div id=app></div>
+<div class="card">
+<h3>Welcome Student</h3>
+<p>This is your school dashboard.</p>
+<button>Login</button>
+</div>
 
-<script>
+<div class="card">
+<h3>📊 GPA</h3>
+<p>View your academic results.</p>
+</div>
 
-const ADMIN="202122";
+<div class="card">
+<h3>📢 School News</h3>
+<p>No news today.</p>
+</div>
 
-const subjects=["ไทย","คณิต","วิทย์","อังกฤษ","สังคม","ประวัติ","สุข","พละ","ศิลปะ","ดนตรี","การงาน","เทคโน","จีน"];
-
-let students=[
-{id:"41235",name:"กิตติพงศ์ ศรีทอง"},
-{id:"43821",name:"ปราณี วงศ์วรรณ"},
-{id:"42759",name:"พีรวัช มณีโชติ"},
-{id:"46503",name:"ชลธิชา ใจดี"},
-{id:"48972",name:"พิชญ์สินี แก้วมี"},
-{id:"45186",name:"นรินทร์ แสงทอง"},
-{id:"47329",name:"อริสรา พิทักษ์ใจ"},
-{id:"49614",name:"ภูมิพัฒน์ สุขเกษม"},
-{id:"48257",name:"ธีรภัทร วัฒนสุข"},
-{id:"45491",name:"ชุติมา บุญรอด"},
-{id:"42578",name:"ศุภชัย นิ่มนวล"},
-{id:"46302",name:"ณัฐยา รัตนสกุล"},
-{id:"47953",name:"พรทิพย์ กาญจนรักษ์"},
-{id:"48716",name:"อิศรพล ประเสริฐสุข"},
-{id:"49328",name:"วริษญา ศรีเจริญ"},
-{id:"46825",name:"ธนกร แก้วเกิด"},
-{id:"45297",name:"มณีนันท์ บุญญา"},
-{id:"47490",name:"ศศิธร Lucas แชตั้ง"},
-{id:"48136",name:"ภาณุพงศ์ แก้วตา"},
-{id:"45672",name:"ชลธร ชัยมงคล"},
-{id:"47904",name:"กัญญารัตน์ พัฒนโชค"},
-{id:"46285",name:"อนุชา ศรีชัย"},
-{id:"48419",name:"พิมพ์ชนก ทองดี"},
-{id:"45703",name:"ธนวัฒน์ สวัสดิวงศ์"},
-{id:"49068",name:"ปริญญา ชื่นใจ"},
-{id:"46859",name:"รัตนา สายทอง"},
-{id:"47216",name:"วรวิทย์ แสงสว่าง"},
-{id:"48175",name:"พัชรินทร์ Emily สุขสม"},
-{id:"49357",name:"อรินทรา จันทร์เพ็ญ"},
-{id:"48426",name:"Alexander Michael Smith"}
-];
-
-let db=JSON.parse(localStorage.getItem("db")||"{}");
-
-if(Object.keys(db).length==0){
-students.forEach(s=>{
-db[s.id]={};
-subjects.forEach(sub=>{
-db[s.id][sub+"k"]=Math.floor(Math.random()*31)+40; //40-70
-db[s.id][sub+"e"]=Math.floor(Math.random()*21)+10; //10-30
-});
-});
-localStorage.setItem("db",JSON.stringify(db));
-}
-
-function grade(x){
-if(x>=80)return["A",4];
-if(x>=75)return["B+",3.5];
-if(x>=70)return["B",3];
-if(x>=65)return["C+",2.5];
-if(x>=60)return["C",2];
-if(x>=55)return["D+",1.5];
-if(x>=50)return["D",1];
-return["F",0];
-}
-
-function ranking(){
-return students.map(s=>{
-let sum=0;
-subjects.forEach(sub=>{
-sum+=(db[s.id][sub+"k"]||0)+(db[s.id][sub+"e"]||0);
-});
-return {id:s.id,name:s.name,total:sum};
-}).sort((a,b)=>b.total-a.total);
-}
-
-function enter(){
-if(login.value==ADMIN){admin();return;}
-student(login.value);
-}
-
-function admin(){
-
-let r=ranking();
-let h="<div class=card><b>ADMIN DASHBOARD</b> <button onclick=save()>SAVE</button><table><tr><th>อันดับ</th><th>ชื่อ</th>";
-
-subjects.forEach(s=>{
-h+=`<th>${s}<br>เก็บ70</th><th>${s}<br>สอบ30</th>`;
-});
-
-h+="<th>GPA</th></tr>";
-
-r.forEach((st,i)=>{
-
-let gpa=0;
-h+=`<tr><td>${i+1}</td><td>${st.name}</td>`;
-
-subjects.forEach(sub=>{
-let k=db[st.id][sub+"k"];
-let e=db[st.id][sub+"e"];
-let sum=k+e;
-let g=grade(sum);
-gpa+=g[1];
-
-h+=`<td contenteditable oninput="edit('${st.id}','${sub}k',this.innerText)">${k}</td>`;
-h+=`<td contenteditable oninput="edit('${st.id}','${sub}e',this.innerText)">${e}</td>`;
-});
-
-h+=`<td>${(gpa/subjects.length).toFixed(2)}</td></tr>`;
-});
-
-h+="</table></div>";
-app.innerHTML=h;
-}
-
-function student(id){
-
-let st=students.find(x=>x.id==id);
-if(!st){alert("ไม่พบ");return;}
-
-let r=ranking();
-let pos=r.findIndex(x=>x.id==id)+1;
-
-let gpa=0;
-
-let h=`<div class=card><h3>${st.name}</h3><b>อันดับ ${pos}/${students.length}</b><table><tr><th>วิชา</th><th>รวม</th><th>เกรด</th></tr>`;
-
-subjects.forEach(sub=>{
-let sum=(db[id][sub+"k"]||0)+(db[id][sub+"e"]||0);
-let g=grade(sum);
-gpa+=g[1];
-h+=`<tr><td>${sub}</td><td>${sum}</td><td>${g[0]}</td></tr>`;
-});
-
-h+=`</table><b>GPA รวม: ${(gpa/subjects.length).toFixed(2)}</b></div>`;
-app.innerHTML=h;
-}
-
-function edit(id,k,v){db[id][k]=Number(v)||0;}
-function save(){localStorage.setItem("db",JSON.stringify(db));alert("Saved");}
-
-</script>
 </body>
 </html>
