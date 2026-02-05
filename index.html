@@ -1,167 +1,117 @@
 <!DOCTYPE html>
-<html lang="th">
+<html>
 <head>
 <meta charset="UTF-8">
-<title>ICE School System</title>
+<title>Rayongwit School System</title>
 
 <style>
-body{margin:0;font-family:tahoma;background:#eef1ff}
-header{background:#3f51b5;color:white;padding:15px;text-align:center}
-nav{background:#5c6bc0;color:white;padding:10px}
-nav button{background:none;border:none;color:white;margin-right:15px;font-size:15px;cursor:pointer}
-.card{background:white;margin:20px;padding:20px;border-radius:10px;box-shadow:0 0 10px #aaa}
-input,select{padding:8px;width:100%;margin:5px}
-table{border-collapse:collapse;width:100%}
-th,td{border:1px solid #ccc;padding:5px;text-align:center}
+body{font-family:sans-serif;background:#f2f6ff;padding:20px}
+input,button,select{padding:5px;margin:3px}
+table{border-collapse:collapse}
+td,th{border:1px solid #999;padding:4px}
 .hidden{display:none}
-.main{background:#3f51b5;color:white;border:none;padding:10px;border-radius:5px;margin-top:10px}
 </style>
 </head>
 
 <body>
 
-<header><h2>🏫 International Center for Excellence</h2></header>
+<h2>🏫 Rayongwit School System</h2>
 
-<nav>
-<button onclick="show('home')">Home</button>
-<button onclick="show('studentLogin')">Student</button>
-<button onclick="show('adminLogin')">Admin</button>
-</nav>
-
-<div id="home" class="card">
-<h3>ยินดีต้อนรับ</h3>
-ระบบตรวจสอบผลการเรียนออนไลน์
+<div id="home">
+<button onclick="show('student')">นักเรียน</button>
+<button onclick="show('adminLogin')">แอดมิน</button>
 </div>
 
-<div id="studentLogin" class="card hidden">
-<h3>Student Login</h3>
-<input id="no" placeholder="เลขที่">
-<input id="sid" placeholder="เลขประจำตัว">
-<button class="main" onclick="studentLogin()">Login</button>
+<div id="student" class="hidden">
+<h3>นักเรียน</h3>
+เลขที่ <select id="sid"></select>
+<button onclick="studentLogin()">ดูผล</button>
+<div id="result"></div>
 </div>
 
-<div id="adminLogin" class="card hidden">
+<div id="adminLogin" class="hidden">
 <h3>Admin Login</h3>
-<input id="au" placeholder="username">
-<input id="ap" type="password" placeholder="password">
-<button class="main" onclick="adminLogin()">Login</button>
+<input id="au" placeholder="user">
+<input id="ap" placeholder="pass">
+<button onclick="adminLogin()">Login</button>
 </div>
 
-<div id="studentPage" class="card hidden"></div>
-<div id="adminPage" class="card hidden"></div>
+<div id="adminPage" class="hidden"></div>
 
 <script>
 
-subjects=["ไทย","คณิต","วิทย์","อังกฤษ","สังคม","ประวัติ","สุข","พละ","ศิลปะ","ดนตรี","การงาน","คอม","กิจกรรม"]
+const subjects=["Math","Sci","Eng","Thai","Soc","Art","PE","IT","Hist","Geo","Bio","Phy","Chem"]
 
-students=[
-{no:1,id:41235,name:"กิตติพงศ์"},
-{no:2,id:43821,name:"ปราณี"},
-{no:3,id:42759,name:"พีรวัช"},
-{no:4,id:46503,name:"ชลธิชา"},
-{no:5,id:48972,name:"พิชญ์สินี"},
-{no:6,id:45186,name:"นรินทร์"},
-{no:7,id:47329,name:"อริสรา"},
-{no:8,id:49614,name:"ภูมิพัฒน์"},
-{no:9,id:48257,name:"ธีรภัทร"},
-{no:10,id:45491,name:"ชุติมา"},
-{no:11,id:42578,name:"ศุภชัย"},
-{no:12,id:46302,name:"ณัฐยา"},
-{no:13,id:47953,name:"พรทิพย์"},
-{no:14,id:48716,name:"อิศรพล"},
-{no:15,id:49328,name:"วริญญา"},
-{no:16,id:46825,name:"ธนกร"},
-{no:17,id:45297,name:"มนัสนันท์"},
-{no:18,id:47490,name:"ศศิธร"},
-{no:19,id:48136,name:"ภาณุพงศ์"},
-{no:20,id:45672,name:"ชลธร"},
-{no:21,id:47904,name:"กัญญารัตน์"},
-{no:22,id:46285,name:"อนุชา"},
-{no:23,id:48419,name:"พิมพ์ชนก"},
-{no:24,id:45703,name:"ธนวัฒน์"},
-{no:25,id:49068,name:"ปริญญา"},
-{no:26,id:46859,name:"รัตนา"},
-{no:27,id:47216,name:"วรวิทย์"},
-{no:28,id:48175,name:"พัชรินทร์"},
-{no:29,id:49357,name:"อรินทรา"},
-{no:30,id:48426,name:"Alexander"}
-]
+let students=[...Array(30)].map((_,i)=>({id:i+1,name:"Student "+(i+1)}))
 
-if(!localStorage.db){
- let d={}
- students.forEach(s=>{
-  d[s.id]={}
-  subjects.forEach(x=>d[s.id][x]={k:Math.floor(Math.random()*40)+30,e:Math.floor(Math.random()*20)+10})
- })
- localStorage.db=JSON.stringify(d)
-}
-db=JSON.parse(localStorage.db)
+let db=JSON.parse(localStorage.school||"{}")
 
-function grade(x){
- if(x>=80)return["A",4]
- if(x>=75)return["B+",3.5]
- if(x>=70)return["B",3]
- if(x>=65)return["C+",2.5]
- if(x>=60)return["C",2]
- if(x>=55)return["D+",1.5]
- if(x>=50)return["D",1]
- return["F",0]
-}
+students.forEach(s=>{
+if(!db[s.id]) db[s.id]={}
+subjects.forEach(sb=>{
+if(!db[s.id][sb]) db[s.id][sb]={k:0,e:0}
+})
+})
+
+localStorage.school=JSON.stringify(db)
+
+sid.innerHTML=students.map(s=>`<option value=${s.id}>เลขที่ ${s.id}</option>`)
 
 function show(x){
-["home","studentLogin","adminLogin","studentPage","adminPage"].forEach(i=>document.getElementById(i).classList.add("hidden"))
+["home","student","adminLogin","adminPage"].forEach(i=>document.getElementById(i).classList.add("hidden"))
 document.getElementById(x).classList.remove("hidden")
 }
 
+function grade(x){
+if(x>=80)return"A"
+if(x>=70)return"B"
+if(x>=60)return"C"
+if(x>=50)return"D"
+return"F"
+}
+
 function studentLogin(){
- let n=Number(no.value)
- let i=Number(sid.value)
- let st=students.find(s=>s.no==n&&s.id==i)
- if(!st){alert("ข้อมูลไม่ถูกต้อง");return}
- let gpa=0
- let h=`<h3>${st.name}</h3><table><tr><th>วิชา</th><th>รวม</th><th>เกรด</th></tr>`
- subjects.forEach(s=>{
-  let t=db[st.id][s]
-  let sum=t.k+t.e
-  let g=grade(sum)
-  gpa+=g[1]
-  h+=`<tr><td>${s}</td><td>${sum}</td><td>${g[0]}</td></tr>`
- })
- h+=`</table><b>GPA รวม ${(gpa/subjects.length).toFixed(2)}</b>`
- studentPage.innerHTML=h
- show("studentPage")
+let id=sid.value
+let t=0,c=0,h="<table><tr><th>วิชา</th><th>รวม</th><th>เกรด</th></tr>"
+subjects.forEach(s=>{
+let k=db[id][s].k*0.3
+let e=db[id][s].e*0.7
+let sum=k+e
+t+=sum;c++
+h+=`<tr><td>${s}</td><td>${sum.toFixed(1)}</td><td>${grade(sum)}</td></tr>`
+})
+let gpa=(t/c/20).toFixed(2)
+h+=`</table><h3>GPA ${gpa}</h3>`
+result.innerHTML=h
 }
 
 function adminLogin(){
- if(au.value=="teacher"&&ap.value=="202122"){
-  admin()
-  show("adminPage")
- }
+if(au.value=="admin"&&ap.value=="9999"){admin();show("adminPage")}
+else alert("รหัสผิด")
 }
 
 function admin(){
- let h="<h3>ADMIN PANEL</h3><table><tr><th>ชื่อ</th>"
- subjects.forEach(s=>h+=`<th>${s}</th>`)
- h+="</tr>"
- students.forEach(st=>{
-  h+=`<tr><td>${st.name}</td>`
-  subjects.forEach(sb=>{
-   let t=db[st.id][sb]
-   h+=`<td><input value="${t.k}" style="width:35px" onchange="set('${st.id}','${sb}','k',this.value)">/
-        <input value="${t.e}" style="width:35px" onchange="set('${st.id}','${sb}','e',this.value)"></td>`
-  })
-  h+="</tr>"
- })
- h+="</table>"
- adminPage.innerHTML=h
+let h="<h3>ADMIN</h3><table><tr><th>เลขที่</th>"
+subjects.forEach(s=>h+=`<th>${s}</th>`)
+h+="</tr>"
+students.forEach(st=>{
+h+=`<tr><td>${st.id}</td>`
+subjects.forEach(sb=>{
+let t=db[st.id][sb]
+h+=`<td><input value=${t.k} onchange="set(${st.id},'${sb}','k',this.value)" size=2>
+<input value=${t.e} onchange="set(${st.id},'${sb}','e',this.value)" size=2></td>`
+})
+h+="</tr>"
+})
+h+="</table>"
+adminPage.innerHTML=h
 }
 
-function set(id,s,k,v){
- db[id][s][k]=Number(v)
- localStorage.db=JSON.stringify(db)
+function set(i,s,k,v){
+db[i][s][k]=Number(v)
+localStorage.school=JSON.stringify(db)
 }
 
 </script>
-
 </body>
 </html>
