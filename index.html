@@ -2,149 +2,128 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>ICE School System</title>
+<title>School System</title>
 
 <style>
-body{font-family:Arial;background:#f2f4ff;padding:20px}
-.card{background:white;padding:20px;border-radius:10px;max-width:1000px;margin:auto}
-input,select{padding:5px;width:80px}
-button{padding:8px;background:#4CAF50;color:white;border:none;border-radius:5px}
+body{font-family:Arial;background:#f2f2f2;padding:20px}
+.card{background:white;padding:15px;margin:10px;border-radius:10px}
 table{border-collapse:collapse;width:100%}
-td,th{border:1px solid #ccc;padding:6px;text-align:center}
-nav a{margin-right:10px}
+td,th{border:1px solid #aaa;padding:5px;text-align:center}
+input{width:45px}
 </style>
 </head>
 
 <body>
 
-<div class="card">
+<h1>🏫 School System</h1>
 
-<h2>ICE School System</h2>
-
-<nav>
-<a href="#" onclick="home()">Home</a>
-<a href="#" onclick="login()">Login</a>
-<a href="#" onclick="admin()">Admin</a>
-</nav>
-
-<div id="app"></div>
-
+<div class="card" id="home">
+<input id="uid" placeholder="Student ID / Admin">
+<button onclick="login()">Login</button>
 </div>
+
+<div id="admin" style="display:none" class="card"></div>
+<div id="student" style="display:none" class="card"></div>
 
 <script>
 
-const students=[
-"กิตติพงศ์","ปราณี","พีรวัช","ชลธิชา","พิชญสินี","นรินทร์","อิสรา","ภูมิพัฒน์","ธีรภัทร","ชุติมา",
-"ศุภชัย","ณัฐยา","พรทิพย์","จักรพล","วริษญา","ธนกร","มนัสนันท์","ศศิธร","ภานุพงศ์","ชลธร",
-"กัญญารัตน์","อนุชา","พิมพชนก","ธันวัฒน์","ปริญญา","รัตนา","วรวิทย์","พัชรินทร์","อรินทรา","Alexander"
-];
+const ADMIN="9999"
 
-let current="";
+const subjects=[
+"Thai","Math","Science","English","Social",
+"Health","Art","Music","PE","Computer",
+"Chinese","Project","Activity"
+]
 
-home();
+let students=JSON.parse(localStorage.getItem("stu"))||[
+{id:"41235",name:"Student1",work:Array(13).fill(0),exam:Array(13).fill(0)},
+{id:"43821",name:"Student2",work:Array(13).fill(0),exam:Array(13).fill(0)}
+]
 
-function home(){
-document.getElementById("app").innerHTML=`
-<h3>Welcome Student</h3>
-<p>School Dashboard</p>
-`;
-}
-
-function login(){
-let opt="";
-students.forEach(s=>opt+=`<option>${s}</option>`);
-
-document.getElementById("app").innerHTML=`
-<h3>Login</h3>
-<select id="stu">${opt}</select>
-<br><br>
-<button onclick="enter()">Enter</button>
-`;
-}
-
-function enter(){
-current=document.getElementById("stu").value;
-dashboard();
-}
-
-function dashboard(){
-document.getElementById("app").innerHTML=`
-<h3>${current}</h3>
-
-<table>
-<tr><th>วิชา</th><th>เก็บ70</th><th>สอบ30</th><th>รวม</th><th>เกรด</th></tr>
-
-${row("ไทย")}
-${row("คณิต")}
-${row("วิทย์")}
-${row("อังกฤษ")}
-${row("สังคม")}
-${row("ประวัติ")}
-${row("สุข")}
-${row("พละ")}
-${row("ศิลปะ")}
-${row("ดนตรี")}
-${row("การงาน")}
-${row("คอม")}
-
-</table>
-
-<br>
-<button onclick="calc()">คำนวณเกรด</button>
-
-<h3 id="gpa"></h3>
-`;
-}
-
-function row(n){
-return `<tr>
-<td>${n}</td>
-<td><input></td>
-<td><input></td>
-<td></td>
-<td></td>
-</tr>`;
-}
+function save(){localStorage.setItem("stu",JSON.stringify(students))}
 
 function grade(x){
-if(x>=80)return 4;
-if(x>=70)return 3;
-if(x>=60)return 2;
-if(x>=50)return 1;
-return 0;
+if(x>=80)return"A"
+if(x>=70)return"B"
+if(x>=60)return"C"
+if(x>=50)return"D"
+return"F"
 }
 
-function calc(){
-let rows=document.querySelectorAll("tr");
-let sum=0,c=0;
+function gpa(g){return{A:4,B:3,C:2,D:1,F:0}[g]}
 
-rows.forEach((r,i)=>{
-if(i==0)return;
+function total(w,e){return w*0.7+e*0.3}
 
-let a=r.children[1].children[0].value||0;
-let b=r.children[2].children[0].value||0;
-
-let total=Number(a)+Number(b);
-r.children[3].innerHTML=total;
-
-let g=grade(total);
-r.children[4].innerHTML=g;
-
-sum+=g;c++;
-});
-
-document.getElementById("gpa").innerHTML="GPA : "+(sum/c).toFixed(2);
+function login(){
+let id=uid.value
+if(id==ADMIN){home.style.display="none";admin.style.display="block";renderAdmin();return}
+let s=students.find(x=>x.id==id)
+if(s){home.style.display="none";student.style.display="block";renderStudent(s)}
 }
 
-function admin(){
-document.getElementById("app").innerHTML=`
-<h3>Admin Panel</h3>
-<p>Students: 30</p>
-<p>System Online</p>
-`;
+function renderAdmin(){
+
+let html="<h2>ADMIN PANEL</h2><table><tr><th>Name</th>"
+
+subjects.forEach(x=>html+=`<th>${x}</th>`)
+
+html+="<th>GPA</th></tr>"
+
+students.forEach((s,i)=>{
+let sum=0
+html+=`<tr><td>${s.name}</td>`
+subjects.forEach((_,j)=>{
+let t=total(s.work[j],s.exam[j])
+let g=grade(t)
+sum+=gpa(g)
+html+=`<td>
+W<input value="${s.work[j]}" onchange="edit(${i},${j},0,this.value)">
+E<input value="${s.exam[j]}" onchange="edit(${i},${j},1,this.value)">
+<br>${g}
+</td>`
+})
+html+=`<td>${(sum/13).toFixed(2)}</td></tr>`
+})
+
+html+="</table><button onclick='ranking()'>ดู Ranking</button>"
+
+admin.innerHTML=html
+save()
+}
+
+function edit(i,j,t,v){
+t==0?students[i].work[j]=+v:students[i].exam[j]=+v
+renderAdmin()
+}
+
+function ranking(){
+students.sort((a,b)=>{
+return calc(b)-calc(a)
+})
+renderAdmin()
+}
+
+function calc(s){
+let sum=0
+for(let i=0;i<13;i++)sum+=gpa(grade(total(s.work[i],s.exam[i])))
+return sum
+}
+
+function renderStudent(s){
+let html=`<h2>${s.name}</h2><table><tr>`
+subjects.forEach(x=>html+=`<th>${x}</th>`)
+html+="</tr><tr>"
+let sum=0
+subjects.forEach((_,i)=>{
+let t=total(s.work[i],s.exam[i])
+let g=grade(t)
+sum+=gpa(g)
+html+=`<td>${t.toFixed(0)}<br>${g}</td>`
+})
+html+=`</tr></table><h3>GPA ${(sum/13).toFixed(2)}</h3>`
+student.innerHTML=html
 }
 
 </script>
-
 </body>
 </html>
