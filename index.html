@@ -1,65 +1,106 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>internation School System</title>
-
-<style>
-body{font-family:sans-serif;background:#f2f6ff;padding:20px}
-input,button,select{padding:5px;margin:3px}
-table{border-collapse:collapse}
-td,th{border:1px solid #999;padding:4px}
-.hidden{display:none}
-</style>
-</head>
-
-<body>
-
-<h2>🏫 Rayongwit School System</h2>
-
-<div id="home">
-<button onclick="show('student')">นักเรียน</button>
-<button onclick="show('adminLogin')">แอดมิน</button>
-</div>
-
-<div id="student" class="hidden">
-<h3>นักเรียน</h3>
-เลขที่ <select id="sid"></select>
-<button onclick="studentLogin()">ดูผล</button>
-<div id="result"></div>
-</div>
-
-<div id="adminLogin" class="hidden">
-<h3>Admin Login</h3>
-<input id="au" placeholder="user">
-<input id="ap" placeholder="pass">
-<button onclick="adminLogin()">Login</button>
-</div>
-
-<div id="adminPage" class="hidden"></div>
-
 <script>
 
-const subjects=["Math","Sci","Eng","Thai","Soc","Art","PE","IT","Hist","Geo","Bio","Phy","Chem"]
+const subjects=[
+"Thai","Math","Science","English","Social","Health",
+"Art","Career","Computer","Chinese","Music","PE","Activity"
+]
 
-let students=[...Array(30)].map((_,i)=>({id:i+1,name:"Student "+(i+1)}))
+const students=[
+const students=[
+{id:41235,name:"กิตติพงศ์ ศรีทอง"},
+{id:43821,name:"ปราณี วงศ์วรรณ"},
+{id:42759,name:"พีรวัญ มณีโชติ"},
+{id:46503,name:"ชลธิชา ใจดี"},
+{id:48972,name:"พิชญสินี แก้วมณี"},
+{id:45186,name:"นรินทร์ แสงทอง"},
+{id:47329,name:"อริสรา พิทักษ์ใจ"},
+{id:49614,name:"ภูมิพัฒน์ สุขเกษม"},
+{id:48257,name:"ธีรภัทร วัฒนสุข"},
+{id:45491,name:"ชุติมา บุญรอด"},
+{id:42578,name:"ศุภชัย นิ่มนวล"},
+{id:46302,name:"ณัฐยา รัตนสกุล"},
+{id:47953,name:"พรทิพย์ กาญจนรักษ์"},
+{id:48716,name:"อัครพล ประเสริฐสุข"},
+{id:49328,name:"วรัญญา ศรีเจริญ"},
+{id:46825,name:"ธนกร แก้วเกิด"},
+{id:45297,name:"มนัสนันท์ บุญญา"},
+{id:47490,name:"ศศิธร Lucas"},
+{id:48136,name:"ภาณุพงศ์ แก้วตา"},
+{id:45672,name:"ชธร ชัยมงคล"},
+{id:47904,name:"กัญญารัตน์ พัฒน์โชค"},
+{id:46285,name:"อนุชา ศรีวิชัย"},
+{id:48419,name:"พิมพ์ชนก ทองดี"},
+{id:45703,name:"ธันวัฒน์ สวัสดิวงศ์"},
+{id:49068,name:"ปริญญา ชื่นใจ"},
+{id:46859,name:"รัตนา สายทอง"},
+{id:47216,name:"วรวีร์ แสงสว่าง"},
+{id:48175,name:"พัชรินทร์ สุขสม"},
+{id:49357,name:"อรินทรา จันทร์เพ็ญ"},
+{id:48426,name:"Alexander Michael Smith"}
+]
 
 let db=JSON.parse(localStorage.school||"{}")
-
 students.forEach(s=>{
-if(!db[s.id]) db[s.id]={}
+if(!db[s.id]){
+db[s.id]={}
+subjects.forEach(sb=>db[s.id][sb]="0/0")
+}
+})
+
+function show(p){
+["home","admin","student"].forEach(x=>document.getElementById(x).style.display="none")
+document.getElementById(p).style.display="block"
+}
+
+function adminLogin(){
+if(adUser.value=="admin" && adPass.value=="9999"){
+renderAdmin()
+show("admin")
+}else alert("รหัสผิด")
+}
+
+function renderAdmin(){
+let h="<h2>ADMIN</h2><table border=1 width=100%><tr><th>ชื่อ</th>"
+subjects.forEach(s=>h+=`<th>${s}</th>`)
+h+="</tr>"
+
+students.forEach(st=>{
+h+=`<tr><td>${st.name}</td>`
 subjects.forEach(sb=>{
-if(!db[s.id][sb]) db[s.id][sb]={k:0,e:0}
+h+=`<td><input value="${db[st.id][sb]}" onchange="set('${st.id}','${sb}',this.value)" placeholder="เก็บ/สอบ" style="width:70px"></td>`
 })
+h+="</tr>"
 })
 
+h+="</table>"
+admin.innerHTML=h
+}
+
+function set(id,s,v){
+db[id][s]=v
 localStorage.school=JSON.stringify(db)
+}
 
-sid.innerHTML=students.map(s=>`<option value=${s.id}>เลขที่ ${s.id}</option>`)
+function studentLogin(){
+let sid=stuId.value
+if(!db[sid]) return alert("ไม่พบข้อมูล")
 
-function show(x){
-["home","student","adminLogin","adminPage"].forEach(i=>document.getElementById(i).classList.add("hidden"))
-document.getElementById(x).classList.remove("hidden")
+let h="<h2>ผลการเรียน</h2><table border=1 width=100%><tr><th>วิชา</th><th>คะแนน</th><th>เกรด</th></tr>"
+let sum=0,c=0
+
+subjects.forEach(s=>{
+let v=db[sid][s].split("/")
+let k=Number(v[0]),e=Number(v[1])
+let total=k*0.7+e*0.3
+let g=grade(total)
+sum+=point(g)
+c++
+h+=`<tr><td>${s}</td><td>${total.toFixed(1)}</td><td>${g}</td></tr>`
+})
+
+h+=`</table><h3>GPA ${(sum/c).toFixed(2)}</h3>`
+student.innerHTML=h
+show("student")
 }
 
 function grade(x){
@@ -70,48 +111,8 @@ if(x>=50)return"D"
 return"F"
 }
 
-function studentLogin(){
-let id=sid.value
-let t=0,c=0,h="<table><tr><th>วิชา</th><th>รวม</th><th>เกรด</th></tr>"
-subjects.forEach(s=>{
-let k=db[id][s].k*0.3
-let e=db[id][s].e*0.7
-let sum=k+e
-t+=sum;c++
-h+=`<tr><td>${s}</td><td>${sum.toFixed(1)}</td><td>${grade(sum)}</td></tr>`
-})
-let gpa=(t/c/20).toFixed(2)
-h+=`</table><h3>GPA ${gpa}</h3>`
-result.innerHTML=h
-}
-
-function adminLogin(){
-if(au.value=="admin"&&ap.value=="9999"){admin();show("adminPage")}
-else alert("รหัสผิด")
-}
-
-function admin(){
-let h="<h3>ADMIN</h3><table><tr><th>เลขที่</th>"
-subjects.forEach(s=>h+=`<th>${s}</th>`)
-h+="</tr>"
-students.forEach(st=>{
-h+=`<tr><td>${st.id}</td>`
-subjects.forEach(sb=>{
-let t=db[st.id][sb]
-h+=`<td><input value=${t.k} onchange="set(${st.id},'${sb}','k',this.value)" size=2>
-<input value=${t.e} onchange="set(${st.id},'${sb}','e',this.value)" size=2></td>`
-})
-h+="</tr>"
-})
-h+="</table>"
-adminPage.innerHTML=h
-}
-
-function set(i,s,k,v){
-db[i][s][k]=Number(v)
-localStorage.school=JSON.stringify(db)
+function point(g){
+return{A:4,B:3,C:2,D:1,F:0}[g]
 }
 
 </script>
-</body>
-</html>
