@@ -1,93 +1,127 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8">
-<title>ICE School</title>
+<meta charset="UTF-8">
+<title>Student Grade System</title>
 
 <style>
-body{font-family:tahoma;background:#f2f2ff;margin:0}
-header{background:#4b4bbd;color:white;padding:15px;font-size:22px}
-.menu{background:white;padding:10px}
-.menu a{margin-right:15px;text-decoration:none;color:#333;font-weight:bold}
-.card{background:white;margin:15px;padding:15px;border-radius:10px}
-button{padding:8px 15px;border:none;background:#4b4bbd;color:white;border-radius:6px}
+body{
+font-family:Arial;
+background:#f2f2f2;
+padding:20px;
+}
+
+.card{
+background:white;
+padding:15px;
+border-radius:10px;
+max-width:800px;
+margin:auto;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:10px;
+}
+
+th,td{
+border:1px solid #ccc;
+padding:8px;
+text-align:center;
+}
+
+input{
+width:60px;
+}
+
+button{
+margin-top:10px;
+padding:10px;
+border:none;
+background:#4caf50;
+color:white;
+border-radius:6px;
+}
 </style>
 </head>
 
 <body>
 
-<header>🏫 ICE School System</header>
-
-<div class="menu">
-<a href="#">Home</a>
-<a href="#">Login</a>
-<a href="#">GPA</a>
-<a href="#">News</a>
-<a href="#">Admin</a>
-</div>
-
 <div class="card">
-<h3>Welcome Student</h3>
-<p>This is your school dashboard.</p>
-<button>Login</button>
+
+<h2>ระบบดูเกรดนักเรียน</h2>
+
+<table id="tbl">
+<tr>
+<th>วิชา</th>
+<th>เก็บ70</th>
+<th>สอบ30</th>
+<th>รวม</th>
+<th>เกรด</th>
+</tr>
+</table>
+
+<button onclick="calc()">คำนวณเกรด</button>
+
+<h3 id="gpa"></h3>
+
 </div>
 
-<div class="card">
-<h3>📊 GPA</h3>
-<p>View your academic results.</p>
-</div>
-
-<div class="card">
-<h3>📢 School News</h3>
-<p>No news today.</p>
-</div>
-function enter(){
-  document.getElementById("app").innerHTML = `
-  <div class='card'>
-    <h3>Dashboard</h3>
-    <p>Welcome to ICE School System</p>
-
-    <p>Thai : A</p>
-    <p>Math : B+</p>
-    <p>Science : A</p>
-    <p>English : A</p>
-
-    <h3>GPA : 3.85</h3>
-  </div>
-  `;
-}
-</body>
-</html>
 <script>
+
 const subjects=[
-"ไทย","คณิต","วิทย์","อังกฤษ","สังคม","ประวัติ",
-"สุข","พละ","ศิลปะ","ดนตรี","การงาน","คอม","จีน"
+"ไทย","คณิต","วิทย์","อังกฤษ","สังคม",
+"ประวัติ","สุข","พละ","ศิลปะ","ดนตรี",
+"การงาน","คอม"
 ];
 
-function showGrade(){
-let html="<div class='card'><h3>คะแนนนักเรียน</h3><table><tr><th>วิชา</th><th>เก็บ70</th><th>สอบ30</th><th>รวม</th><th>เกรด</th></tr>";
-let gpa=0;
+const tbl=document.getElementById("tbl");
 
 subjects.forEach(s=>{
- let keep=Math.floor(Math.random()*70);
- let exam=Math.floor(Math.random()*30);
- let sum=keep+exam;
- let grade="F",point=0;
-
- if(sum>=80){grade="A";point=4}
- else if(sum>=75){grade="B+";point=3.5}
- else if(sum>=70){grade="B";point=3}
- else if(sum>=65){grade="C+";point=2.5}
- else if(sum>=60){grade="C";point=2}
- else if(sum>=55){grade="D+";point=1.5}
- else if(sum>=50){grade="D";point=1}
-
- gpa+=point;
- html+=`<tr><td>${s}</td><td>${keep}</td><td>${exam}</td><td>${sum}</td><td>${grade}</td></tr>`;
+tbl.innerHTML+=`
+<tr>
+<td>${s}</td>
+<td><input type=number max=70></td>
+<td><input type=number max=30></td>
+<td class=t></td>
+<td class=g></td>
+</tr>`;
 });
 
-gpa=(gpa/subjects.length).toFixed(2);
-html+=`</table><h2>GPA : ${gpa}</h2></div>`;
-document.body.innerHTML+=html;
+function grade(x){
+if(x>=80)return 4;
+if(x>=70)return 3;
+if(x>=60)return 2;
+if(x>=50)return 1;
+return 0;
 }
+
+function calc(){
+let rows=document.querySelectorAll("tr");
+let sum=0,c=0;
+
+rows.forEach((r,i)=>{
+if(i==0)return;
+
+let a=r.children[1].children[0].value||0;
+let b=r.children[2].children[0].value||0;
+
+let total=Number(a)+Number(b);
+r.children[3].innerHTML=total;
+
+let g=grade(total);
+r.children[4].innerHTML=g;
+
+sum+=g;
+c++;
+});
+
+document.getElementById("gpa").innerHTML=
+"GPA : "+(sum/c).toFixed(2);
+}
+
 </script>
+
+</body>
+</html>
