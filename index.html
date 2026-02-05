@@ -1,118 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>ICE School System</title>
+
+<style>
+body{font-family:tahoma;background:#ecebff;text-align:center}
+.card{background:white;margin:20px auto;padding:20px;border-radius:15px;width:95%;max-width:900px}
+button{background:#5b3cff;color:white;border:none;padding:10px 20px;border-radius:8px;margin:5px}
+input{padding:8px;border-radius:6px;border:1px solid #aaa}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{border:1px solid #aaa;padding:5px}
+th{background:#d8d2ff}
+</style>
+</head>
+
+<body>
+
+<div id=app></div>
+
 <script>
 
-const subjects=[
-"Thai","Math","Science","English","Social","Health",
-"Art","Career","Computer","Chinese","Music","PE","Activity"
-]
+const ADMIN="9999";
+
+const subjects=["ไทย","คณิต","วิทย์","อังกฤษ","สังคม","ประวัติ","สุข","พละ","ศิลปะ","ดนตรี","การงาน","เทคโน","จีน"];
 
 const students=[
-const students=[
-{id:41235,name:"ณัฐพิมล โกวิทภัทรอำพน"},
-{id:43821,name:"ปราณี วงศ์วรรณ"},
-{id:42759,name:"พีรวัญ มณีโชติ"},
-{id:46503,name:"ชลธิชา ใจดี"},
-{id:48972,name:"พิชญสินี แก้วมณี"},
-{id:45186,name:"นรินทร์ แสงทอง"},
-{id:47329,name:"อริสรา พิทักษ์ใจ"},
-{id:49614,name:"ภูมิพัฒน์ สุขเกษม"},
-{id:48257,name:"ธีรภัทร วัฒนสุข"},
-{id:45491,name:"ชุติมา บุญรอด"},
-{id:42578,name:"ศุภชัย นิ่มนวล"},
-{id:46302,name:"ณัฐยา รัตนสกุล"},
-{id:47953,name:"พรทิพย์ กาญจนรักษ์"},
-{id:48716,name:"อัครพล ประเสริฐสุข"},
-{id:49328,name:"วรัญญา ศรีเจริญ"},
-{id:46825,name:"ธนกร แก้วเกิด"},
-{id:45297,name:"มนัสนันท์ บุญญา"},
-{id:47490,name:"ศศิธร Lucas"},
-{id:48136,name:"ภาณุพงศ์ แก้วตา"},
-{id:45672,name:"ชธร ชัยมงคล"},
-{id:47904,name:"กัญญารัตน์ พัฒน์โชค"},
-{id:46285,name:"อนุชา ศรีวิชัย"},
-{id:48419,name:"พิมพ์ชนก ทองดี"},
-{id:45703,name:"ธันวัฒน์ สวัสดิวงศ์"},
-{id:49068,name:"ปริญญา ชื่นใจ"},
-{id:46859,name:"รัตนา สายทอง"},
-{id:47216,name:"วรวีร์ แสงสว่าง"},
-{id:48175,name:"พัชรินทร์ สุขสม"},
-{id:49357,name:"อรินทรา จันทร์เพ็ญ"},
-{id:48426,name:"Alexander Michael Smith"}
-]
+{id:"41235",name:"กิตติพงศ์ ศรีทอง"},
+{id:"43821",name:"ปราณี วงศ์วรรณ"},
+{id:"42759",name:"พีรวัญ มณีโชติ"},
+{id:"46503",name:"ชลธิชา ใจดี"},
+{id:"48972",name:"พิชญสินี แก้วมณี"},
+{id:"45186",name:"นรินทร์ แสงทอง"},
+{id:"47329",name:"อริสรา พิทักษ์ใจ"},
+{id:"49614",name:"ภูมิพัฒน์ สุขเกษม"},
+{id:"48257",name:"ธีรภัทร วัฒนสุข"},
+{id:"45491",name:"ชุติมา บุญรอด"},
+{id:"42578",name:"ศุภชัย นิ่มนวล"},
+{id:"46302",name:"ณัฐยา รัตนสกุล"},
+{id:"47953",name:"พรทิพย์ กาญจนรักษ์"},
+{id:"48716",name:"อัครพล ประเสริฐสุข"},
+{id:"49328",name:"วรัญญา ศรีเจริญ"},
+{id:"46825",name:"ธนกร แก้วเกิด"},
+{id:"45297",name:"มนัสนันท์ บุญญา"},
+{id:"47490",name:"ศศิธร Lucas"},
+{id:"48136",name:"ภาณุพงศ์ แก้วตา"},
+{id:"45672",name:"ชธร ชัยมงคล"},
+{id:"47904",name:"กัญญารัตน์ พัฒน์โชค"},
+{id:"46285",name:"อนุชา ศรีวิชัย"},
+{id:"48419",name:"พิมพ์ชนก ทองดี"},
+{id:"45703",name:"ธันวัฒน์ สวัสดิวงศ์"},
+{id:"49068",name:"ปริญญา ชื่นใจ"},
+{id:"46859",name:"รัตนา สายทอง"},
+{id:"47216",name:"วรวีร์ แสงสว่าง"},
+{id:"48175",name:"พัชรินทร์ สุขสม"},
+{id:"49357",name:"อรินทรา จันทร์เพ็ญ"},
+{id:"48426",name:"Alexander Michael Smith"}
+];
 
-let db=JSON.parse(localStorage.school||"{}")
+let db=JSON.parse(localStorage.getItem("db")||"{}");
+
+if(Object.keys(db).length==0){
 students.forEach(s=>{
-if(!db[s.id]){
-db[s.id]={}
-subjects.forEach(sb=>db[s.id][sb]="0/0")
-}
-})
-
-function show(p){
-["home","admin","student"].forEach(x=>document.getElementById(x).style.display="none")
-document.getElementById(p).style.display="block"
-}
-
-function adminLogin(){
-if(adUser.value=="admin" && adPass.value=="9999"){
-renderAdmin()
-show("admin")
-}else alert("รหัสผิด")
-}
-
-function renderAdmin(){
-let h="<h2>ADMIN</h2><table border=1 width=100%><tr><th>ชื่อ</th>"
-subjects.forEach(s=>h+=`<th>${s}</th>`)
-h+="</tr>"
-
-students.forEach(st=>{
-h+=`<tr><td>${st.name}</td>`
-subjects.forEach(sb=>{
-h+=`<td><input value="${db[st.id][sb]}" onchange="set('${st.id}','${sb}',this.value)" placeholder="เก็บ/สอบ" style="width:70px"></td>`
-})
-h+="</tr>"
-})
-
-h+="</table>"
-admin.innerHTML=h
-}
-
-function set(id,s,v){
-db[id][s]=v
-localStorage.school=JSON.stringify(db)
-}
-
-function studentLogin(){
-let sid=stuId.value
-if(!db[sid]) return alert("ไม่พบข้อมูล")
-
-let h="<h2>ผลการเรียน</h2><table border=1 width=100%><tr><th>วิชา</th><th>คะแนน</th><th>เกรด</th></tr>"
-let sum=0,c=0
-
-subjects.forEach(s=>{
-let v=db[sid][s].split("/")
-let k=Number(v[0]),e=Number(v[1])
-let total=k*0.7+e*0.3
-let g=grade(total)
-sum+=point(g)
-c++
-h+=`<tr><td>${s}</td><td>${total.toFixed(1)}</td><td>${g}</td></tr>`
-})
-
-h+=`</table><h3>GPA ${(sum/c).toFixed(2)}</h3>`
-student.innerHTML=h
-show("student")
+db[s.id]={};
+subjects.forEach(sub=>db[s.id][sub]=Math.floor(Math.random()*41)+60);
+});
+localStorage.setItem("db",JSON.stringify(db));
 }
 
 function grade(x){
-if(x>=80)return"A"
-if(x>=70)return"B"
-if(x>=60)return"C"
-if(x>=50)return"D"
-return"F"
+if(x>=80)return["A",4];
+if(x>=75)return["B+",3.5];
+if(x>=70)return["B",3];
+if(x>=65)return["C+",2.5];
+if(x>=60)return["C",2];
+if(x>=55)return["D+",1.5];
+if(x>=50)return["D",1];
+return["F",0];
 }
 
-function point(g){
-return{A:4,B:3,C:2,D:1,F:0}[g]
+home();
+
+function home(){
+app.innerHTML=`
+<div class=card>
+<h2>International Center for Excellence</h2>
+<button onclick=studentLogin()>Student</button>
+<button onclick=adminLogin()>Admin</button>
+</div>`;
+}
+
+function studentLogin(){
+app.innerHTML=`<div class=card>
+<h3>Student Login</h3>
+<input id=sid placeholder="เลขประจำตัว"><br><br>
+<button onclick=student()>Login</button></div>`;
+}
+
+function adminLogin(){
+app.innerHTML=`<div class=card>
+<h3>Admin Login</h3>
+<input id=ap type=password placeholder="Admin Password"><br><br>
+<button onclick=admin()>Login</button></div>`;
+}
+
+function admin(){
+if(ap.value!=ADMIN){alert("รหัสผิด");return;}
+
+let h="<div class=card><h3>ADMIN</h3><table><tr><th>ชื่อ</th>";
+
+subjects.forEach(s=>h+=`<th>${s}</th>`);
+h+="</tr>";
+
+students.forEach(st=>{
+h+=`<tr><td>${st.name}</td>`;
+subjects.forEach(sub=>{
+h+=`<td contenteditable oninput="db['${st.id}']['${sub}']=Number(this.innerText)||0">${db[st.id][sub]}</td>`;
+});
+h+="</tr>";
+});
+
+h+="</table><button onclick=save()>SAVE</button></div>";
+app.innerHTML=h;
+}
+
+function student(){
+let id=sid.value;
+let st=students.find(x=>x.id==id);
+if(!st){alert("ไม่พบ");return;}
+
+let gpa=0;
+
+let h=`<div class=card><h3>${st.name}</h3><table><tr><th>วิชา</th><th>คะแนน</th><th>เกรด</th></tr>`;
+
+subjects.forEach(sub=>{
+let g=grade(db[id][sub]);
+gpa+=g[1];
+h+=`<tr><td>${sub}</td><td>${db[id][sub]}</td><td>${g[0]}</td></tr>`;
+});
+
+h+=`</table><b>GPA ${(gpa/subjects.length).toFixed(2)}</b></div>`;
+app.innerHTML=h;
+}
+
+function save(){
+localStorage.setItem("db",JSON.stringify(db));
+alert("Saved");
 }
 
 </script>
+</body>
+</html>
