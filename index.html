@@ -2,20 +2,25 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>ICE School System</title>
+<title>ICE School PRO+</title>
 
 <style>
-body{font-family:tahoma;background:#ecebff;text-align:center}
-.card{background:white;margin:20px auto;padding:20px;border-radius:15px;width:95%;max-width:900px}
-button{background:#5b3cff;color:white;border:none;padding:10px 20px;border-radius:8px;margin:5px}
-input{padding:8px;border-radius:6px;border:1px solid #aaa}
+body{margin:0;font-family:tahoma;background:#eef}
+header{background:#5b3cff;color:white;padding:15px;text-align:center}
+.card{background:white;margin:15px auto;padding:15px;border-radius:12px;width:95%;max-width:1000px}
+button{background:#5b3cff;color:white;border:none;padding:8px 15px;border-radius:6px;margin:3px}
+input{padding:6px;border-radius:6px;border:1px solid #aaa}
 table{width:100%;border-collapse:collapse;font-size:12px}
-th,td{border:1px solid #aaa;padding:5px}
+th,td{border:1px solid #aaa;padding:5px;text-align:center}
 th{background:#d8d2ff}
 </style>
 </head>
 
 <body>
+
+<header>
+<b>International Center for Excellence – Student System PRO+</b>
+</header>
 
 <div id=app></div>
 
@@ -26,7 +31,7 @@ const ADMIN="9999";
 const subjects=["ไทย","คณิต","วิทย์","อังกฤษ","สังคม","ประวัติ","สุข","พละ","ศิลปะ","ดนตรี","การงาน","เทคโน","จีน"];
 
 const students=[
-{id:"41235",name:"ณัฐพิมล โกวิทภัทรอำพน"},
+{id:"41235",name:"กิตติพงศ์ ศรีทอง"},
 {id:"43821",name:"ปราณี วงศ์วรรณ"},
 {id:"42759",name:"พีรวัญ มณีโชติ"},
 {id:"46503",name:"ชลธิชา ใจดี"},
@@ -55,7 +60,8 @@ const students=[
 {id:"47216",name:"วรวีร์ แสงสว่าง"},
 {id:"48175",name:"พัชรินทร์ สุขสม"},
 {id:"49357",name:"อรินทรา จันทร์เพ็ญ"},
-{id:"48426",name:"Alexander Michael Smith"}
+{id:"48426",name:"Alexander Michael Smith"},
+{id:"43881",name:"กฤติญดา ถีรวงศ์"}
 ];
 
 let db=JSON.parse(localStorage.getItem("db")||"{}");
@@ -84,30 +90,34 @@ home();
 function home(){
 app.innerHTML=`
 <div class=card>
-<h2>International Center for Excellence</h2>
-<button onclick=studentLogin()>Student</button>
-<button onclick=adminLogin()>Admin</button>
+<h2>🏫 ICE Student Portal</h2>
+<button onclick=studentLogin()>Student Login</button>
+<button onclick=adminLogin()>Admin Login</button>
 </div>`;
 }
 
 function studentLogin(){
 app.innerHTML=`<div class=card>
 <h3>Student Login</h3>
-<input id=sid placeholder="เลขประจำตัว"><br><br>
-<button onclick=student()>Login</button></div>`;
+<input id=sid placeholder="Student ID"><br><br>
+<button onclick=student()>Login</button>
+<button onclick=home()>Home</button>
+</div>`;
 }
 
 function adminLogin(){
 app.innerHTML=`<div class=card>
 <h3>Admin Login</h3>
 <input id=ap type=password placeholder="Admin Password"><br><br>
-<button onclick=admin()>Login</button></div>`;
+<button onclick=admin()>Login</button>
+<button onclick=home()>Home</button>
+</div>`;
 }
 
 function admin(){
-if(ap.value!=ADMIN){alert("รหัสผิด");return;}
+if(ap.value!=ADMIN){alert("Wrong password");return;}
 
-let h="<div class=card><h3>ADMIN</h3><table><tr><th>ชื่อ</th>";
+let h="<div class=card><h3>ADMIN PANEL</h3><table><tr><th>Name</th>";
 
 subjects.forEach(s=>h+=`<th>${s}</th>`);
 h+="</tr>";
@@ -120,18 +130,19 @@ h+=`<td contenteditable oninput="db['${st.id}']['${sub}']=Number(this.innerText)
 h+="</tr>";
 });
 
-h+="</table><button onclick=save()>SAVE</button></div>";
+h+=`</table><br><button onclick=save()>Save</button> <button onclick=home()>Home</button></div>`;
 app.innerHTML=h;
 }
 
 function student(){
 let id=sid.value;
 let st=students.find(x=>x.id==id);
-if(!st){alert("ไม่พบ");return;}
+if(!st){alert("Not found");return;}
 
 let gpa=0;
 
-let h=`<div class=card><h3>${st.name}</h3><table><tr><th>วิชา</th><th>คะแนน</th><th>เกรด</th></tr>`;
+let h=`<div class=card><h3>${st.name}</h3>
+<table><tr><th>Subject</th><th>Score</th><th>Grade</th></tr>`;
 
 subjects.forEach(sub=>{
 let g=grade(db[id][sub]);
@@ -139,13 +150,14 @@ gpa+=g[1];
 h+=`<tr><td>${sub}</td><td>${db[id][sub]}</td><td>${g[0]}</td></tr>`;
 });
 
-h+=`</table><b>GPA ${(gpa/subjects.length).toFixed(2)}</b></div>`;
+h+=`</table><br><b>GPA ${(gpa/subjects.length).toFixed(2)}</b><br><br>
+<button onclick=home()>Home</button></div>`;
 app.innerHTML=h;
 }
 
 function save(){
 localStorage.setItem("db",JSON.stringify(db));
-alert("Saved");
+alert("Saved!");
 }
 
 </script>
