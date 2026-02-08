@@ -7,12 +7,13 @@
 <style>
 body{margin:0;font-family:tahoma;background:#eef1ff}
 header{background:#5b3cff;color:white;padding:15px;text-align:center;font-size:22px}
-.card{background:white;margin:20px auto;padding:20px;border-radius:12px;max-width:900px;box-shadow:0 0 10px #ccc}
+.card{background:white;margin:20px auto;padding:20px;border-radius:12px;max-width:1000px;box-shadow:0 0 10px #ccc}
 button{background:#5b3cff;color:white;border:none;padding:8px 15px;border-radius:6px;margin:4px}
-input{padding:6px;border-radius:5px;border:1px solid #aaa}
+input{padding:6px;border-radius:5px;border:1px solid #aaa;width:60px}
 table{border-collapse:collapse;width:100%;font-size:13px}
 th,td{border:1px solid #aaa;padding:6px;text-align:center}
 th{background:#ddd6ff}
+small{color:#555}
 </style>
 </head>
 
@@ -26,6 +27,7 @@ th{background:#ddd6ff}
 
 const ADMIN="9999";
 
+/* ผู้เข้าแข่งขัน */
 let players=[
 {id:"41235",name:"กิตติพงศ์ ศรีทอง"},
 {id:"43821",name:"ปราณี วงศ์วรรณ"},
@@ -34,30 +36,67 @@ let players=[
 {id:"42759",name:"พีรวัญ มณีโชติ"}
 ];
 
+/*
+เกณฑ์คะแนน
+Creativity 30
+Presentation 25
+Technique 25
+Teamwork 20
+รวม 100
+*/
+
 let db=JSON.parse(localStorage.getItem("db")||"{}");
 
 if(!Object.keys(db).length){
-players.forEach(p=>db[p.id]=Math.floor(Math.random()*50)+50);
+players.forEach(p=>{
+db[p.id]={
+cre:Math.floor(Math.random()*15)+15,
+pre:Math.floor(Math.random()*15)+10,
+tech:Math.floor(Math.random()*15)+10,
+team:Math.floor(Math.random()*10)+10
+};
+});
 localStorage.setItem("db",JSON.stringify(db));
 }
 
 home();
 
+function total(p){
+return p.cre+p.pre+p.tech+p.team;
+}
+
 function home(){
 app.innerHTML=`<div class=card>
-<h2>🏁 Welcome</h2>
+<h2>🏁 หน้าแรก</h2>
+
+<b>📌 เกณฑ์การให้คะแนน</b><br>
+ความสร้างสรรค์ 30 คะแนน<br>
+การนำเสนอ 25 คะแนน<br>
+เทคนิค / ความถูกต้อง 25 คะแนน<br>
+การทำงานเป็นทีม 20 คะแนน<br>
+รวม 100 คะแนน
+
+<br><br>
+
 <button onclick=viewer()>ดูผลการแข่งขัน</button>
 <button onclick=adminLogin()>Admin</button>
 </div>`;
 }
 
+function ranking(){
+return players.map(p=>{
+let s=db[p.id];
+return {id:p.id,name:p.name,sum:total(s)};
+}).sort((a,b)=>b.sum-a.sum);
+}
+
 function viewer(){
 let r=ranking();
-let h="<div class=card><h3>📊 ตารางคะแนน</h3><table><tr><th>อันดับ</th><th>ชื่อ</th><th>คะแนน</th></tr>";
+let h="<div class=card><h3>📊 ตารางคะแนน</h3><table><tr><th>อันดับ</th><th>ชื่อ</th><th>คะแนนรวม</th></tr>";
 
 r.forEach((p,i)=>{
-let medal=i==0?"🥇":i==1?"🥈":i==2?"🥉":"";
-h+=`<tr><td>${i+1}${medal}</td><td>${p.name}</td><td>${p.score}</td></tr>`;
+let m=i==0?"🥇":i==1?"🥈":i==2?"🥉":"";
+h+=`<tr><td>${i+1}${m}</td><td>${p.name}</td><td>${p.sum}</td></tr>`;
 });
 
 h+=`</table><br><button onclick=home()>Home</button></div>`;
@@ -67,7 +106,8 @@ app.innerHTML=h;
 function adminLogin(){
 app.innerHTML=`<div class=card>
 <h3>Admin Login</h3>
-<input id=ap type=password placeholder="Password"><br><br>
+<input id=ap type=password placeholder="Password">
+<br><br>
 <button onclick=admin()>Login</button>
 <button onclick=home()>Home</button>
 </div>`;
@@ -76,22 +116,28 @@ app.innerHTML=`<div class=card>
 function admin(){
 if(ap.value!=ADMIN){alert("Wrong password");return;}
 
-let h="<div class=card><h3>ADMIN PANEL</h3><table><tr><th>ชื่อ</th><th>คะแนน</th></tr>";
+let h="<div class=card><h3>ADMIN PANEL</h3>";
+
+h+=`<small>
+Creativity 30 | Presentation 25 | Technique 25 | Teamwork 20
+</small><br><br>`;
+
+h+="<table><tr><th>ชื่อ</th><th>สร้างสรรค์</th><th>นำเสนอ</th><th>เทคนิค</th><th>ทีม</th><th>รวม</th></tr>";
 
 players.forEach(p=>{
+let s=db[p.id];
 h+=`<tr>
 <td>${p.name}</td>
-<td contenteditable oninput="db['${p.id}']=Number(this.innerText)||0">${db[p.id]}</td>
+<td contenteditable oninput="db['${p.id}'].cre=Number(this.innerText)||0">${s.cre}</td>
+<td contenteditable oninput="db['${p.id}'].pre=Number(this.innerText)||0">${s.pre}</td>
+<td contenteditable oninput="db['${p.id}'].tech=Number(this.innerText)||0">${s.tech}</td>
+<td contenteditable oninput="db['${p.id}'].team=Number(this.innerText)||0">${s.team}</td>
+<td>${total(s)}</td>
 </tr>`;
 });
 
-h+=`</table><br><button onclick=save()>Save</button> <button onclick=home()>Home</button></div>`;
+h+="</table><br><button onclick=save()>Save</button> <button onclick=home()>Home</button></div>";
 app.innerHTML=h;
-}
-
-function ranking(){
-return players.map(p=>({id:p.id,name:p.name,score:db[p.id]}))
-.sort((a,b)=>b.score-a.score);
 }
 
 function save(){
