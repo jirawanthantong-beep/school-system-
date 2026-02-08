@@ -5,21 +5,20 @@
 <title>Competition Result System</title>
 
 <style>
-body{margin:0;font-family:tahoma;background:#eef1ff}
-header{background:#5b3cff;color:white;padding:15px;text-align:center;font-size:22px}
+body{margin:0;font-family:tahoma;background:#eef1ff;text-align:center}
+header{background:#5b3cff;color:white;padding:15px;font-size:22px}
 .card{background:white;margin:20px auto;padding:20px;border-radius:12px;max-width:1000px;box-shadow:0 0 10px #ccc}
 button{background:#5b3cff;color:white;border:none;padding:8px 15px;border-radius:6px;margin:4px}
-input{padding:6px;border-radius:5px;border:1px solid #aaa;width:60px}
+input{padding:6px;border-radius:5px;border:1px solid #aaa}
 table{border-collapse:collapse;width:100%;font-size:13px}
 th,td{border:1px solid #aaa;padding:6px;text-align:center}
 th{background:#ddd6ff}
-small{color:#555}
 </style>
 </head>
 
 <body>
 
-<header>🏆 COMPETITION RESULT SYSTEM</header>
+<header>🏆 Competition Result System</header>
 
 <div id=app></div>
 
@@ -27,7 +26,6 @@ small{color:#555}
 
 const ADMIN="9999";
 
-/* ผู้เข้าแข่งขัน */
 let players=[
 {id:"41235",name:"กิตติพงศ์ ศรีทอง"},
 {id:"43821",name:"ปราณี วงศ์วรรณ"},
@@ -36,23 +34,14 @@ let players=[
 {id:"42759",name:"พีรวัญ มณีโชติ"}
 ];
 
-/*
-เกณฑ์คะแนน
-Creativity 30
-Presentation 25
-Technique 25
-Teamwork 20
-รวม 100
-*/
-
 let db=JSON.parse(localStorage.getItem("db")||"{}");
 
 if(!Object.keys(db).length){
 players.forEach(p=>{
 db[p.id]={
-cre:Math.floor(Math.random()*15)+15,
-pre:Math.floor(Math.random()*15)+10,
-tech:Math.floor(Math.random()*15)+10,
+cre:Math.floor(Math.random()*10)+20,
+pre:Math.floor(Math.random()*10)+15,
+tech:Math.floor(Math.random()*10)+15,
 team:Math.floor(Math.random()*10)+10
 };
 });
@@ -61,53 +50,65 @@ localStorage.setItem("db",JSON.stringify(db));
 
 home();
 
-function total(p){
-return p.cre+p.pre+p.tech+p.team;
+function total(x){return x.cre+x.pre+x.tech+x.team;}
+
+function ranking(){
+return players.map(p=>({id:p.id,name:p.name,sum:total(db[p.id])}))
+.sort((a,b)=>b.sum-a.sum);
 }
 
 function home(){
 app.innerHTML=`<div class=card>
 <h2>🏁 หน้าแรก</h2>
 
-<b>📌 เกณฑ์การให้คะแนน</b><br>
-ความสร้างสรรค์ 30 คะแนน<br>
-การนำเสนอ 25 คะแนน<br>
-เทคนิค / ความถูกต้อง 25 คะแนน<br>
-การทำงานเป็นทีม 20 คะแนน<br>
-รวม 100 คะแนน
+<b>เกณฑ์คะแนน</b><br>
+สร้างสรรค์ 30 | นำเสนอ 25 | เทคนิค 25 | ทีม 20<br><br>
 
-<br><br>
-
-<button onclick=viewer()>ดูผลการแข่งขัน</button>
+<button onclick=myResult()>ดูผลของฉัน</button>
 <button onclick=adminLogin()>Admin</button>
 </div>`;
 }
 
-function ranking(){
-return players.map(p=>{
-let s=db[p.id];
-return {id:p.id,name:p.name,sum:total(s)};
-}).sort((a,b)=>b.sum-a.sum);
+function myResult(){
+app.innerHTML=`<div class=card>
+<h3>ใส่เลขประจำตัว</h3>
+<input id=sid placeholder="Student ID"><br><br>
+<button onclick=showMe()>ดูคะแนน</button>
+<button onclick=home()>Home</button>
+</div>`;
 }
 
-function viewer(){
+function showMe(){
+let p=players.find(x=>x.id==sid.value);
+if(!p){alert("ไม่พบเลขนี้");return;}
+
+let s=db[p.id];
 let r=ranking();
-let h="<div class=card><h3>📊 ตารางคะแนน</h3><table><tr><th>อันดับ</th><th>ชื่อ</th><th>คะแนนรวม</th></tr>";
+let pos=r.findIndex(x=>x.id==p.id)+1;
 
-r.forEach((p,i)=>{
-let m=i==0?"🥇":i==1?"🥈":i==2?"🥉":"";
-h+=`<tr><td>${i+1}${m}</td><td>${p.name}</td><td>${p.sum}</td></tr>`;
-});
+app.innerHTML=`<div class=card>
+<h3>${p.name}</h3>
 
-h+=`</table><br><button onclick=home()>Home</button></div>`;
-app.innerHTML=h;
+<table>
+<tr><td>สร้างสรรค์</td><td>${s.cre}</td></tr>
+<tr><td>นำเสนอ</td><td>${s.pre}</td></tr>
+<tr><td>เทคนิค</td><td>${s.tech}</td></tr>
+<tr><td>ทีม</td><td>${s.team}</td></tr>
+<tr><th>รวม</th><th>${total(s)}</th></tr>
+</table>
+
+<br>
+<b>อันดับ ${pos}/${players.length}</b>
+
+<br><br>
+<button onclick=home()>Home</button>
+</div>`;
 }
 
 function adminLogin(){
 app.innerHTML=`<div class=card>
 <h3>Admin Login</h3>
-<input id=ap type=password placeholder="Password">
-<br><br>
+<input id=ap type=password placeholder="Password"><br><br>
 <button onclick=admin()>Login</button>
 <button onclick=home()>Home</button>
 </div>`;
@@ -116,13 +117,7 @@ app.innerHTML=`<div class=card>
 function admin(){
 if(ap.value!=ADMIN){alert("Wrong password");return;}
 
-let h="<div class=card><h3>ADMIN PANEL</h3>";
-
-h+=`<small>
-Creativity 30 | Presentation 25 | Technique 25 | Teamwork 20
-</small><br><br>`;
-
-h+="<table><tr><th>ชื่อ</th><th>สร้างสรรค์</th><th>นำเสนอ</th><th>เทคนิค</th><th>ทีม</th><th>รวม</th></tr>";
+let h="<div class=card><h3>ADMIN PANEL</h3><table><tr><th>ชื่อ</th><th>สร้าง</th><th>นำเสนอ</th><th>เทคนิค</th><th>ทีม</th><th>รวม</th></tr>";
 
 players.forEach(p=>{
 let s=db[p.id];
@@ -147,4 +142,4 @@ alert("Saved");
 
 </script>
 </body>
-</html>
+</html>ต
