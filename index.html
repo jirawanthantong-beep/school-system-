@@ -2,31 +2,34 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Attendance M1/14</title>
+<title>Attendance 2 Weeks</title>
 
 <style>
-body{font-family:sans-serif;padding:20px}
+body{font-family:sans-serif;padding:15px}
 table{border-collapse:collapse;width:100%}
-th,td{border:1px solid #666;padding:6px;text-align:center}
-.absent{background:#ffcccc}
+th,td{border:1px solid #555;padding:5px;text-align:center}
+.absent{background:#ffd6d6}
 </style>
-
 </head>
 
 <body>
 
-<h2>📋 เช็คชื่อ ม.1/14 English Program</h2>
+<h2>📋 เช็คชื่อ ม.1/14 (2 อาทิตย์)</h2>
+
+วันที่:
+<input type="date" id="date" onchange="draw()">
 
 <p id="summary"></p>
 
 <table id="table"></table>
 
 <br>
-<button onclick="exportCSV()">Export CSV</button>
+<button onclick="exportCSV()">Export Excel รวมทุกวัน</button>
+<button onclick="clearAll()">ล้างข้อมูลทั้งหมด</button>
 
 <script>
 
-let students=[
+const baseStudents=[
 {id:"43620",name:"เด็กชายกร มณีเมือง"},
 {id:"43643",name:"เด็กชายจตุพร กล่ำพล"},
 {id:"43666",name:"เด็กชายชัยภัทร เสน่หา"},
@@ -59,15 +62,27 @@ let students=[
 {id:"44123",name:"เด็กหญิงไอลดา สิงห์จันทร์"}
 ]
 
-students.forEach(s=>{
-s.status=""
-s.yellow=0
-s.score=100
-})
+let data=JSON.parse(localStorage.getItem("att14")||"{}")
+
+function today(){
+return document.getElementById("date").value
+}
+
+function init(){
+document.getElementById("date").value=new Date().toISOString().slice(0,10)
+draw()
+}
 
 function draw(){
 
-let come=0,absent=0
+let d=today()
+if(!data[d]){
+data[d]=baseStudents.map(s=>({...s,status:"",yellow:0,score:100}))
+save()
+}
+
+let students=data[d]
+let come=0,abs=0
 
 let html=`<tr>
 <th>เลข</th><th>ชื่อ</th>
@@ -77,50 +92,77 @@ let html=`<tr>
 students.forEach((s,i)=>{
 
 if(s.status=="มา") come++
-if(s.status=="ขาด") absent++
+if(s.status=="ขาด") abs++
 
 html+=`
 <tr class="${s.status=='ขาด'?'absent':''}">
 <td>${s.id}</td>
 <td>${s.name}</td>
 
-<td><input type="radio" name="s${i}" onchange="set(${i},'มา')" ${s.status=="มา"?"checked":""}></td>
-<td><input type="radio" name="s${i}" onchange="set(${i},'ขาด')" ${s.status=="ขาด"?"checked":""}></td>
-<td><input type="radio" name="s${i}" onchange="set(${i},'สาย')" ${s.status=="สาย"?"checked":""}></td>
+<td><input type="radio" name="${i}" ${s.status=="มา"?"checked":""} onchange="setS(${i},'มา')"></td>
+<td><input type="radio" name="${i}" ${s.status=="ขาด"?"checked":""} onchange="setS(${i},'ขาด')"></td>
+<td><input type="radio" name="${i}" ${s.status=="สาย"?"checked":""} onchange="setS(${i},'สาย')"></td>
 
-<td>${s.yellow}<br><button onclick="yellow(${i})">ใบเหลือง</button></td>
+<td>
+${s.yellow}<br>
+<button onclick="yellow(${i})">+</button>
+<button onclick="unyellow(${i})">-</button>
+</td>
+
 <td>${s.score}</td>
 </tr>`
 })
 
 document.getElementById("table").innerHTML=html
-document.getElementById("summary").innerHTML=`✅ มา ${come} คน | ❌ ขาด ${absent} คน`
+document.getElementById("summary").innerHTML=`✅ มา ${come} | ❌ ขาด ${abs}`
 }
 
-function set(i,v){
-students[i].status=v
+function setS(i,v){
+data[today()][i].status=v
+save()
 draw()
 }
 
 function yellow(i){
-students[i].yellow++
-students[i].score-=5
-draw()
+data[today()][i].yellow++
+data[today()][i].score-=5
+save();draw()
+}
+
+function unyellow(i){
+if(data[today()][i].yellow>0){
+data[today()][i].yellow--
+data[today()][i].score+=5
+save();draw()
+}
+}
+
+function save(){
+localStorage.setItem("att14",JSON.stringify(data))
 }
 
 function exportCSV(){
-let csv="เลข,ชื่อ,สถานะ,ใบเหลือง,คะแนน\n"
-students.forEach(s=>{
-csv+=`${s.id},${s.name},${s.status},${s.yellow},${s.score}\n`
+let csv="วันที่,เลข,ชื่อ,สถานะ,ใบเหลือง,คะแนน\n"
+Object.keys(data).forEach(d=>{
+data[d].forEach(s=>{
+csv+=`${d},${s.id},${s.name},${s.status},${s.yellow},${s.score}\n`
+})
 })
 let blob=new Blob([csv])
 let a=document.createElement("a")
 a.href=URL.createObjectURL(blob)
-a.download="attendance.csv"
+a.download="attendance2week.csv"
 a.click()
 }
 
-draw()
+function clearAll(){
+if(confirm("ล้างทั้งหมด?")){
+localStorage.removeItem("att14")
+location.reload()
+}
+}
+
+init()
 
 </script>
 
