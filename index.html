@@ -2,137 +2,88 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Competition Board</title>
-
+<title>Attendance System</title>
 <style>
-body{margin:0;font-family:tahoma;background:#eef}
-header{background:#5b3cff;color:white;padding:15px;text-align:center;font-size:22px}
-.card{background:white;margin:20px auto;padding:20px;border-radius:10px;max-width:900px}
-button{background:#5b3cff;color:white;border:none;padding:8px 15px;border-radius:6px;margin:4px}
-input{padding:6px;border-radius:5px;border:1px solid #aaa}
+body{font-family:sans-serif;padding:20px}
 table{border-collapse:collapse;width:100%}
-th,td{border:1px solid #aaa;padding:6px;text-align:center}
-th{background:#ddd}
+td,th{border:1px solid #999;padding:6px;text-align:center}
+button{padding:5px}
 </style>
 </head>
 
 <body>
 
-<header>🏆 Competition Result Board</header>
-<div id="app"></div>
+<h2>📋 ระบบเช็คชื่อ + ใบเหลือง</h2>
+
+<input id="name" placeholder="ชื่อนักเรียน">
+<button onclick="add()">เพิ่ม</button>
+
+<table id="table">
+<tr>
+<th>ชื่อ</th>
+<th>สถานะ</th>
+<th>ใบเหลือง</th>
+<th>คะแนน</th>
+</tr>
+</table>
+
+<br>
+<button onclick="exportCSV()">Export CSV</button>
 
 <script>
+let students=[]
 
-const ADMIN="9999";
-
-const players=[
-{id:"41235",name:"นิว"},
-{id:"43821",name:"ปราณี วงศ์วรรณ"},
-{id:"44123",name:"เคซี่"},
-{id:"43881",name:"กฤติญดา ถีรวงศ์"},
-{id:"42759",name:"พีรวัญ มณีโชติ"}
-];
-
-let db=JSON.parse(localStorage.getItem("score")||"{}");
-
-if(!Object.keys(db).length){
-players.forEach(p=>db[p.id]={c:20,p:15,t:15,team:10});
-localStorage.setItem("score",JSON.stringify(db));
+function add(){
+let n=document.getElementById("name").value
+students.push({name:n,status:"-",yellow:0,score:100})
+draw()
 }
 
-home();
-
-function total(x){return x.c+x.p+x.t+x.team;}
-
-function rank(){
-return players.map(p=>({id:p.id,name:p.name,sum:total(db[p.id])}))
-.sort((a,b)=>b.sum-a.sum);
+function setStatus(i,s){
+students[i].status=s
+draw()
 }
 
-function home(){
-app.innerHTML=`
-<div class=card>
-<h2>Home</h2>
-เกณฑ์คะแนน:<br>
-ครั้งที่1 30 | ครั้งที่2 25 | ครั้งที่3 25 | ครั้งที่4 20 | ครั้งที่5 100<br><br>
-
-<button onclick="student()">ดูผลของฉัน</button>
-<button onclick="adminLogin()">Admin</button>
-</div>`;
+function yellow(i){
+students[i].yellow++
+students[i].score-=5
+draw()
 }
 
-function student(){
-app.innerHTML=`
-<div class=card>
-เลขประจำตัว:<br>
-<input id=sid><br><br>
-<button onclick="show()">ดูคะแนน</button>
-<button onclick="home()">Back</button>
-</div>`;
+function draw(){
+let html=`<tr>
+<th>ชื่อ</th><th>สถานะ</th><th>ใบเหลือง</th><th>คะแนน</th></tr>`
+students.forEach((s,i)=>{
+html+=`<tr>
+<td>${s.name}</td>
+<td>
+<button onclick="setStatus(${i},'มา')">มา</button>
+<button onclick="setStatus(${i},'ขาด')">ขาด</button>
+<button onclick="setStatus(${i},'สาย')">สาย</button>
+<br>${s.status}
+</td>
+<td>
+${s.yellow}
+<br><button onclick="yellow(${i})">ใบเหลือง</button>
+</td>
+<td>${s.score}</td>
+</tr>`
+})
+document.getElementById("table").innerHTML=html
 }
 
-function show(){
-let p=players.find(x=>x.id==sid.value);
-if(!p){alert("ไม่พบ");return;}
-
-let s=db[p.id];
-let r=rank();
-let pos=r.findIndex(x=>x.id==p.id)+1;
-
-app.innerHTML=`
-<div class=card>
-<h3>${p.name}</h3>
-ครั้ง1 ${s.c}<br>
-ครั้ง2 ${s.p}<br>
-ครั้ง3 ${s.t}<br>
-ครั้ง4 ${s.t}<br>
-ครั้ง5 ${s.team}<br><br>
-
-<b>รวม ${total(s)}</b><br>
-อันดับ ${pos}/${players.length}<br><br>
-
-<button onclick="home()">Home</button>
-</div>`;
+function exportCSV(){
+let csv="ชื่อ,สถานะ,ใบเหลือง,คะแนน\n"
+students.forEach(s=>{
+csv+=`${s.name},${s.status},${s.yellow},${s.score}\n`
+})
+let blob=new Blob([csv])
+let a=document.createElement("a")
+a.href=URL.createObjectURL(blob)
+a.download="attendance.csv"
+a.click()
 }
-
-function adminLogin(){
-app.innerHTML=`
-<div class=card>
-Admin Password<br>
-<input id=ap type=password><br><br>
-<button onclick="admin()">Login</button>
-<button onclick="home()">Back</button>
-</div>`;
-}
-
-function admin(){
-if(ap.value!=ADMIN){alert("wrong");return;}
-
-let h=`<div class=card><h3>ADMIN</h3><table>
-<tr><th>ชื่อ</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr>`;
-
-players.forEach(p=>{
-let s=db[p.id];
-h+=`
-<tr>
-<td>${p.name}</td>
-<td contenteditable oninput="db['${p.id}'].c=+this.innerText">${s.c}</td>
-<td contenteditable oninput="db['${p.id}'].p=+this.innerText">${s.p}</td>
-<td contenteditable oninput="db['${p.id}'].t=+this.innerText">${s.t}</td>
-<td contenteditable oninput="db['${p.id}'].t=+this.innerText">${s.t}</td>
-<td contenteditable oninput="db['${p.id}'].team=+this.innerText">${s.team}</td>
-</tr>`;
-});
-
-h+=`</table><br><button onclick="save()">Save</button> <button onclick="home()">Home</button></div>`;
-app.innerHTML=h;
-}
-
-function save(){
-localStorage.setItem("score",JSON.stringify(db));
-alert("Saved");
-}
-
 </script>
+
 </body>
 </html>
