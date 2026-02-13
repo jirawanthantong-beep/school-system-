@@ -2,33 +2,29 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>ICE School PRO+</title>
+<title>Midterm Result</title>
 
 <style>
-body{margin:0;font-family:tahoma;background:#eef}
-header{background:#5b3cff;color:white;padding:15px;text-align:center}
-.card{background:white;margin:15px auto;padding:15px;border-radius:12px;width:95%;max-width:1000px}
-button{background:#5b3cff;color:white;border:none;padding:8px 15px;border-radius:6px;margin:3px}
-input{padding:6px;border-radius:6px;border:1px solid #aaa}
-table{width:100%;border-collapse:collapse;font-size:12px}
-th,td{border:1px solid #aaa;padding:5px;text-align:center}
-th{background:#d8d2ff}
+body{font-family:tahoma;background:#f2f2ff;margin:0}
+header{background:#4a4cff;color:white;padding:15px;text-align:center;font-size:22px}
+.box{background:white;margin:20px auto;padding:20px;max-width:900px;border-radius:10px}
+input,button{padding:6px;margin:5px}
+table{border-collapse:collapse;width:100%}
+th,td{border:1px solid #999;padding:6px;text-align:center}
+th{background:#ddd}
+button{background:#4a4cff;color:white;border:none;border-radius:6px}
 </style>
 </head>
 
 <body>
 
-<header>
-<b>International Center for Excellence – Student System PRO+</b>
-</header>
+<header>📘 คะแนนกลางภาค เทอม 1 (50 คะแนน/วิชา)</header>
 
-<div id=app></div>
+<div id="app"></div>
 
 <script>
 
-const ADMIN="123456";
-
-const subjects=["ไทย","คณิต","วิทย์","อังกฤษ","สังคม","ประวัติ","สุข","พละ","ศิลปะ","ดนตรี","การงาน","เทคโน","จีน"];
+const ADMIN="admin123";
 
 const students=[
 {id:"41235",name:"กิตติพงศ์ ศรีทอง"},
@@ -65,100 +61,94 @@ const students=[
 {id:"44123",name:"ไอลดาสิงห์ จันทร์"}
 ];
 
-let db=JSON.parse(localStorage.getItem("db")||"{}");
 
-if(Object.keys(db).length==0){
+const subjects=["คณิต","วิทย์","อังกฤษ","ไทย"];
+
+let data=JSON.parse(localStorage.getItem("midterm")||"{}");
+
+if(!Object.keys(data).length){
 students.forEach(s=>{
-db[s.id]={};
-subjects.forEach(sub=>db[s.id][sub]=Math.floor(Math.random()*41)+60);
+data[s.id]={};
+subjects.forEach(x=>data[s.id][x]=25);
 });
-localStorage.setItem("db",JSON.stringify(db));
-}
-
-function grade(x){
-if(x>=80)return["A",4];
-if(x>=75)return["B+",3.5];
-if(x>=70)return["B",3];
-if(x>=65)return["C+",2.5];
-if(x>=60)return["C",2];
-if(x>=55)return["D+",1.5];
-if(x>=50)return["D",1];
-return["F",0];
+localStorage.setItem("midterm",JSON.stringify(data));
 }
 
 home();
 
 function home(){
 app.innerHTML=`
-<div class=card>
-<h2>🏫 ICE Student Portal</h2>
-<button onclick=studentLogin()>Student Login</button>
-<button onclick=adminLogin()>Admin Login</button>
+<div class=box>
+<h3>HOME</h3>
+<button onclick="student()">ดูคะแนนนักเรียน</button>
+<button onclick="adminLogin()">Admin</button>
 </div>`;
 }
 
-function studentLogin(){
-app.innerHTML=`<div class=card>
-<h3>Student Login</h3>
-<input id=sid placeholder="Student ID"><br><br>
-<button onclick=student()>Login</button>
-<button onclick=home()>Home</button>
+function student(){
+app.innerHTML=`
+<div class=box>
+เลขประจำตัว:<br>
+<input id=sid><br>
+<button onclick="show()">ดูคะแนน</button>
+<button onclick="home()">กลับ</button>
 </div>`;
+}
+
+function show(){
+let s=students.find(x=>x.id==sid.value);
+if(!s){alert("ไม่พบ");return;}
+
+let h=`<div class=box><h3>${s.name}</h3>`;
+let sum=0;
+
+subjects.forEach(x=>{
+let v=data[s.id][x];
+sum+=v;
+h+=`${x}: ${v}/50<br>`;
+});
+
+h+=`<br><b>รวม ${sum}</b><br><button onclick="home()">Home</button></div>`;
+app.innerHTML=h;
 }
 
 function adminLogin(){
-app.innerHTML=`<div class=card>
-<h3>Admin Login</h3>
-<input id=ap type=password placeholder="Admin Password"><br><br>
-<button onclick=admin()>Login</button>
-<button onclick=home()>Home</button>
+app.innerHTML=`
+<div class=box>
+Admin Password:<br>
+<input id=ap type=password><br>
+<button onclick="admin()">Login</button>
+<button onclick="home()">Back</button>
 </div>`;
 }
 
 function admin(){
-if(ap.value!=ADMIN){alert("Wrong password");return;}
+if(ap.value!=ADMIN){alert("รหัสผิด");return;}
 
-let h="<div class=card><h3>ADMIN PANEL</h3><table><tr><th>Name</th>";
+let h=`<div class=box><table>
+<tr><th>ชื่อ</th>`;
 
-subjects.forEach(s=>h+=`<th>${s}</th>`);
-h+="</tr>";
+subjects.forEach(x=>h+=`<th>${x}</th>`);
+h+=`</tr>`;
 
-students.forEach(st=>{
-h+=`<tr><td>${st.name}</td>`;
-subjects.forEach(sub=>{
-h+=`<td contenteditable oninput="db['${st.id}']['${sub}']=Number(this.innerText)||0">${db[st.id][sub]}</td>`;
+students.forEach(s=>{
+h+=`<tr><td>${s.name}</td>`;
+subjects.forEach(x=>{
+h+=`<td contenteditable oninput="data['${s.id}']['${x}']=+this.innerText">${data[s.id][x]}</td>`;
 });
-h+="</tr>";
-});
-
-h+=`</table><br><button onclick=save()>Save</button> <button onclick=home()>Home</button></div>`;
-app.innerHTML=h;
-}
-
-function student(){
-let id=sid.value;
-let st=students.find(x=>x.id==id);
-if(!st){alert("Not found");return;}
-
-let gpa=0;
-
-let h=`<div class=card><h3>${st.name}</h3>
-<table><tr><th>Subject</th><th>Score</th><th>Grade</th></tr>`;
-
-subjects.forEach(sub=>{
-let g=grade(db[id][sub]);
-gpa+=g[1];
-h+=`<tr><td>${sub}</td><td>${db[id][sub]}</td><td>${g[0]}</td></tr>`;
+h+=`</tr>`;
 });
 
-h+=`</table><br><b>GPA ${(gpa/subjects.length).toFixed(2)}</b><br><br>
-<button onclick=home()>Home</button></div>`;
+h+=`</table><br>
+<button onclick="save()">Save</button>
+<button onclick="home()">Home</button></div>`;
+
 app.innerHTML=h;
 }
 
 function save(){
-localStorage.setItem("db",JSON.stringify(db));
-alert("Saved!");
+localStorage.setItem("midterm",JSON.stringify(data));
+alert("บันทึกแล้ว");
 }
 
 </script>
