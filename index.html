@@ -1,170 +1,166 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Attendance 2 Weeks</title>
+<meta charset="utf-8">
+<title>ICE School PRO+</title>
 
 <style>
-body{font-family:sans-serif;padding:15px}
-table{border-collapse:collapse;width:100%}
-th,td{border:1px solid #555;padding:5px;text-align:center}
-.absent{background:#ffd6d6}
+body{margin:0;font-family:tahoma;background:#eef}
+header{background:#5b3cff;color:white;padding:15px;text-align:center}
+.card{background:white;margin:15px auto;padding:15px;border-radius:12px;width:95%;max-width:1000px}
+button{background:#5b3cff;color:white;border:none;padding:8px 15px;border-radius:6px;margin:3px}
+input{padding:6px;border-radius:6px;border:1px solid #aaa}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{border:1px solid #aaa;padding:5px;text-align:center}
+th{background:#d8d2ff}
 </style>
 </head>
 
 <body>
 
-<h2>📋 เช็คชื่อ ม.1/14 (2 อาทิตย์)</h2>
+<header>
+<b>International Center for Excellence – Student System PRO+</b>
+</header>
 
-วันที่:
-<input type="date" id="date" onchange="draw()">
-
-<p id="summary"></p>
-
-<table id="table"></table>
-
-<br>
-<button onclick="exportCSV()">Export Excel รวมทุกวัน</button>
-<button onclick="clearAll()">ล้างข้อมูลทั้งหมด</button>
+<div id=app></div>
 
 <script>
 
-const baseStudents=[
-{id:"43620",name:"เด็กชายกร มณีเมือง"},
-{id:"43643",name:"เด็กชายจตุพร กล่ำพล"},
-{id:"43666",name:"เด็กชายชัยภัทร เสน่หา"},
-{id:"43686",name:"เด็กชายณรงค์ชน แก้วมณี"},
-{id:"43688",name:"เด็กรชายณัฐปรกรณ์ รัตนสัจธรรม"},
-{id:"43709",name:"เด็กชายถิรพุทธิ์ เกียรติไพบูล"},
-{id:"43720",name:"เด็กชายธนภัทร บุญมี"},
-{id:"43741",name:"เด็กชายธีรภัทร ใจรื่น"},
-{id:"43760",name:"เด็กชายปภาวิน พบบ่อเงิน"},
-{id:"43800",name:"เด็กชายโพชฌงค์ สุขเจริญทรัพย์"},
-{id:"43801",name:"เด็กชายภคนันท์ คุ้มตัว"},
-{id:"43809",name:"เด็กชายภูบดินทร์ ชูเชิด"},
-{id:"43875",name:"เด็กชายอิสระ ชัยบรรจงเวช"},
-{id:"43881",name:"เด็กหญิงกฤติญดา ถีรวงศ์"},
-{id:"43888",name:"เด็กหญิงกัญญาภัค กาญจนนิธิ"},
-{id:"43906",name:"เด็กหญิงจรรยมณฑน์ บุญฉ่ำ"},
-{id:"43915",name:"เด็กหญิงเจน่าดาว เลฟเฟ่"},
-{id:"43928",name:"เด็กหญิงญาณิณี โพธิ์ยวง"},
-{id:"43934",name:"เด็กหญิงฐานิตา ทัศศรีษะ"},
-{id:"43936",name:"เด็กหญิงณฉัตร ปิ่นสุข"},
-{id:"43944",name:"เด็กหญิงณรัญชน์รัตน์ พระสุพรรณ"},
-{id:"43945",name:"เด็กหญิงณัชชรี เที่ยงตรง"},
-{id:"43954",name:"เด็กหญิงณัฐกฤตา ท้วมโคกหม้อ"},
-{id:"44000",name:"เด็กหญิงบุญยนุช บุญยืน"},
-{id:"44031",name:"เด็กหญิงพลอยนวพัชร คีรีวัล"},
-{id:"44048",name:"เด็กหญิงภวรัญชน์ ต่อวิววรรธ"},
-{id:"44097",name:"เด็กหญิงศิริวีรินทร์ วันเชียง"},
-{id:"44098",name:"เด็กหญิงศุภรดา พินิจมนตรี"},
-{id:"44117",name:"เด็กหญิงอลิน สุตะพันธ์"},
-{id:"44123",name:"เด็กหญิงไอลดา สิงห์จันทร์"}
-]
+const ADMIN="123456";
 
-let data=JSON.parse(localStorage.getItem("att14")||"{}")
+const subjects=["ไทย","คณิต","วิทย์","อังกฤษ","สังคม","ประวัติ","สุข","พละ","ศิลปะ","ดนตรี","การงาน","เทคโน","จีน"];
 
-function today(){
-return document.getElementById("date").value
+const students=[
+{id:"41235",name:"กิตติพงศ์ ศรีทอง"},
+{id:"43821",name:"ปราณี วงศ์วรรณ"},
+{id:"42759",name:"พีรวัญ มณีโชติ"},
+{id:"46503",name:"ชลธิชา ใจดี"},
+{id:"48972",name:"พิชญสินี แก้วมณี"},
+{id:"45186",name:"นรินทร์ แสงทอง"},
+{id:"47329",name:"อริสรา พิทักษ์ใจ"},
+{id:"49614",name:"ภูมิพัฒน์ สุขเกษม"},
+{id:"48257",name:"ธีรภัทร วัฒนสุข"},
+{id:"45491",name:"ชุติมา บุญรอด"},
+{id:"42578",name:"ศุภชัย นิ่มนวล"},
+{id:"46302",name:"ณัฐยา รัตนสกุล"},
+{id:"47953",name:"พรทิพย์ กาญจนรักษ์"},
+{id:"48716",name:"อัครพล ประเสริฐสุข"},
+{id:"49328",name:"วรัญญา ศรีเจริญ"},
+{id:"46825",name:"ธนกร แก้วเกิด"},
+{id:"45297",name:"มนัสนันท์ บุญญา"},
+{id:"47490",name:"ศศิธร Lucas"},
+{id:"48136",name:"ภาณุพงศ์ แก้วตา"},
+{id:"45672",name:"ชธร ชัยมงคล"},
+{id:"47904",name:"กัญญารัตน์ พัฒน์โชค"},
+{id:"46285",name:"อนุชา ศรีวิชัย"},
+{id:"48419",name:"พิมพ์ชนก ทองดี"},
+{id:"45703",name:"ธันวัฒน์ สวัสดิวงศ์"},
+{id:"49068",name:"ปริญญา ชื่นใจ"},
+{id:"46859",name:"รัตนา สายทอง"},
+{id:"47216",name:"วรวีร์ แสงสว่าง"},
+{id:"48175",name:"พัชรินทร์ สุขสม"},
+{id:"49357",name:"อรินทรา จันทร์เพ็ญ"},
+{id:"48426",name:"Alexander Michael Smith"},
+{id:"43881",name:"กฤติญดา ถีรวงศ์"},
+{id:"44123",name:"ไอลดาสิงห์ จันทร์"}
+];
+
+let db=JSON.parse(localStorage.getItem("db")||"{}");
+
+if(Object.keys(db).length==0){
+students.forEach(s=>{
+db[s.id]={};
+subjects.forEach(sub=>db[s.id][sub]=Math.floor(Math.random()*41)+60);
+});
+localStorage.setItem("db",JSON.stringify(db));
 }
 
-function init(){
-document.getElementById("date").value=new Date().toISOString().slice(0,10)
-draw()
+function grade(x){
+if(x>=80)return["A",4];
+if(x>=75)return["B+",3.5];
+if(x>=70)return["B",3];
+if(x>=65)return["C+",2.5];
+if(x>=60)return["C",2];
+if(x>=55)return["D+",1.5];
+if(x>=50)return["D",1];
+return["F",0];
 }
 
-function draw(){
+home();
 
-let d=today()
-if(!data[d]){
-data[d]=baseStudents.map(s=>({...s,status:"",yellow:0,score:100}))
-save()
+function home(){
+app.innerHTML=`
+<div class=card>
+<h2>🏫 ICE Student Portal</h2>
+<button onclick=studentLogin()>Student Login</button>
+<button onclick=adminLogin()>Admin Login</button>
+</div>`;
 }
 
-let students=data[d]
-let come=0,abs=0
-
-let html=`<tr>
-<th>เลข</th><th>ชื่อ</th>
-<th>มา</th><th>ขาด</th><th>สาย</th>
-<th>ใบเหลือง</th><th>คะแนน</th></tr>`
-
-students.forEach((s,i)=>{
-
-if(s.status=="มา") come++
-if(s.status=="ขาด") abs++
-
-html+=`
-<tr class="${s.status=='ขาด'?'absent':''}">
-<td>${s.id}</td>
-<td>${s.name}</td>
-
-<td><input type="radio" name="${i}" ${s.status=="มา"?"checked":""} onchange="setS(${i},'มา')"></td>
-<td><input type="radio" name="${i}" ${s.status=="ขาด"?"checked":""} onchange="setS(${i},'ขาด')"></td>
-<td><input type="radio" name="${i}" ${s.status=="สาย"?"checked":""} onchange="setS(${i},'สาย')"></td>
-
-<td>
-${s.yellow}<br>
-<button onclick="yellow(${i})">+</button>
-<button onclick="unyellow(${i})">-</button>
-</td>
-
-<td>${s.score}</td>
-</tr>`
-})
-
-document.getElementById("table").innerHTML=html
-document.getElementById("summary").innerHTML=`✅ มา ${come} | ❌ ขาด ${abs}`
+function studentLogin(){
+app.innerHTML=`<div class=card>
+<h3>Student Login</h3>
+<input id=sid placeholder="Student ID"><br><br>
+<button onclick=student()>Login</button>
+<button onclick=home()>Home</button>
+</div>`;
 }
 
-function setS(i,v){
-data[today()][i].status=v
-save()
-draw()
+function adminLogin(){
+app.innerHTML=`<div class=card>
+<h3>Admin Login</h3>
+<input id=ap type=password placeholder="Admin Password"><br><br>
+<button onclick=admin()>Login</button>
+<button onclick=home()>Home</button>
+</div>`;
 }
 
-function yellow(i){
-data[today()][i].yellow++
-data[today()][i].score-=5
-save();draw()
+function admin(){
+if(ap.value!=ADMIN){alert("Wrong password");return;}
+
+let h="<div class=card><h3>ADMIN PANEL</h3><table><tr><th>Name</th>";
+
+subjects.forEach(s=>h+=`<th>${s}</th>`);
+h+="</tr>";
+
+students.forEach(st=>{
+h+=`<tr><td>${st.name}</td>`;
+subjects.forEach(sub=>{
+h+=`<td contenteditable oninput="db['${st.id}']['${sub}']=Number(this.innerText)||0">${db[st.id][sub]}</td>`;
+});
+h+="</tr>";
+});
+
+h+=`</table><br><button onclick=save()>Save</button> <button onclick=home()>Home</button></div>`;
+app.innerHTML=h;
 }
 
-function unyellow(i){
-if(data[today()][i].yellow>0){
-data[today()][i].yellow--
-data[today()][i].score+=5
-save();draw()
-}
+function student(){
+let id=sid.value;
+let st=students.find(x=>x.id==id);
+if(!st){alert("Not found");return;}
+
+let gpa=0;
+
+let h=`<div class=card><h3>${st.name}</h3>
+<table><tr><th>Subject</th><th>Score</th><th>Grade</th></tr>`;
+
+subjects.forEach(sub=>{
+let g=grade(db[id][sub]);
+gpa+=g[1];
+h+=`<tr><td>${sub}</td><td>${db[id][sub]}</td><td>${g[0]}</td></tr>`;
+});
+
+h+=`</table><br><b>GPA ${(gpa/subjects.length).toFixed(2)}</b><br><br>
+<button onclick=home()>Home</button></div>`;
+app.innerHTML=h;
 }
 
 function save(){
-localStorage.setItem("att14",JSON.stringify(data))
+localStorage.setItem("db",JSON.stringify(db));
+alert("Saved!");
 }
-
-function exportCSV(){
-let csv="วันที่,เลข,ชื่อ,สถานะ,ใบเหลือง,คะแนน\n"
-Object.keys(data).forEach(d=>{
-data[d].forEach(s=>{
-csv+=`${d},${s.id},${s.name},${s.status},${s.yellow},${s.score}\n`
-})
-})
-let blob=new Blob([csv])
-let a=document.createElement("a")
-a.href=URL.createObjectURL(blob)
-a.download="attendance2week.csv"
-a.click()
-}
-
-function clearAll(){
-if(confirm("ล้างทั้งหมด?")){
-localStorage.removeItem("att14")
-location.reload()
-}
-}
-
-init()
 
 </script>
-
 </body>
 </html>
