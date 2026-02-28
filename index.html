@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ระบบประกาศผลแฟชั่นโชว์</title>
+<title>ระบบแฟชั่นโชว์</title>
 
 <style>
 body {
@@ -12,42 +12,34 @@ body {
     text-align: center;
     padding: 30px;
 }
-
 .container {
     background: white;
     padding: 20px;
     border-radius: 15px;
-    max-width: 700px;
+    max-width: 750px;
     margin: auto;
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
-
-input {
-    padding: 6px;
-    margin: 5px;
-}
-
+input { padding:6px; margin:5px; }
 button {
-    padding: 6px 12px;
+    padding:6px 12px;
     background: purple;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
+    color:white;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
 }
-
 .admin-panel {
-    display: none;
-    margin-top: 20px;
-    padding: 15px;
-    background: #f3e8ff;
-    border-radius: 10px;
+    display:none;
+    margin-top:20px;
+    padding:15px;
+    background:#f3e8ff;
+    border-radius:10px;
 }
-
-.score-box {
-    margin: 10px 0;
+.result-box {
+    margin-top:15px;
+    font-weight:bold;
 }
-
 h2 { color: purple; }
 </style>
 </head>
@@ -55,9 +47,13 @@ h2 { color: purple; }
 <body>
 
 <div class="container">
-<h2>✨ ผลการแข่งขันแฟชั่นโชว์ ✨</h2>
+<h2>✨ ระบบคะแนนแฟชั่นโชว์ ✨</h2>
 
-<div id="results"></div>
+<h3>🔎 ตรวจสอบคะแนนของตนเอง</h3>
+<input type="password" id="userCode" placeholder="กรอกรหัสประจำตัว">
+<button onclick="checkScore()">ดูคะแนน</button>
+
+<div class="result-box" id="userResult"></div>
 
 <hr>
 
@@ -67,30 +63,40 @@ h2 { color: purple; }
 
 <div class="admin-panel" id="adminPanel">
 <h3>⚙️ แก้ไขคะแนน</h3>
-
 <div id="editScores"></div>
-
 <button onclick="saveScores()">บันทึกคะแนน</button>
 </div>
 
 </div>
 
 <script>
-let adminPassword = "1234"; // เปลี่ยนรหัสได้ตรงนี้
+let adminPassword = "9999"; // รหัสแอดมิน
 
 let contestants = [
-    {name: "อัญญา", score: 85},
-    {name: "ภูมิ", score: 80},
-    {name: "พิม", score: 75}
+    {name:"อัญญา", code:"1111", score:85},
+    {name:"ภูมิ", code:"2222", score:80},
+    {name:"พิม", code:"3333", score:75}
 ];
 
-function displayResults() {
-    let sorted = [...contestants].sort((a,b)=> b.score - a.score);
-    let html = "";
-    sorted.forEach((c, index)=>{
-        html += `<div>อันดับ ${index+1}: ${c.name} - ${c.score} คะแนน</div>`;
-    });
-    document.getElementById("results").innerHTML = html;
+function getRankings() {
+    return [...contestants].sort((a,b)=> b.score - a.score);
+}
+
+function checkScore() {
+    let code = document.getElementById("userCode").value;
+    let resultBox = document.getElementById("userResult");
+    let rankings = getRankings();
+
+    let found = rankings.find(c => c.code === code);
+
+    if(found) {
+        let rank = rankings.indexOf(found) + 1;
+        resultBox.innerHTML = `คุณคือ ${found.name}<br>คะแนน: ${found.score}<br>อันดับที่: ${rank}`;
+        resultBox.style.color = "green";
+    } else {
+        resultBox.innerHTML = "❌ ไม่พบรหัสนี้";
+        resultBox.style.color = "red";
+    }
 }
 
 function loginAdmin() {
@@ -104,12 +110,12 @@ function loginAdmin() {
 }
 
 function loadEditPanel() {
-    let html = "";
+    let html="";
     contestants.forEach((c,index)=>{
         html += `
-        <div class="score-box">
-            ${c.name} :
-            <input type="number" id="score${index}" value="${c.score}">
+        <div>
+        ${c.name} (${c.code}) :
+        <input type="number" id="score${index}" value="${c.score}">
         </div>
         `;
     });
@@ -121,11 +127,9 @@ function saveScores() {
         let newScore = document.getElementById("score"+index).value;
         c.score = parseInt(newScore);
     });
-    displayResults();
     alert("บันทึกคะแนนแล้ว!");
 }
 
-displayResults();
 </script>
 
 </body>
