@@ -2,26 +2,37 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<title>ระบบโรงเรียน PRO</title>
+<title>ระบบโรงเรียน I.C.E.C</title>
 <style>
 body { font-family: Arial; background:#eef2f7; text-align:center; }
-.box { background:white; padding:20px; margin:20px auto; width:350px; border-radius:10px; box-shadow:0 0 10px gray;}
+.box { background:white; padding:20px; margin:20px auto; width:380px; border-radius:10px; box-shadow:0 0 10px gray;}
 input, select { padding:8px; margin:5px; width:90%; }
 button { padding:10px; margin:5px; border:none; border-radius:5px; cursor:pointer; background:#4CAF50; color:white;}
+.admin { background:#222; color:white; }
 </style>
 </head>
 
 <body>
 
-<h1>🏫 ระบบโรงเรียน PRO</h1>
+<h1>🏫 ระบบโรงเรียน PRO+</h1>
 
+<!-- ครูลงเวลา -->
 <div class="box">
 <h3>👩‍🏫 ลงเวลา (ก่อน 10:00)</h3>
-<input type="text" id="teacher" placeholder="ชื่อครู">
+
+<select id="teacher">
+<option>พิตต้า</option>
+<option>วันเฮง</option>
+<option>ซีเกม</option>
+<option>ข้าวหอม</option>
+</select>
+
+<input type="password" id="teacherPass" placeholder="รหัสครู">
 <button onclick="checkIn()">ลงเวลา</button>
 <p id="checkStatus"></p>
 </div>
 
+<!-- ใส่คะแนน -->
 <div class="box">
 <h3>📊 ใส่คะแนนนักเรียน</h3>
 
@@ -38,6 +49,7 @@ button { padding:10px; margin:5px; border:none; border-radius:5px; cursor:pointe
 
 <select id="subject">
 <option>ภาษาไทย</option>
+<option>ภาษาอังกฤษ</option>
 <option>สังคม</option>
 <option>การงานอาชีพ</option>
 <option>พละ</option>
@@ -52,38 +64,69 @@ button { padding:10px; margin:5px; border:none; border-radius:5px; cursor:pointe
 <input type="number" id="exam" placeholder="คะแนนสอบ (30)">
 
 <button onclick="saveScore()">บันทึกคะแนน</button>
-
 <p id="result"></p>
 </div>
 
-<div class="box">
-<h3>📋 รายงาน</h3>
-<button onclick="showAll()">แสดงทั้งหมด</button>
-<pre id="report"></pre>
+<!-- แอดมิน -->
+<div class="box admin">
+<h3>🔐 ระบบแอดมิน</h3>
+<input type="password" id="adminPass" placeholder="รหัสแอดมิน">
+<button onclick="showAdmin()">ดูข้อมูล</button>
+<pre id="adminReport"></pre>
 </div>
 
 <script>
-let data = [];
 
+// รหัส
+let teacherPasswords = {
+    "พิตต้า": "111",
+    "วันเฮง": "222",
+    "ซีเกม": "333",
+    "ข้าวหอม": "444"
+};
+
+let adminPassword = "999";
+
+// เก็บข้อมูล
+let checkedTeachers = [];
+let allTeachers = ["พิตต้า","วันเฮง","ซีเกม","ข้าวหอม"];
+let scores = [];
+
+// ลงเวลา
 function checkIn(){
     let name = document.getElementById("teacher").value;
+    let pass = document.getElementById("teacherPass").value;
     let hour = new Date().getHours();
+
+    if(pass !== teacherPasswords[name]){
+        alert("รหัสผิด!");
+        return;
+    }
 
     if(hour >= 10){
         document.getElementById("checkStatus").innerText = "❌ มาสาย";
     } else {
-        document.getElementById("checkStatus").innerText = "✅ ลงเวลาสำเร็จ";
+        document.getElementById("checkStatus").innerText = "✅ ลงเวลาแล้ว";
+    }
+
+    if(!checkedTeachers.includes(name)){
+        checkedTeachers.push(name);
     }
 }
 
+// คำนวณเกรด (แบบมี .5)
 function calcGrade(score){
     if(score >= 80) return 4;
+    if(score >= 75) return 3.5;
     if(score >= 70) return 3;
+    if(score >= 65) return 2.5;
     if(score >= 60) return 2;
+    if(score >= 55) return 1.5;
     if(score >= 50) return 1;
     return 0;
 }
 
+// บันทึกคะแนน
 function saveScore(){
     let cls = document.getElementById("class").value;
     let stu = document.getElementById("student").value;
@@ -94,27 +137,41 @@ function saveScore(){
     let total = (work * 0.7) + (exam * 0.3);
     let grade = calcGrade(total);
 
-    let obj = {
+    scores.push({
         class: cls,
         student: stu,
         subject: sub,
         total: total.toFixed(2),
         grade: grade
-    };
-
-    data.push(obj);
+    });
 
     document.getElementById("result").innerText =
-    `คะแนนรวม: ${total.toFixed(2)} | เกรด: ${grade}`;
+    `คะแนนรวม ${total.toFixed(2)} | เกรด ${grade}`;
 }
 
-function showAll(){
-    let text = "";
-    data.forEach(d=>{
-        text += `ห้อง ${d.class} เลขที่ ${d.student} วิชา ${d.subject} = ${d.total} (เกรด ${d.grade})\n`;
+// แอดมินดูข้อมูล
+function showAdmin(){
+    let pass = document.getElementById("adminPass").value;
+
+    if(pass !== adminPassword){
+        alert("รหัสแอดมินผิด!");
+        return;
+    }
+
+    let text = "📌 ครูที่ยังไม่ลงเวลา:\n";
+
+    let notChecked = allTeachers.filter(t => !checkedTeachers.includes(t));
+    notChecked.forEach(t => text += "- " + t + "\n");
+
+    text += "\n📊 คะแนนนักเรียน:\n";
+
+    scores.forEach(s=>{
+        text += `ห้อง ${s.class} เลขที่ ${s.student} ${s.subject} = ${s.total} (เกรด ${s.grade})\n`;
     });
-    document.getElementById("report").innerText = text;
+
+    document.getElementById("adminReport").innerText = text;
 }
+
 </script>
 
 </body>
