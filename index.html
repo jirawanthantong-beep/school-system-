@@ -2,134 +2,119 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ระบบแฟชั่นโชว์</title>
-
+<title>ระบบโรงเรียน PRO</title>
 <style>
-body {
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #a855f7, #ffffff);
-    text-align: center;
-    padding: 30px;
-}
-.container {
-    background: white;
-    padding: 20px;
-    border-radius: 15px;
-    max-width: 750px;
-    margin: auto;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-}
-input { padding:6px; margin:5px; }
-button {
-    padding:6px 12px;
-    background: purple;
-    color:white;
-    border:none;
-    border-radius:6px;
-    cursor:pointer;
-}
-.admin-panel {
-    display:none;
-    margin-top:20px;
-    padding:15px;
-    background:#f3e8ff;
-    border-radius:10px;
-}
-.result-box {
-    margin-top:15px;
-    font-weight:bold;
-}
-h2 { color: purple; }
+body { font-family: Arial; background:#eef2f7; text-align:center; }
+.box { background:white; padding:20px; margin:20px auto; width:350px; border-radius:10px; box-shadow:0 0 10px gray;}
+input, select { padding:8px; margin:5px; width:90%; }
+button { padding:10px; margin:5px; border:none; border-radius:5px; cursor:pointer; background:#4CAF50; color:white;}
 </style>
 </head>
 
 <body>
 
-<div class="container">
-<h2>✨ ระบบคะแนนแฟชั่นโชว์ ✨</h2>
+<h1>🏫 ระบบโรงเรียน PRO</h1>
 
-<h3>🔎 ตรวจสอบคะแนนของตนเอง</h3>
-<input type="password" id="userCode" placeholder="กรอกรหัสประจำตัว">
-<button onclick="checkScore()">ดูคะแนน</button>
-
-<div class="result-box" id="userResult"></div>
-
-<hr>
-
-<h3>🔐 เข้าสู่ระบบแอดมิน</h3>
-<input type="password" id="adminPass" placeholder="กรอกรหัสแอดมิน">
-<button onclick="loginAdmin()">เข้าสู่ระบบ</button>
-
-<div class="admin-panel" id="adminPanel">
-<h3>⚙️ แก้ไขคะแนน</h3>
-<div id="editScores"></div>
-<button onclick="saveScores()">บันทึกคะแนน</button>
+<div class="box">
+<h3>👩‍🏫 ลงเวลา (ก่อน 10:00)</h3>
+<input type="text" id="teacher" placeholder="ชื่อครู">
+<button onclick="checkIn()">ลงเวลา</button>
+<p id="checkStatus"></p>
 </div>
 
+<div class="box">
+<h3>📊 ใส่คะแนนนักเรียน</h3>
+
+<select id="class">
+<option>3/1</option>
+<option>3/2</option>
+<option>3/3</option>
+</select>
+
+<select id="student">
+<option>1</option>
+<option>2</option>
+</select>
+
+<select id="subject">
+<option>ภาษาไทย</option>
+<option>สังคม</option>
+<option>การงานอาชีพ</option>
+<option>พละ</option>
+<option>สุขศึกษา</option>
+<option>ลูกเสือ</option>
+<option>คณิต</option>
+<option>วิทย์</option>
+<option>ศิลปะ</option>
+</select>
+
+<input type="number" id="work" placeholder="คะแนนเก็บ (70)">
+<input type="number" id="exam" placeholder="คะแนนสอบ (30)">
+
+<button onclick="saveScore()">บันทึกคะแนน</button>
+
+<p id="result"></p>
+</div>
+
+<div class="box">
+<h3>📋 รายงาน</h3>
+<button onclick="showAll()">แสดงทั้งหมด</button>
+<pre id="report"></pre>
 </div>
 
 <script>
-let adminPassword = "9999"; // รหัสแอดมิน
+let data = [];
 
-let contestants = [
-    {name:"นิว", code:"1111", score:85},
-    {name:"เคซี่", code:"2222", score:80},
-    {name:"วันเฮง", code:"3333", score:75}
-];
+function checkIn(){
+    let name = document.getElementById("teacher").value;
+    let hour = new Date().getHours();
 
-function getRankings() {
-    return [...contestants].sort((a,b)=> b.score - a.score);
-}
-
-function checkScore() {
-    let code = document.getElementById("userCode").value;
-    let resultBox = document.getElementById("userResult");
-    let rankings = getRankings();
-
-    let found = rankings.find(c => c.code === code);
-
-    if(found) {
-        let rank = rankings.indexOf(found) + 1;
-        resultBox.innerHTML = `คุณคือ ${found.name}<br>คะแนน: ${found.score}<br>อันดับที่: ${rank}`;
-        resultBox.style.color = "green";
+    if(hour >= 10){
+        document.getElementById("checkStatus").innerText = "❌ มาสาย";
     } else {
-        resultBox.innerHTML = "❌ ไม่พบรหัสนี้";
-        resultBox.style.color = "red";
+        document.getElementById("checkStatus").innerText = "✅ ลงเวลาสำเร็จ";
     }
 }
 
-function loginAdmin() {
-    let pass = document.getElementById("adminPass").value;
-    if(pass === adminPassword) {
-        document.getElementById("adminPanel").style.display = "block";
-        loadEditPanel();
-    } else {
-        alert("รหัสไม่ถูกต้อง!");
-    }
+function calcGrade(score){
+    if(score >= 80) return 4;
+    if(score >= 70) return 3;
+    if(score >= 60) return 2;
+    if(score >= 50) return 1;
+    return 0;
 }
 
-function loadEditPanel() {
-    let html="";
-    contestants.forEach((c,index)=>{
-        html += `
-        <div>
-        ${c.name} (${c.code}) :
-        <input type="number" id="score${index}" value="${c.score}">
-        </div>
-        `;
+function saveScore(){
+    let cls = document.getElementById("class").value;
+    let stu = document.getElementById("student").value;
+    let sub = document.getElementById("subject").value;
+    let work = Number(document.getElementById("work").value);
+    let exam = Number(document.getElementById("exam").value);
+
+    let total = (work * 0.7) + (exam * 0.3);
+    let grade = calcGrade(total);
+
+    let obj = {
+        class: cls,
+        student: stu,
+        subject: sub,
+        total: total.toFixed(2),
+        grade: grade
+    };
+
+    data.push(obj);
+
+    document.getElementById("result").innerText =
+    `คะแนนรวม: ${total.toFixed(2)} | เกรด: ${grade}`;
+}
+
+function showAll(){
+    let text = "";
+    data.forEach(d=>{
+        text += `ห้อง ${d.class} เลขที่ ${d.student} วิชา ${d.subject} = ${d.total} (เกรด ${d.grade})\n`;
     });
-    document.getElementById("editScores").innerHTML = html;
+    document.getElementById("report").innerText = text;
 }
-
-function saveScores() {
-    contestants.forEach((c,index)=>{
-        let newScore = document.getElementById("score"+index).value;
-        c.score = parseInt(newScore);
-    });
-    alert("บันทึกคะแนนแล้ว!");
-}
-
 </script>
 
 </body>
