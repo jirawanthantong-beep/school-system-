@@ -86,6 +86,14 @@
     .edit:hover {
       background: #3ae9bc;
     }
+
+    #countdownBox {
+      text-align: center;
+      font-size: 22px;
+      margin: 15px 0;
+      color: #ffe66d;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -134,7 +142,8 @@
 
   <div class="box">
     <h2>ดูผลคะแนน</h2>
-    <p>สามารถดูผลได้ตั้งแต่เวลา 20:00 น. เป็นต้นไป</p>
+
+    <div id="countdownBox"></div>
 
     <input type="text" id="userCode" placeholder="กรอกรหัสของคุณ">
     <button onclick="checkScore()">ดูผล</button>
@@ -145,7 +154,6 @@
   <script>
     const adminPassword = "admin123";
     let contestants = [];
-    let releaseHour = 20;
 
     function loginAdmin() {
       const pass = document.getElementById("adminPass").value;
@@ -193,8 +201,6 @@
       document.getElementById("code").value = "";
       document.getElementById("debate").value = "";
       document.getElementById("leader").value = "";
-
-      releaseHour = 20;
     }
 
     function updateTable() {
@@ -272,16 +278,42 @@
       link.click();
     }
 
+    function updateCountdown() {
+      const countdownBox = document.getElementById("countdownBox");
+
+      let targetHour = contestants.length === 0 ? 21 : 20;
+
+      const now = new Date();
+      const target = new Date();
+
+      target.setHours(targetHour, 0, 0, 0);
+
+      if (now >= target) {
+        countdownBox.innerHTML = "เปิดให้ดูผลแล้ว";
+        return;
+      }
+
+      const diff = target - now;
+
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+      countdownBox.innerHTML = `
+        เหลือเวลาอีก ${hours} ชั่วโมง ${minutes} นาที ${seconds} วินาที
+        <br>
+        จะเปิดดูผลเวลา ${targetHour}:00 น.
+      `;
+    }
+
     function checkScore() {
       const code = document.getElementById("userCode").value.trim();
       const resultBox = document.getElementById("resultBox");
 
+      let releaseHour = contestants.length === 0 ? 21 : 20;
+
       const now = new Date();
       const currentHour = now.getHours();
-
-      if (contestants.length === 0) {
-        releaseHour = 21;
-      }
 
       if (currentHour < releaseHour) {
         resultBox.innerHTML = `
@@ -306,6 +338,9 @@
         resultBox.innerHTML = `<p>ไม่พบรหัสนี้</p>`;
       }
     }
+
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
   </script>
 
 </body>
