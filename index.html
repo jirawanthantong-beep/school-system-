@@ -1,202 +1,378 @@
-<script>
-  const adminPassword = "admin123";
-
-  let contestants = JSON.parse(localStorage.getItem("contestants")) || [];
-
-  function saveData() {
-    localStorage.setItem("contestants", JSON.stringify(contestants));
-  }
-
-  function loginAdmin() {
-    const pass = document.getElementById("adminPass").value;
-
-    if (pass === adminPassword) {
-      document.getElementById("adminPanel").classList.remove("hidden");
-      alert("เข้าสู่ระบบแอดมินสำเร็จ");
-    } else {
-      alert("รหัสผ่านไม่ถูกต้อง");
-    }
-  }
-
-  function addContestant() {
-    const name = document.getElementById("name").value.trim();
-    const team = document.getElementById("team").value;
-    const code = document.getElementById("code").value.trim();
-    const debate = parseInt(document.getElementById("debate").value) || 0;
-    const leader = parseInt(document.getElementById("leader").value) || 0;
-
-    if (!name || !code) {
-      alert("กรุณากรอกชื่อและรหัส");
-      return;
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ระบบประกาศผลการแข่งขัน</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #6a11cb, #2575fc);
+      margin: 0;
+      padding: 20px;
+      color: white;
     }
 
-    const duplicate = contestants.find(person => person.code === code);
-    if (duplicate) {
-      alert("รหัสนี้ถูกใช้แล้ว");
-      return;
+    h1, h2 {
+      text-align: center;
     }
 
-    const total = debate + leader;
-
-    contestants.push({
-      name,
-      team,
-      code,
-      debate,
-      leader,
-      total
-    });
-
-    saveData();
-    updateTable();
-
-    document.getElementById("name").value = "";
-    document.getElementById("code").value = "";
-    document.getElementById("debate").value = "";
-    document.getElementById("leader").value = "";
-  }
-
-  function updateTable() {
-    contestants.sort((a, b) => b.total - a.total);
-
-    const tbody = document.querySelector("#adminTable tbody");
-    tbody.innerHTML = "";
-
-    contestants.forEach((person, index) => {
-      person.rank = index + 1;
-
-      tbody.innerHTML += `
-        <tr>
-          <td>${person.name}</td>
-          <td>${person.team}</td>
-          <td>${person.code}</td>
-          <td>${person.debate}</td>
-          <td>${person.leader}</td>
-          <td>${person.total}</td>
-          <td>${person.rank}</td>
-          <td>
-            <button class="edit" onclick="editContestant(${index})">แก้ไข</button>
-            <button class="danger" onclick="deleteContestant(${index})">ลบ</button>
-          </td>
-        </tr>
-      `;
-    });
-
-    saveData();
-  }
-
-  function editContestant(index) {
-    const person = contestants[index];
-
-    const newName = prompt("ชื่อใหม่", person.name);
-    const newTeam = prompt("ทีมใหม่ (ทีมมายู หรือ ทีมเถิด)", person.team);
-    const newDebate = prompt("คะแนนโต้วาทีใหม่", person.debate);
-    const newLeader = prompt("คะแนนศึกผู้นำใหม่", person.leader);
-
-    if (newName !== null) person.name = newName;
-    if (newTeam !== null && (newTeam === "ทีมมายู" || newTeam === "ทีมเถิด")) {
-      person.team = newTeam;
+    .box {
+      background: rgba(255,255,255,0.1);
+      padding: 20px;
+      border-radius: 15px;
+      margin: 20px auto;
+      max-width: 1000px;
+      backdrop-filter: blur(10px);
     }
-    if (newDebate !== null) person.debate = parseInt(newDebate) || 0;
-    if (newLeader !== null) person.leader = parseInt(newLeader) || 0;
 
-    person.total = person.debate + person.leader;
+    input, select, button {
+      padding: 10px;
+      margin: 5px;
+      border-radius: 8px;
+      border: none;
+      font-size: 15px;
+    }
 
-    saveData();
-    updateTable();
-  }
+    input, select {
+      width: 180px;
+    }
 
-  function deleteContestant(index) {
-    if (confirm("ต้องการลบข้อมูลนี้หรือไม่")) {
-      contestants.splice(index, 1);
+    button {
+      background: #ff9f1c;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #ffbf69;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+      background: rgba(255,255,255,0.1);
+    }
+
+    th, td {
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 10px;
+      text-align: center;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .rank {
+      color: #ffe66d;
+      font-size: 22px;
+      margin-top: 10px;
+    }
+
+    .danger {
+      background: #e63946;
+    }
+
+    .danger:hover {
+      background: #ff5d73;
+    }
+
+    .edit {
+      background: #06d6a0;
+    }
+
+    .edit:hover {
+      background: #3ae9bc;
+    }
+
+    #countdownBox {
+      text-align: center;
+      font-size: 22px;
+      margin: 15px 0;
+      color: #ffe66d;
+      font-weight: bold;
+    }
+
+    .winner {
+      background: rgba(255, 215, 0, 0.2);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>ระบบประกาศผลการแข่งขัน</h1>
+
+  <div class="box">
+    <h2>เข้าสู่ระบบแอดมิน</h2>
+    <input type="password" id="adminPass" placeholder="รหัสผ่านแอดมิน">
+    <button onclick="loginAdmin()">เข้าสู่ระบบ</button>
+
+    <div id="adminPanel" class="hidden">
+      <h2>เพิ่มผู้เข้าแข่งขัน</h2>
+
+      <input type="text" id="name" placeholder="ชื่อผู้แข่งขัน">
+
+      <select id="team">
+        <option value="ทีมมายู">ทีมมายู</option>
+        <option value="ทีมเถิด">ทีมเถิด</option>
+      </select>
+
+      <input type="text" id="code" placeholder="รหัสเข้าดูผล">
+      <input type="number" id="debate" placeholder="โต้วาที /100">
+      <input type="number" id="leader" placeholder="ศึกผู้นำ /100">
+
+      <button onclick="addContestant()">บันทึกคะแนน</button>
+      <button onclick="exportCSV()">ดาวน์โหลด CSV</button>
+      <button class="danger" onclick="clearAllData()">ลบข้อมูลทั้งหมด</button>
+
+      <table id="adminTable">
+        <thead>
+          <tr>
+            <th>อันดับ</th>
+            <th>ชื่อ</th>
+            <th>ทีม</th>
+            <th>รหัส</th>
+            <th>โต้วาที</th>
+            <th>ศึกผู้นำ</th>
+            <th>รวม</th>
+            <th>จัดการ</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="box">
+    <h2>ดูผลคะแนน</h2>
+
+    <div id="countdownBox"></div>
+
+    <input type="text" id="userCode" placeholder="กรอกรหัสของคุณ">
+    <button onclick="checkScore()">ดูผล</button>
+
+    <div id="resultBox"></div>
+  </div>
+
+  <script>
+    const adminPassword = "admin123";
+
+    let contestants = JSON.parse(localStorage.getItem("contestants")) || [];
+
+    function saveData() {
+      localStorage.setItem("contestants", JSON.stringify(contestants));
+    }
+
+    function loginAdmin() {
+      const pass = document.getElementById("adminPass").value;
+
+      if (pass === adminPassword) {
+        document.getElementById("adminPanel").classList.remove("hidden");
+        alert("เข้าสู่ระบบแอดมินสำเร็จ");
+      } else {
+        alert("รหัสผ่านไม่ถูกต้อง");
+      }
+    }
+
+    function addContestant() {
+      const name = document.getElementById("name").value.trim();
+      const team = document.getElementById("team").value;
+      const code = document.getElementById("code").value.trim();
+      const debate = parseInt(document.getElementById("debate").value) || 0;
+      const leader = parseInt(document.getElementById("leader").value) || 0;
+
+      if (!name || !code) {
+        alert("กรุณากรอกชื่อและรหัส");
+        return;
+      }
+
+      if (debate > 100 || leader > 100) {
+        alert("คะแนนต้องไม่เกิน 100");
+        return;
+      }
+
+      const duplicate = contestants.find(person => person.code === code);
+
+      if (duplicate) {
+        alert("รหัสนี้ถูกใช้แล้ว");
+        return;
+      }
+
+      const total = debate + leader;
+
+      contestants.push({
+        name,
+        team,
+        code,
+        debate,
+        leader,
+        total,
+        rank: 0
+      });
+
+      saveData();
+      updateTable();
+
+      document.getElementById("name").value = "";
+      document.getElementById("code").value = "";
+      document.getElementById("debate").value = "";
+      document.getElementById("leader").value = "";
+    }
+
+    function updateTable() {
+      contestants.sort((a, b) => b.total - a.total);
+
+      contestants.forEach((person, index) => {
+        person.rank = index + 1;
+      });
+
+      saveData();
+
+      const tbody = document.querySelector("#adminTable tbody");
+      tbody.innerHTML = "";
+
+      contestants.forEach((person, index) => {
+        tbody.innerHTML += `
+          <tr class="${person.rank === 1 ? 'winner' : ''}">
+            <td>${person.rank}</td>
+            <td>${person.name}</td>
+            <td>${person.team}</td>
+            <td>${person.code}</td>
+            <td>${person.debate}</td>
+            <td>${person.leader}</td>
+            <td>${person.total}</td>
+            <td>
+              <button class="edit" onclick="editContestant(${index})">แก้ไข</button>
+              <button class="danger" onclick="deleteContestant(${index})">ลบ</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    function editContestant(index) {
+      const person = contestants[index];
+
+      const newName = prompt("ชื่อใหม่", person.name);
+      const newTeam = prompt("ทีมใหม่", person.team);
+      const newDebate = prompt("คะแนนโต้วาทีใหม่", person.debate);
+      const newLeader = prompt("คะแนนศึกผู้นำใหม่", person.leader);
+
+      if (newName !== null) person.name = newName;
+      if (newTeam !== null) person.team = newTeam;
+      if (newDebate !== null) person.debate = parseInt(newDebate) || 0;
+      if (newLeader !== null) person.leader = parseInt(newLeader) || 0;
+
+      if (person.debate > 100) person.debate = 100;
+      if (person.leader > 100) person.leader = 100;
+
+      person.total = person.debate + person.leader;
+
       saveData();
       updateTable();
     }
-  }
 
-  function exportCSV() {
-    if (contestants.length === 0) {
-      alert("ยังไม่มีข้อมูล");
-      return;
+    function deleteContestant(index) {
+      if (confirm("ต้องการลบข้อมูลนี้หรือไม่")) {
+        contestants.splice(index, 1);
+        saveData();
+        updateTable();
+      }
     }
 
-    let csvContent = "ชื่อ,ทีม,รหัส,โต้วาที,ศึกผู้นำ,รวมคะแนน,อันดับ\n";
-
-    contestants.forEach(person => {
-      csvContent += `${person.name},${person.team},${person.code},${person.debate},${person.leader},${person.total},${person.rank}\n`;
-    });
-
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "ผลการแข่งขัน.csv";
-    link.click();
-  }
-
-  function updateCountdown() {
-    const countdownBox = document.getElementById("countdownBox");
-
-    let targetHour = contestants.length === 0 ? 21 : 20;
-
-    const now = new Date();
-    const target = new Date();
-
-    target.setHours(targetHour, 0, 0, 0);
-
-    if (now >= target) {
-      countdownBox.innerHTML = "เปิดให้ดูผลแล้ว";
-      return;
+    function clearAllData() {
+      if (confirm("คุณต้องการลบข้อมูลทั้งหมดหรือไม่")) {
+        contestants = [];
+        saveData();
+        updateTable();
+        document.getElementById("resultBox").innerHTML = "";
+      }
     }
 
-    const diff = target - now;
+    function exportCSV() {
+      if (contestants.length === 0) {
+        alert("ยังไม่มีข้อมูล");
+        return;
+      }
 
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      let csvContent = "อันดับ,ชื่อ,ทีม,รหัส,โต้วาที,ศึกผู้นำ,รวมคะแนน\n";
 
-    countdownBox.innerHTML = `
-      เหลือเวลาอีก ${hours} ชั่วโมง ${minutes} นาที ${seconds} วินาที
-      <br>
-      จะเปิดดูผลเวลา ${targetHour}:00 น.
-    `;
-  }
+      contestants.forEach(person => {
+        csvContent += `${person.rank},${person.name},${person.team},${person.code},${person.debate},${person.leader},${person.total}\n`;
+      });
 
-  function checkScore() {
-    const code = document.getElementById("userCode").value.trim();
-    const resultBox = document.getElementById("resultBox");
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
 
-    let releaseHour = contestants.length === 0 ? 21 : 20;
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "ผลการแข่งขัน.csv";
+      link.click();
+    }
 
-    const now = new Date();
-    const currentHour = now.getHours();
+    function updateCountdown() {
+      const countdownBox = document.getElementById("countdownBox");
 
-    if (currentHour < releaseHour) {
-      resultBox.innerHTML = `
-        <p>ยังไม่สามารถดูผลได้</p>
-        <p>สามารถดูผลได้ตั้งแต่เวลา ${releaseHour}:00 น.</p>
+      const now = new Date();
+      const target = new Date();
+
+      target.setHours(20, 0, 0, 0);
+
+      if (now >= target) {
+        countdownBox.innerHTML = "เปิดให้ดูผลแล้ว";
+        return;
+      }
+
+      const diff = target - now;
+
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+      countdownBox.innerHTML = `
+        เหลือเวลาอีก ${hours} ชั่วโมง ${minutes} นาที ${seconds} วินาที
+        <br>
+        จะเปิดดูผลเวลา 20:00 น.
       `;
-      return;
     }
 
-    const person = contestants.find(item => item.code === code);
+    function checkScore() {
+      const code = document.getElementById("userCode").value.trim();
+      const resultBox = document.getElementById("resultBox");
 
-    if (person) {
-      resultBox.innerHTML = `
-        <h3>${person.name}</h3>
-        <p>ทีม: ${person.team}</p>
-        <p>รอบที่ 1 โต้วาที: ${person.debate} / 100</p>
-        <p>รอบที่ 2 ศึกชิงความเป็นผู้นำ: ${person.leader} / 100</p>
-        <p><strong>รวมคะแนน: ${person.total} / 200</strong></p>
-        <div class="rank">อันดับที่ ${person.rank}</div>
-      `;
-    } else {
-      resultBox.innerHTML = `<p>ไม่พบรหัสนี้</p>`;
+      const now = new Date();
+      const currentHour = now.getHours();
+
+      if (currentHour < 20) {
+        resultBox.innerHTML = `
+          <p>ยังไม่สามารถดูผลได้</p>
+          <p>สามารถดูผลได้ตั้งแต่เวลา 20:00 น.</p>
+        `;
+        return;
+      }
+
+      const person = contestants.find(item => item.code === code);
+
+      if (person) {
+        resultBox.innerHTML = `
+          <h3>${person.name}</h3>
+          <p>ทีม: ${person.team}</p>
+          <p>คะแนนโต้วาที: ${person.debate} / 100</p>
+          <p>คะแนนศึกผู้นำ: ${person.leader} / 100</p>
+          <p><strong>รวมคะแนน: ${person.total} / 200</strong></p>
+          <div class="rank">อันดับที่ ${person.rank}</div>
+        `;
+      } else {
+        resultBox.innerHTML = "<p>ไม่พบรหัสนี้</p>";
+      }
     }
-  }
 
-  updateTable();
-  setInterval(updateCountdown, 1000);
-  updateCountdown();
-</script>
+    updateTable();
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+  </script>
+
+</body>
+</html>
