@@ -1,173 +1,312 @@
-	<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<title>เว็บไซต์โรงเรียน I.C.E.C</title>
-<style>
-body { font-family: Arial; background:#eef2f7; text-align:center; }
-.box { background:white; padding:20px; margin:20px auto; width:380px; border-radius:10px; box-shadow:0 0 10px gray;}
-input, select { padding:8px; margin:5px; width:90%; }
-button { padding:10px; margin:5px; border:none; border-radius:5px; cursor:pointer; background:#6a5acd; color:white;}
-.admin { background:#222; color:white; }
-</style>
-</head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ระบบประกาศผลการแข่งขัน</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #6a11cb, #2575fc);
+      margin: 0;
+      padding: 20px;
+      color: white;
+    }
 
+    h1, h2 {
+      text-align: center;
+    }
+
+    .box {
+      background: rgba(255,255,255,0.1);
+      padding: 20px;
+      border-radius: 15px;
+      margin: 20px auto;
+      max-width: 1000px;
+      backdrop-filter: blur(10px);
+    }
+
+    input, select, button {
+      padding: 10px;
+      margin: 5px;
+      border-radius: 8px;
+      border: none;
+      font-size: 15px;
+    }
+
+    input, select {
+      width: 180px;
+    }
+
+    button {
+      background: #ff9f1c;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #ffbf69;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+      background: rgba(255,255,255,0.1);
+    }
+
+    th, td {
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 10px;
+      text-align: center;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .rank {
+      color: #ffe66d;
+      font-size: 22px;
+      margin-top: 10px;
+    }
+
+    .danger {
+      background: #e63946;
+    }
+
+    .danger:hover {
+      background: #ff5d73;
+    }
+
+    .edit {
+      background: #06d6a0;
+    }
+
+    .edit:hover {
+      background: #3ae9bc;
+    }
+  </style>
+</head>
 <body>
 
-<h1>🏫 เว็บไซต์โรงเรียน I.C.E.C</h1>
+  <h1>ระบบประกาศผลการแข่งขัน</h1>
 
-<div class="box">
-<h3>👩‍🏫 ลงเวลา (ก่อน 10:00)</h3>
-<select id="teacher">
-<option>พิตต้า</option>
-<option>วันเฮง</option>
-<option>ซีเกม</option>
-<option>ข้าวหอม</option>
-</select>
-<input type="password" id="teacherPass" placeholder="รหัสครู">
-<button onclick="checkIn()">ลงเวลา</button>
-<p id="checkStatus"></p>
-</div>
+  <div class="box">
+    <h2>เข้าสู่ระบบแอดมิน</h2>
+    <input type="password" id="adminPass" placeholder="รหัสผ่านแอดมิน">
+    <button onclick="loginAdmin()">เข้าสู่ระบบ</button>
 
-<div class="box">
-<h3>📊 ใส่คะแนนนักเรียน</h3>
+    <div id="adminPanel" class="hidden">
+      <h2>เพิ่มผู้เข้าแข่งขัน</h2>
 
-<select id="class">
-<option>3/1</option>
-<option>3/2</option>
-<option>3/3</option>
-</select>
+      <input type="text" id="name" placeholder="ชื่อผู้แข่งขัน">
 
-<select id="student">
-<option>1</option>
-<option>2</option>
-</select>
+      <select id="team">
+        <option value="ทีมมายู">ทีมมายู</option>
+        <option value="ทีมเถิด">ทีมเถิด</option>
+      </select>
 
-<select id="subject">
-<option>ภาษาไทย</option>
-<option>ภาษาอังกฤษ</option>
-<option>สังคม</option>
-<option>การงานอาชีพ</option>
-<option>พละ</option>
-<option>สุขศึกษา</option>
-<option>ลูกเสือ</option>
-<option>คณิต</option>
-<option>วิทย์</option>
-<option>ศิลปะ</option>
-</select>
+      <input type="text" id="code" placeholder="รหัสเข้าดูผล">
+      <input type="number" id="debate" placeholder="โต้วาที /100">
+      <input type="number" id="leader" placeholder="ศึกผู้นำ /100">
 
-<input type="number" id="work" placeholder="คะแนนเก็บ (เต็ม 70)">
-<input type="number" id="exam" placeholder="คะแนนสอบ (เต็ม 30)">
+      <button onclick="addContestant()">บันทึกคะแนน</button>
+      <button onclick="exportCSV()">ดาวน์โหลด CSV</button>
 
-<button onclick="saveScore()">บันทึกคะแนน</button>
-<p id="result"></p>
-</div>
+      <table id="adminTable">
+        <thead>
+          <tr>
+            <th>ชื่อ</th>
+            <th>ทีม</th>
+            <th>รหัส</th>
+            <th>โต้วาที</th>
+            <th>ศึกผู้นำ</th>
+            <th>รวม</th>
+            <th>อันดับ</th>
+            <th>จัดการ</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
 
-<div class="box admin">
-<h3>🔐 ระบบแอดมิน</h3>
-<input type="password" id="adminPass" placeholder="รหัสแอดมิน">
-<button onclick="showAdmin()">ดูข้อมูล</button>
-<pre id="adminReport"></pre>
-</div>
+  <div class="box">
+    <h2>ดูผลคะแนน</h2>
+    <p>สามารถดูผลได้ตั้งแต่เวลา 20:00 น. เป็นต้นไป</p>
 
-<script>
+    <input type="text" id="userCode" placeholder="กรอกรหัสของคุณ">
+    <button onclick="checkScore()">ดูผล</button>
 
-let teacherPasswords = {
-    "พิตต้า": "111",
-    "วันเฮง": "222",
-    "ซีเกม": "333",
-    "ข้าวหอม": "444"
-};
+    <div id="resultBox"></div>
+  </div>
 
-let adminPassword = "999";
+  <script>
+    const adminPassword = "admin123";
+    let contestants = [];
+    let releaseHour = 20;
 
-let checkedTeachers = [];
-let allTeachers = ["พิตต้า","วันเฮง","ซีเกม","ข้าวหอม"];
-let scores = [];
+    function loginAdmin() {
+      const pass = document.getElementById("adminPass").value;
 
-function checkIn(){
-    let name = document.getElementById("teacher").value;
-    let pass = document.getElementById("teacherPass").value;
-    let hour = new Date().getHours();
+      if (pass === adminPassword) {
+        document.getElementById("adminPanel").classList.remove("hidden");
+        alert("เข้าสู่ระบบแอดมินสำเร็จ");
+      } else {
+        alert("รหัสผ่านไม่ถูกต้อง");
+      }
+    }
 
-    if(pass !== teacherPasswords[name]){
-        alert("รหัสผิด!");
+    function addContestant() {
+      const name = document.getElementById("name").value.trim();
+      const team = document.getElementById("team").value;
+      const code = document.getElementById("code").value.trim();
+      const debate = parseInt(document.getElementById("debate").value) || 0;
+      const leader = parseInt(document.getElementById("leader").value) || 0;
+
+      if (!name || !code) {
+        alert("กรุณากรอกชื่อและรหัส");
         return;
-    }
+      }
 
-    document.getElementById("checkStatus").innerText =
-    hour >= 10 ? "❌ มาสาย" : "✅ ลงเวลาแล้ว";
-
-    if(!checkedTeachers.includes(name)){
-        checkedTeachers.push(name);
-    }
-}
-
-// เกรด A-F
-function calcGrade(score){
-    if(score >= 80) return {grade:"A", gpa:4.0};
-    if(score >= 75) return {grade:"B+", gpa:3.5};
-    if(score >= 70) return {grade:"B", gpa:3.0};
-    if(score >= 65) return {grade:"C+", gpa:2.5};
-    if(score >= 60) return {grade:"C", gpa:2.0};
-    if(score >= 55) return {grade:"D+", gpa:1.5};
-    if(score >= 50) return {grade:"D", gpa:1.0};
-    return {grade:"F", gpa:0};
-}
-
-function saveScore(){
-    let cls = document.getElementById("class").value;
-    let stu = document.getElementById("student").value;
-    let sub = document.getElementById("subject").value;
-    let work = Number(document.getElementById("work").value);
-    let exam = Number(document.getElementById("exam").value);
-
-    // กันใส่เกิน
-    if(work > 70 || exam > 30){
-        alert("คะแนนเกิน! (เก็บไม่เกิน 70 / สอบไม่เกิน 30)");
+      const duplicate = contestants.find(person => person.code === code);
+      if (duplicate) {
+        alert("รหัสนี้ถูกใช้แล้ว");
         return;
+      }
+
+      const total = debate + leader;
+
+      contestants.push({
+        name,
+        team,
+        code,
+        debate,
+        leader,
+        total
+      });
+
+      updateTable();
+
+      document.getElementById("name").value = "";
+      document.getElementById("code").value = "";
+      document.getElementById("debate").value = "";
+      document.getElementById("leader").value = "";
+
+      releaseHour = 20;
     }
 
-    // ✅ สูตรที่ถูกต้อง
-    let total = work + exam;
+    function updateTable() {
+      contestants.sort((a, b) => b.total - a.total);
 
-    let result = calcGrade(total);
+      const tbody = document.querySelector("#adminTable tbody");
+      tbody.innerHTML = "";
 
-    scores.push({
-        class: cls,
-        student: stu,
-        subject: sub,
-        total: total,
-        grade: result.grade
-    });
+      contestants.forEach((person, index) => {
+        person.rank = index + 1;
 
-    document.getElementById("result").innerText =
-    `คะแนน ${total} / 100 | เกรด ${result.grade}`;
-}
+        tbody.innerHTML += `
+          <tr>
+            <td>${person.name}</td>
+            <td>${person.team}</td>
+            <td>${person.code}</td>
+            <td>${person.debate}</td>
+            <td>${person.leader}</td>
+            <td>${person.total}</td>
+            <td>${person.rank}</td>
+            <td>
+              <button class="edit" onclick="editContestant(${index})">แก้ไข</button>
+              <button class="danger" onclick="deleteContestant(${index})">ลบ</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
 
-function showAdmin(){
-    let pass = document.getElementById("adminPass").value;
+    function editContestant(index) {
+      const person = contestants[index];
 
-    if(pass !== adminPassword){
-        alert("รหัสแอดมินผิด!");
+      const newName = prompt("ชื่อใหม่", person.name);
+      const newTeam = prompt("ทีมใหม่ (ทีมมายู หรือ ทีมเถิด)", person.team);
+      const newDebate = prompt("คะแนนโต้วาทีใหม่", person.debate);
+      const newLeader = prompt("คะแนนศึกผู้นำใหม่", person.leader);
+
+      if (newName !== null) person.name = newName;
+      if (newTeam !== null && (newTeam === "ทีมมายู" || newTeam === "ทีมเถิด")) {
+        person.team = newTeam;
+      }
+      if (newDebate !== null) person.debate = parseInt(newDebate) || 0;
+      if (newLeader !== null) person.leader = parseInt(newLeader) || 0;
+
+      person.total = person.debate + person.leader;
+
+      updateTable();
+    }
+
+    function deleteContestant(index) {
+      if (confirm("ต้องการลบข้อมูลนี้หรือไม่")) {
+        contestants.splice(index, 1);
+        updateTable();
+      }
+    }
+
+    function exportCSV() {
+      if (contestants.length === 0) {
+        alert("ยังไม่มีข้อมูล");
         return;
+      }
+
+      let csvContent = "ชื่อ,ทีม,รหัส,โต้วาที,ศึกผู้นำ,รวมคะแนน,อันดับ\n";
+
+      contestants.forEach(person => {
+        csvContent += `${person.name},${person.team},${person.code},${person.debate},${person.leader},${person.total},${person.rank}\n`;
+      });
+
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "ผลการแข่งขัน.csv";
+      link.click();
     }
 
-    let text = "📌 ครูที่ยังไม่ลงเวลา:\n";
+    function checkScore() {
+      const code = document.getElementById("userCode").value.trim();
+      const resultBox = document.getElementById("resultBox");
 
-    let notChecked = allTeachers.filter(t => !checkedTeachers.includes(t));
-    notChecked.forEach(t => text += "- " + t + "\n");
+      const now = new Date();
+      const currentHour = now.getHours();
 
-    text += "\n📊 คะแนนนักเรียน:\n";
+      if (contestants.length === 0) {
+        releaseHour = 21;
+      }
 
-    scores.forEach(s=>{
-        text += `ห้อง ${s.class} เลขที่ ${s.student} ${s.subject} = ${s.total} (${s.grade})\n`;
-    });
+      if (currentHour < releaseHour) {
+        resultBox.innerHTML = `
+          <p>ยังไม่สามารถดูผลได้</p>
+          <p>สามารถดูผลได้ตั้งแต่เวลา ${releaseHour}:00 น.</p>
+        `;
+        return;
+      }
 
-    document.getElementById("adminReport").innerText = text;
-}
+      const person = contestants.find(item => item.code === code);
 
-</script>
+      if (person) {
+        resultBox.innerHTML = `
+          <h3>${person.name}</h3>
+          <p>ทีม: ${person.team}</p>
+          <p>รอบที่ 1 โต้วาที: ${person.debate} / 100</p>
+          <p>รอบที่ 2 ศึกชิงความเป็นผู้นำ: ${person.leader} / 100</p>
+          <p><strong>รวมคะแนน: ${person.total} / 200</strong></p>
+          <div class="rank">อันดับที่ ${person.rank}</div>
+        `;
+      } else {
+        resultBox.innerHTML = `<p>ไม่พบรหัสนี้</p>`;
+      }
+    }
+  </script>
 
 </body>
-</h 
+</html>
