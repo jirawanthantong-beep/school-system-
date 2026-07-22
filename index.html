@@ -1,378 +1,1258 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ระบบประกาศผลการแข่งขัน</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(to right, #6a11cb, #2575fc);
-      margin: 0;
-      padding: 20px;
-      color: white;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    h1, h2 {
-      text-align: center;
-    }
+<title>ICE Examination System</title>
 
-    .box {
-      background: rgba(255,255,255,0.1);
-      padding: 20px;
-      border-radius: 15px;
-      margin: 20px auto;
-      max-width: 1000px;
-      backdrop-filter: blur(10px);
-    }
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    input, select, button {
-      padding: 10px;
-      margin: 5px;
-      border-radius: 8px;
-      border: none;
-      font-size: 15px;
-    }
+<style>
 
-    input, select {
-      width: 180px;
-    }
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Kanit',sans-serif;
+}
 
-    button {
-      background: #ff9f1c;
-      color: white;
-      cursor: pointer;
-    }
+body{
+background:linear-gradient(135deg,#4F46E5,#7C3AED,#3B82F6);
+min-height:100vh;
+}
 
-    button:hover {
-      background: #ffbf69;
-    }
+.login{
+width:420px;
+background:white;
+padding:40px;
+border-radius:25px;
+position:absolute;
+left:50%;
+top:50%;
+transform:translate(-50%,-50%);
+box-shadow:0 20px 40px rgba(0,0,0,.2);
+}
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 15px;
-      background: rgba(255,255,255,0.1);
-    }
+.logo{
+font-size:55px;
+font-weight:bold;
+text-align:center;
+color:#5B3FFF;
+}
 
-    th, td {
-      border: 1px solid rgba(255,255,255,0.2);
-      padding: 10px;
-      text-align: center;
-    }
+.subtitle{
+text-align:center;
+margin-top:10px;
+margin-bottom:30px;
+color:#777;
+}
 
-    .hidden {
-      display: none;
-    }
+input{
+width:100%;
+padding:15px;
+margin-top:15px;
+border-radius:12px;
+border:1px solid #ddd;
+font-size:16px;
+outline:none;
+transition:.3s;
+}
 
-    .rank {
-      color: #ffe66d;
-      font-size: 22px;
-      margin-top: 10px;
-    }
+input:focus{
+border:1px solid #5B3FFF;
+box-shadow:0 0 10px rgba(91,63,255,.3);
+}
 
-    .danger {
-      background: #e63946;
-    }
+button{
+width:100%;
+padding:15px;
+margin-top:25px;
+border:none;
+background:#5B3FFF;
+color:white;
+font-size:18px;
+border-radius:12px;
+cursor:pointer;
+transition:.3s;
+}
 
-    .danger:hover {
-      background: #ff5d73;
-    }
+button:hover{
+background:#4328d6;
+}
 
-    .edit {
-      background: #06d6a0;
-    }
+.dashboard{
+display:none;
+padding:40px;
+}
 
-    .edit:hover {
-      background: #3ae9bc;
-    }
+header{
+background:white;
+padding:20px;
+border-radius:20px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+box-shadow:0 10px 30px rgba(0,0,0,.15);
+}
 
-    #countdownBox {
-      text-align: center;
-      font-size: 22px;
-      margin: 15px 0;
-      color: #ffe66d;
-      font-weight: bold;
-    }
+header h1{
+color:#5B3FFF;
+}
 
-    .winner {
-      background: rgba(255, 215, 0, 0.2);
-    }
-  </style>
+.menu{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+gap:25px;
+margin-top:35px;
+}
+
+.card{
+background:white;
+border-radius:20px;
+padding:40px;
+text-align:center;
+cursor:pointer;
+transition:.3s;
+box-shadow:0 10px 20px rgba(0,0,0,.15);
+}
+
+.card:hover{
+transform:translateY(-10px);
+}
+
+.card h2{
+color:#5B3FFF;
+margin-bottom:15px;
+}
+
+.page{
+display:none;
+margin-top:30px;
+background:white;
+padding:30px;
+border-radius:20px;
+box-shadow:0 10px 25px rgba(0,0,0,.15);
+}
+
+.back{
+display:inline-block;
+background:#5B3FFF;
+color:white;
+padding:10px 25px;
+border-radius:10px;
+cursor:pointer;
+margin-bottom:20px;
+}
+
+.notice{
+font-size:32px;
+text-align:center;
+padding:80px;
+color:#555;
+}
+
+.choice{
+display:flex;
+justify-content:center;
+gap:25px;
+flex-wrap:wrap;
+margin-top:40px;
+}
+
+.choice button{
+width:240px;
+}
+
+.searchBox{
+display:none;
+margin-top:30px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:25px;
+}
+
+table th{
+background:#5B3FFF;
+color:white;
+padding:12px;
+}
+
+table td{
+padding:12px;
+border:1px solid #ddd;
+text-align:center;
+}
+
+.pass{
+color:green;
+font-size:28px;
+font-weight:bold;
+}
+
+.fail{
+color:red;
+font-size:28px;
+font-weight:bold;
+}
+
+</style>
+
 </head>
+
 <body>
 
-  <h1>ระบบประกาศผลการแข่งขัน</h1>
+<div class="login" id="login">
 
-  <div class="box">
-    <h2>เข้าสู่ระบบแอดมิน</h2>
-    <input type="password" id="adminPass" placeholder="รหัสผ่านแอดมิน">
-    <button onclick="loginAdmin()">เข้าสู่ระบบ</button>
+<div class="logo">ICE</div>
 
-    <div id="adminPanel" class="hidden">
-      <h2>เพิ่มผู้เข้าแข่งขัน</h2>
+<div class="subtitle">
+International Center for Excellence
+</div>
 
-      <input type="text" id="name" placeholder="ชื่อผู้แข่งขัน">
+<input id="username" placeholder="Username">
 
-      <select id="team">
-        <option value="ทีมมายู">ทีมมายู</option>
-        <option value="ทีมเถิด">ทีมเถิด</option>
-      </select>
+<input id="password" type="password" placeholder="Password">
 
-      <input type="text" id="code" placeholder="รหัสเข้าดูผล">
-      <input type="number" id="debate" placeholder="โต้วาที /100">
-      <input type="number" id="leader" placeholder="ศึกผู้นำ /100">
+<button onclick="login()">LOGIN</button>
 
-      <button onclick="addContestant()">บันทึกคะแนน</button>
-      <button onclick="exportCSV()">ดาวน์โหลด CSV</button>
-      <button class="danger" onclick="clearAllData()">ลบข้อมูลทั้งหมด</button>
+</div>
 
-      <table id="adminTable">
-        <thead>
-          <tr>
-            <th>อันดับ</th>
-            <th>ชื่อ</th>
-            <th>ทีม</th>
-            <th>รหัส</th>
-            <th>โต้วาที</th>
-            <th>ศึกผู้นำ</th>
-            <th>รวม</th>
-            <th>จัดการ</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
-  </div>
+<div class="dashboard" id="dashboard">
 
-  <div class="box">
-    <h2>ดูผลคะแนน</h2>
+<header>
 
-    <div id="countdownBox"></div>
+<h1>ICE Examination System</h1>
 
-    <input type="text" id="userCode" placeholder="กรอกรหัสของคุณ">
-    <button onclick="checkScore()">ดูผล</button>
+<button onclick="logout()" style="width:150px;margin-top:0;">Logout</button>
 
-    <div id="resultBox"></div>
-  </div>
+</header>
 
-  <script>
-    const adminPassword = "admin123";
+<div class="menu">
 
-    let contestants = JSON.parse(localStorage.getItem("contestants")) || [];
+<div class="card" onclick="openGrade()">
 
-    function saveData() {
-      localStorage.setItem("contestants", JSON.stringify(contestants));
-    }
+<h2>ผลเกรด</h2>
 
-    function loginAdmin() {
-      const pass = document.getElementById("adminPass").value;
+<p>ตรวจสอบผลการเรียน</p>
 
-      if (pass === adminPassword) {
-        document.getElementById("adminPanel").classList.remove("hidden");
-        alert("เข้าสู่ระบบแอดมินสำเร็จ");
-      } else {
-        alert("รหัสผ่านไม่ถูกต้อง");
-      }
-    }
+</div>
 
-    function addContestant() {
-      const name = document.getElementById("name").value.trim();
-      const team = document.getElementById("team").value;
-      const code = document.getElementById("code").value.trim();
-      const debate = parseInt(document.getElementById("debate").value) || 0;
-      const leader = parseInt(document.getElementById("leader").value) || 0;
+<div class="card" onclick="openComplaint()">
 
-      if (!name || !code) {
-        alert("กรุณากรอกชื่อและรหัส");
-        return;
-      }
+<h2>ใบร้องเรียนการขอแก้สอบ</h2>
 
-      if (debate > 100 || leader > 100) {
-        alert("คะแนนต้องไม่เกิน 100");
-        return;
-      }
+<p>ยื่นคำร้องออนไลน์</p>
 
-      const duplicate = contestants.find(person => person.code === code);
+</div>
 
-      if (duplicate) {
-        alert("รหัสนี้ถูกใช้แล้ว");
-        return;
-      }
+<div class="card" onclick="openExam()">
 
-      const total = debate + leader;
+<h2>ประกาศผลสอบเข้า</h2>
 
-      contestants.push({
-        name,
-        team,
-        code,
-        debate,
-        leader,
-        total,
-        rank: 0
-      });
+<p>Admission Result</p>
 
-      saveData();
-      updateTable();
+</div>
 
-      document.getElementById("name").value = "";
-      document.getElementById("code").value = "";
-      document.getElementById("debate").value = "";
-      document.getElementById("leader").value = "";
-    }
+</div>
+<div class="page" id="gradePage">
 
-    function updateTable() {
-      contestants.sort((a, b) => b.total - a.total);
+<div class="back" onclick="home()">
+← กลับหน้าหลัก
+</div>
 
-      contestants.forEach((person, index) => {
-        person.rank = index + 1;
-      });
+<div class="notice">
+📢<br><br>
+ยังไม่ประกาศผล
+</div>
 
-      saveData();
+</div>
 
-      const tbody = document.querySelector("#adminTable tbody");
-      tbody.innerHTML = "";
+<div class="page" id="complaintPage">
 
-      contestants.forEach((person, index) => {
-        tbody.innerHTML += `
-          <tr class="${person.rank === 1 ? 'winner' : ''}">
-            <td>${person.rank}</td>
-            <td>${person.name}</td>
-            <td>${person.team}</td>
-            <td>${person.code}</td>
-            <td>${person.debate}</td>
-            <td>${person.leader}</td>
-            <td>${person.total}</td>
-            <td>
-              <button class="edit" onclick="editContestant(${index})">แก้ไข</button>
-              <button class="danger" onclick="deleteContestant(${index})">ลบ</button>
-            </td>
-          </tr>
-        `;
-      });
-    }
+<div class="back" onclick="home()">
+← กลับหน้าหลัก
+</div>
 
-    function editContestant(index) {
-      const person = contestants[index];
+<div class="notice">
+📢<br><br>
+ยังไม่เปิดให้ยื่นคำร้อง
+</div>
 
-      const newName = prompt("ชื่อใหม่", person.name);
-      const newTeam = prompt("ทีมใหม่", person.team);
-      const newDebate = prompt("คะแนนโต้วาทีใหม่", person.debate);
-      const newLeader = prompt("คะแนนศึกผู้นำใหม่", person.leader);
+</div>
 
-      if (newName !== null) person.name = newName;
-      if (newTeam !== null) person.team = newTeam;
-      if (newDebate !== null) person.debate = parseInt(newDebate) || 0;
-      if (newLeader !== null) person.leader = parseInt(newLeader) || 0;
+<div class="page" id="examPage">
 
-      if (person.debate > 100) person.debate = 100;
-      if (person.leader > 100) person.leader = 100;
+<div class="back" onclick="home()">
+← กลับหน้าหลัก
+</div>
 
-      person.total = person.debate + person.leader;
+<h2 style="text-align:center;color:#5B3FFF;">
+ประกาศผลสอบเข้า
+</h2>
 
-      saveData();
-      updateTable();
-    }
+<div class="choice">
 
-    function deleteContestant(index) {
-      if (confirm("ต้องการลบข้อมูลนี้หรือไม่")) {
-        contestants.splice(index, 1);
-        saveData();
-        updateTable();
-      }
-    }
+<button onclick="chooseLevel('ม.1')">
+มัธยมศึกษาปีที่ 1
+</button>
 
-    function clearAllData() {
-      if (confirm("คุณต้องการลบข้อมูลทั้งหมดหรือไม่")) {
-        contestants = [];
-        saveData();
-        updateTable();
-        document.getElementById("resultBox").innerHTML = "";
-      }
-    }
+<button onclick="chooseLevel('ม.4')">
+มัธยมศึกษาปีที่ 4
+</button>
 
-    function exportCSV() {
-      if (contestants.length === 0) {
-        alert("ยังไม่มีข้อมูล");
-        return;
-      }
+</div>
 
-      let csvContent = "อันดับ,ชื่อ,ทีม,รหัส,โต้วาที,ศึกผู้นำ,รวมคะแนน\n";
+<div class="searchBox" id="searchBox">
 
-      contestants.forEach(person => {
-        csvContent += `${person.rank},${person.name},${person.team},${person.code},${person.debate},${person.leader},${person.total}\n`;
-      });
+<h3 id="levelTitle"
+style="margin-top:30px;color:#5B3FFF;">
+</h3>
 
-      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-      const url = URL.createObjectURL(blob);
+<input
+id="examID"
+placeholder="เลขประจำตัวสอบ">
 
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = "ผลการแข่งขัน.csv";
-      link.click();
-    }
+<input
+id="studentName"
+placeholder="ชื่อ-นามสกุล">
 
-    function updateCountdown() {
-      const countdownBox = document.getElementById("countdownBox");
+<button onclick="searchResult()">
+ค้นหาผลสอบ
+</button>
 
-      const now = new Date();
-      const target = new Date();
+</div>
 
-      target.setHours(20, 0, 0, 0);
+<div id="resultArea"></div>
 
-      if (now >= target) {
-        countdownBox.innerHTML = "เปิดให้ดูผลแล้ว";
-        return;
-      }
+</div>
 
-      const diff = target - now;
+</div>
 
-      const hours = Math.floor(diff / (1000 * 60 * 60));
-      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+<script>
 
-      countdownBox.innerHTML = `
-        เหลือเวลาอีก ${hours} ชั่วโมง ${minutes} นาที ${seconds} วินาที
-        <br>
-        จะเปิดดูผลเวลา 20:00 น.
-      `;
-    }
+let level="";
 
-    function checkScore() {
-      const code = document.getElementById("userCode").value.trim();
-      const resultBox = document.getElementById("resultBox");
+function login(){
 
-      const now = new Date();
-      const currentHour = now.getHours();
+document.getElementById("login").style.display="none";
 
-      if (currentHour < 20) {
-        resultBox.innerHTML = `
-          <p>ยังไม่สามารถดูผลได้</p>
-          <p>สามารถดูผลได้ตั้งแต่เวลา 20:00 น.</p>
-        `;
-        return;
-      }
+document.getElementById("dashboard").style.display="block";
 
-      const person = contestants.find(item => item.code === code);
+}
 
-      if (person) {
-        resultBox.innerHTML = `
-          <h3>${person.name}</h3>
-          <p>ทีม: ${person.team}</p>
-          <p>คะแนนโต้วาที: ${person.debate} / 100</p>
-          <p>คะแนนศึกผู้นำ: ${person.leader} / 100</p>
-          <p><strong>รวมคะแนน: ${person.total} / 200</strong></p>
-          <div class="rank">อันดับที่ ${person.rank}</div>
-        `;
-      } else {
-        resultBox.innerHTML = "<p>ไม่พบรหัสนี้</p>";
-      }
-    }
+function logout(){
 
-    updateTable();
-    setInterval(updateCountdown, 1000);
-    updateCountdown();
-  </script>
+location.reload();
+
+}
+
+function home(){
+
+document.querySelectorAll(".page").forEach(p=>{
+
+p.style.display="none";
+
+});
+
+}
+
+function openGrade(){
+
+home();
+
+document.getElementById("gradePage").style.display="block";
+
+}
+
+function openComplaint(){
+
+home();
+
+document.getElementById("complaintPage").style.display="block";
+
+}
+
+function openExam(){
+
+home();
+
+document.getElementById("examPage").style.display="block";
+
+}
+
+function chooseLevel(x){
+
+level=x;
+
+document.getElementById("searchBox").style.display="block";
+
+document.getElementById("levelTitle").innerHTML=
+"ประกาศผลสอบเข้า "+x;
+
+}
+
+const students=[
+{
+id:"ICEM1001",
+level:"ม.1",
+name:"เด็กหญิงปิยะพร จวงศ์สามารถ",
+math:62.31487,
+thai:83.19428,
+english:91.61422,
+social:88.42951
+},
+
+{
+id:"ICEM1002",
+level:"ม.1",
+name:"เด็กชายณัฐพงศ์ ศรีสวัสดิ์",
+math:95.61428,
+thai:91.28419,
+english:93.58271,
+social:89.31744
+},
+
+{
+id:"ICEM1003",
+level:"ม.1",
+name:"เด็กหญิงพิชญาภา วัฒนากูล",
+math:87.31875,
+thai:92.63819,
+english:90.15482,
+social:84.61352
+},
+
+{
+id:"ICEM1004",
+level:"ม.1",
+name:"เด็กชายธนภัทร บุญมี",
+math:98.91453,
+thai:96.28411,
+english:99.18275,
+social:94.82164
+},
+
+{
+id:"ICEM1005",
+level:"ม.1",
+name:"เด็กหญิงกชกร รัตนชัย",
+math:79.18354,
+thai:80.21458,
+english:82.91473,
+social:84.19284
+},
+
+{
+id:"ICEM1006",
+level:"ม.1",
+name:"เด็กชายกิตติภพ วงศ์ทอง",
+math:74.31845,
+thai:81.52384,
+english:79.61438,
+social:76.81492
+},
+
+{
+id:"ICEM1007",
+level:"ม.1",
+name:"เด็กหญิงธัญชนก ศิริชัย",
+math:88.31426,
+thai:91.28467,
+english:93.81726,
+social:90.41738
+},
+
+{
+id:"ICEM1008",
+level:"ม.1",
+name:"เด็กชายพงศกร อินทร์แก้ว",
+math:70.31489,
+thai:73.61428,
+english:75.29174,
+social:71.81463
+},
+
+{
+id:"ICEM1009",
+level:"ม.1",
+name:"เด็กหญิงพรนภัส จันทร์เพ็ญ",
+math:93.21458,
+thai:94.31842,
+english:92.51739,
+social:95.18473
+},
+
+{
+id:"ICEM1010",
+level:"ม.1",
+name:"เด็กชายศุภชัย ธีระกุล",
+math:84.31745,
+thai:82.51472,
+english:83.29461,
+social:81.51437
+},
+{
+id:"ICEM1011",
+level:"ม.1",
+name:"เด็กหญิงชลธิชา สุวรรณวงศ์",
+math:89.51726,
+thai:91.84317,
+english:90.61428,
+social:92.41753
+},
+
+{
+id:"ICEM1012",
+level:"ม.1",
+name:"เด็กชายพีรพัฒน์ แสงทอง",
+math:81.61482,
+thai:79.28416,
+english:83.51729,
+social:80.19475
+},
+
+{
+id:"ICEM1013",
+level:"ม.1",
+name:"เด็กหญิงวริศรา เกษมสุข",
+math:94.81735,
+thai:96.41827,
+english:93.51482,
+social:95.28461
+},
+
+{
+id:"ICEM1014",
+level:"ม.1",
+name:"เด็กชายธีรภัทร นาคสกุล",
+math:76.51482,
+thai:74.18275,
+english:77.61483,
+social:79.51824
+},
+
+{
+id:"ICEM1015",
+level:"ม.1",
+name:"เด็กหญิงปาริฉัตร ศรีทอง",
+math:85.61842,
+thai:87.51428,
+english:89.31475,
+social:88.21467
+},
+
+{
+id:"ICEM1016",
+level:"ม.1",
+name:"เด็กชายณรงค์เดช บุญเรือง",
+math:67.21485,
+thai:71.61842,
+english:73.51427,
+social:70.21489
+},
+
+{
+id:"ICEM1017",
+level:"ม.1",
+name:"เด็กหญิงกัญญารัตน์ วงศ์ศรี",
+math:97.61482,
+thai:98.21475,
+english:96.51428,
+social:95.81463
+},
+
+{
+id:"ICEM1018",
+level:"ม.1",
+name:"เด็กชายรัชชานนท์ ศักดิ์ชัย",
+math:78.51492,
+thai:80.61472,
+english:79.31486,
+social:81.41825
+},
+
+{
+id:"ICEM1019",
+level:"ม.1",
+name:"เด็กหญิงสุพิชญา มณีรัตน์",
+math:91.81462,
+thai:90.21485,
+english:92.61734,
+social:93.81425
+},
+
+{
+id:"ICEM1020",
+level:"ม.1",
+name:"เด็กชายชยพล วิริยะกุล",
+math:83.51486,
+thai:85.61428,
+english:82.71463,
+social:84.51824
+},
+{
+id:"ICEM1021",
+level:"ม.1",
+name:"เด็กหญิงนันท์นภัส พรหมทอง",
+math:88.51274,
+thai:90.41853,
+english:91.62481,
+social:89.31547
+},
+
+{
+id:"ICEM1022",
+level:"ม.1",
+name:"เด็กชายธีรเดช ศรีวิชัย",
+math:75.61834,
+thai:77.51284,
+english:78.41527,
+social:76.31482
+},
+
+{
+id:"ICEM1023",
+level:"ม.1",
+name:"เด็กหญิงพิชญ์สินี วงศ์เจริญ",
+math:96.41572,
+thai:95.61843,
+english:97.31485,
+social:94.51827
+},
+
+{
+id:"ICEM1024",
+level:"ม.1",
+name:"เด็กชายกฤตภาส อินทรรักษ์",
+math:80.61452,
+thai:82.31478,
+english:81.41562,
+social:79.81425
+},
+
+{
+id:"ICEM1025",
+level:"ม.1",
+name:"เด็กหญิงสุภัสสรา ชัยมงคล",
+math:86.51473,
+thai:87.61824,
+english:88.41257,
+social:89.21584
+},
+
+{
+id:"ICEM1026",
+level:"ม.1",
+name:"เด็กชายภัทรพล รุ่งเรือง",
+math:69.81542,
+thai:71.31478,
+english:72.51864,
+social:70.61427
+},
+
+{
+id:"ICEM1027",
+level:"ม.1",
+name:"เด็กหญิงชุติมา แก้วมณี",
+math:93.61824,
+thai:92.71485,
+english:94.51826,
+social:91.61473
+},
+
+{
+id:"ICEM1028",
+level:"ม.1",
+name:"เด็กชายอดิศักดิ์ วัฒนชัย",
+math:77.51462,
+thai:79.31847,
+english:78.61482,
+social:80.21456
+},
+
+{
+id:"ICEM1029",
+level:"ม.1",
+name:"เด็กหญิงณัฐธิดา ศรีสง่า",
+math:90.31487,
+thai:91.51862,
+english:89.71435,
+social:92.81426
+},
+
+{
+id:"ICEM1030",
+level:"ม.1",
+name:"เด็กชายภูมิพัฒน์ พงศ์ไพบูลย์",
+math:84.61825,
+thai:83.51478,
+english:85.71426,
+social:86.31584
+},
+{
+id:"ICEM1031",
+level:"ม.1",
+name:"เด็กชายกิตติศักดิ์ รุ่งโรจน์",
+math:94.61528,
+thai:91.32874,
+english:95.48216,
+social:92.71635
+},
+
+{
+id:"ICEM1032",
+level:"ม.1",
+name:"เด็กหญิงศิริลักษณ์ วัฒนากุล",
+math:88.71436,
+thai:90.51624,
+english:89.31875,
+social:91.41782
+},
+
+{
+id:"ICEM1033",
+level:"ม.1",
+name:"เด็กชายธนกฤต ศรีเจริญ",
+math:83.61827,
+thai:81.41573,
+english:84.51286,
+social:82.71435
+},
+
+{
+id:"ICEM1034",
+level:"ม.1",
+name:"เด็กหญิงปิยธิดา พรชัย",
+math:97.41826,
+thai:96.71482,
+english:98.31547,
+social:95.81624
+},
+
+{
+id:"ICEM1035",
+level:"ม.1",
+name:"เด็กชายณัฐวุฒิ สุขสวัสดิ์",
+math:79.61428,
+thai:80.31562,
+english:81.71483,
+social:78.41856
+},
+
+{
+id:"ICEM1036",
+level:"ม.1",
+name:"เด็กหญิงกัญญาวีร์ จิตต์ดี",
+math:91.51683,
+thai:92.41857,
+english:90.71425,
+social:93.51468
+},
+
+{
+id:"ICEM1037",
+level:"ม.1",
+name:"เด็กชายภูวดล อินทรชัย",
+math:74.21853,
+thai:75.61482,
+english:73.51824,
+social:76.31574
+},
+
+{
+id:"ICEM1038",
+level:"ม.1",
+name:"เด็กหญิงชลธิชา พงศ์ทอง",
+math:86.71425,
+thai:88.31547,
+english:87.51682,
+social:89.41835
+},
+
+{
+id:"ICEM1039",
+level:"ม.1",
+name:"เด็กชายภัทรดนัย ศรีมงคล",
+math:82.61487,
+thai:84.31528,
+english:83.71456,
+social:85.41873
+},
+
+{
+id:"ICEM1040",
+level:"ม.1",
+name:"เด็กหญิงพิชชาภา บุญเลิศ",
+math:95.81462,
+thai:94.71628,
+english:96.41853,
+social:97.21475
+},
+{
+id:"ICEM1041",
+level:"ม.1",
+name:"เด็กชายธนวัฒน์ ศรีสมบัติ",
+math:90.61483,
+thai:88.31572,
+english:91.51426,
+social:89.61847
+},
+
+{
+id:"ICEM1042",
+level:"ม.1",
+name:"เด็กหญิงณิชาภัทร พรประเสริฐ",
+math:84.31852,
+thai:86.71435,
+english:85.61427,
+social:87.51864
+},
+
+{
+id:"ICEM1043",
+level:"ม.1",
+name:"เด็กชายชยุตม์ วัฒนชัย",
+math:78.61425,
+thai:80.21486,
+english:79.71432,
+social:81.51847
+},
+
+{
+id:"ICEM1044",
+level:"ม.1",
+name:"เด็กหญิงพิมพ์ชนก จันทร์สว่าง",
+math:96.71482,
+thai:95.61437,
+english:97.51428,
+social:94.31875
+},
+
+{
+id:"ICEM1045",
+level:"ม.1",
+name:"เด็กชายรัชชานนท์ ภูมิศรี",
+math:82.51864,
+thai:81.61427,
+english:83.71482,
+social:84.31576
+},
+
+{
+id:"ICEM1046",
+level:"ม.1",
+name:"เด็กหญิงอริสรา บุญส่ง",
+math:91.41853,
+thai:93.51428,
+english:92.61475,
+social:90.31548
+},
+
+{
+id:"ICEM1047",
+level:"ม.1",
+name:"เด็กชายภาคิน วงศ์สวัสดิ์",
+math:76.61483,
+thai:74.51826,
+english:77.31584,
+social:75.61428
+},
+
+{
+id:"ICEM1048",
+level:"ม.1",
+name:"เด็กหญิงปภาวรินท์ ศรีมาลัย",
+math:88.71452,
+thai:89.61437,
+english:90.41826,
+social:91.31574
+},
+
+{
+id:"ICEM1049",
+level:"ม.1",
+name:"เด็กชายณัฐพัฒน์ รัตนชัย",
+math:80.31462,
+thai:82.51847,
+english:81.61483,
+social:79.31526
+},
+
+{
+id:"ICEM1050",
+level:"ม.1",
+name:"เด็กหญิงชญานิศ วงศ์เจริญ",
+math:97.61482,
+thai:98.31547,
+english:96.71428,
+social:97.51836
+},
+{
+id:"ICEM1051",
+level:"ม.1",
+name:"เด็กชายศุภกร ศรีทอง",
+math:92.51847,
+thai:91.61482,
+english:93.31574,
+social:90.71428
+},
+
+{
+id:"ICEM1052",
+level:"ม.1",
+name:"เด็กหญิงกัญญ์วรา อินทรรักษ์",
+math:85.61428,
+thai:87.31574,
+english:86.71482,
+social:88.51836
+},
+
+{
+id:"ICEM1053",
+level:"ม.1",
+name:"เด็กชายพีรวิชญ์ วงศ์สุวรรณ",
+math:79.31582,
+thai:81.61428,
+english:80.71453,
+social:82.51874
+},
+
+{
+id:"ICEM1054",
+level:"ม.1",
+name:"เด็กหญิงพิชชานันท์ จิตต์ประเสริฐ",
+math:96.61482,
+thai:95.71428,
+english:97.31584,
+social:94.51863
+},
+
+{
+id:"ICEM1055",
+level:"ม.1",
+name:"เด็กชายธนโชติ บุญชัย",
+math:83.51847,
+thai:84.71482,
+english:82.61435,
+social:85.31574
+},
+
+{
+id:"ICEM1056",
+level:"ม.1",
+name:"เด็กหญิงปิยฉัตร ศรีวิไล",
+math:90.71453,
+thai:92.51836,
+english:91.61482,
+social:93.31547
+},
+
+{
+id:"ICEM1057",
+level:"ม.1",
+name:"เด็กชายณัฐพล เจริญสุข",
+math:74.61428,
+thai:76.31584,
+english:75.71482,
+social:77.51836
+},
+
+{
+id:"ICEM1058",
+level:"ม.1",
+name:"เด็กหญิงพิมพ์ลภัส วัฒนาพงศ์",
+math:89.31547,
+thai:90.71482,
+english:88.61435,
+social:91.51864
+},
+
+{
+id:"ICEM1059",
+level:"ม.1",
+name:"เด็กชายวรเมธ แสงทอง",
+math:81.71428,
+thai:82.51847,
+english:83.61482,
+social:80.31574
+},
+
+{
+id:"ICEM1060",
+level:"ม.1",
+name:"เด็กหญิงธัญญรัตน์ บุญเจริญ",
+math:98.31574,
+thai:97.61482,
+english:99.51836,
+social:96.71428
+}
+];
+students.forEach(s=>{
+
+s.total=
+s.math+
+s.thai+
+s.english+
+s.social;
+
+s.average=
+s.total/4;
+
+s.standard=
+(
+s.math+
+s.thai+
+s.english+
+s.social
+)/4;
+
+});
+
+students.sort((a,b)=>b.total-a.total);
+
+students.forEach((s,index)=>{
+
+s.rank=index+1;
+
+if(index<30){
+
+s.status="ผ่านการคัดเลือก";
+
+}else{
+
+s.status="ไม่ผ่านการคัดเลือก";
+
+}
+
+});
+
+function searchResult(){
+
+let id=
+document.getElementById("examID").value.trim();
+
+let name=
+document.getElementById("studentName").value.trim();
+
+let student=
+students.find(s=>
+
+s.id===id &&
+
+s.name===name &&
+
+s.level===level
+
+);
+
+if(student==null){
+
+document.getElementById("resultArea").innerHTML=
+
+`
+
+<div class="notice">
+
+❌
+
+<br><br>
+
+ไม่พบข้อมูลผู้สมัคร
+
+</div>
+
+`;
+
+return;
+
+}
+
+document.getElementById("resultArea").innerHTML=
+
+`
+
+<h2 style="color:#5B3FFF;text-align:center;">
+
+${student.name}
+
+</h2>
+
+<h3 style="text-align:center;">
+
+เลขประจำตัวสอบ
+
+${student.id}
+
+</h3>
+
+<table>
+
+<tr>
+
+<th>วิชา</th>
+
+<th>คะแนน</th>
+
+<th>เต็ม</th>
+
+<th>เปอร์เซ็นต์</th>
+
+<th>คะแนนมาตรฐาน</th>
+
+</tr>
+
+<tr>
+
+<td>คณิตศาสตร์</td>
+
+<td>${student.math.toFixed(5)}</td>
+
+<td>100</td>
+
+<td>${student.math.toFixed(5)}%</td>
+
+<td>${(student.math*0.85).toFixed(5)}</td>
+
+</tr>
+
+<tr>
+
+<td>ภาษาไทย</td>
+
+<td>${student.thai.toFixed(5)}</td>
+
+<td>100</td>
+
+<td>${student.thai.toFixed(5)}%</td>
+
+<td>${(student.thai*0.85).toFixed(5)}</td>
+
+</tr>
+
+<tr>
+
+<td>ภาษาอังกฤษ</td>
+
+<td>${student.english.toFixed(5)}</td>
+
+<td>100</td>
+
+<td>${student.english.toFixed(5)}%</td>
+
+<td>${(student.english*0.85).toFixed(5)}</td>
+
+</tr>
+
+<tr>
+
+<td>สังคมศึกษา</td>
+
+<td>${student.social.toFixed(5)}</td>
+
+<td>100</td>
+
+<td>${student.social.toFixed(5)}%</td>
+
+<td>${(student.social*0.85).toFixed(5)}</td>
+
+</tr>
+
+<tr>
+
+<th colspan="4">
+
+คะแนนรวม
+
+</th>
+
+<th>
+
+${student.total.toFixed(5)}
+
+/
+
+400
+
+</th>
+
+</tr>
+
+<tr>
+
+<th colspan="4">
+
+คะแนนเฉลี่ย
+
+</th>
+
+<th>
+
+${student.average.toFixed(5)}
+
+</th>
+
+</tr>
+
+<tr>
+
+<th colspan="4">
+
+ลำดับ
+
+</th>
+
+<th>
+
+${student.rank}
+
+/
+
+60
+
+</th>
+
+</tr>
+
+<tr>
+
+<th colspan="4">
+
+ผลการคัดเลือก
+
+</th>
+
+<th>
+
+<span class="${
+student.rank<=30
+?
+'pass'
+:
+'fail'
+}">
+
+${
+student.status
+}
+
+</span>
+
+</th>
+
+</tr>
+
+</table>
+
+`;
+
+}
+
+</script>
 
 </body>
+
 </html>
