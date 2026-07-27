@@ -249,12 +249,9 @@ International Center for Excellence
 
 </div>
 
-<div class="card" onclick="openExam()">
-
-<h2>ประกาศผลสอบเข้า</h2>
-
-<p>Admission Result</p>
-
+<div class="card" onclick="openScore()">
+    <h2>ผลสอบกลางภาค / ปลายภาค</h2>
+    <p>Midterm & Final Examination</p>
 </div>
 
 </div>
@@ -284,12 +281,31 @@ International Center for Excellence
 
 </div>
 
-<div class="page" id="examPage">
+<div class="page" id="scorePage">
 
 <div class="back" onclick="home()">
 ← กลับหน้าหลัก
 </div>
 
+<h2 style="text-align:center;color:#5B3FFF;">
+ผลสอบกลางภาค / ปลายภาค
+</h2>
+
+<p style="text-align:center;color:#666;margin-top:10px;">
+กรอกเลขประจำตัวนักเรียน
+</p>
+
+<input
+id="studentID"
+placeholder="เช่น 41001 หรือ 43015">
+
+<button onclick="searchStudent()">
+ค้นหาผลการเรียน
+</button>
+
+<div id="studentResult"></div>
+
+</div>
 <h2 style="text-align:center;color:#5B3FFF;">
 ประกาศผลสอบเข้า
 </h2>
