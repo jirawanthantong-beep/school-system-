@@ -4,322 +4,923 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>ประกาศผลสโม 💗</title>
+<title>โรงเรียนจุไรรัตน์วิทยา | ระบบประกาศผลสอบ</title>
+
+<!-- Luxury Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-* {
-    box-sizing: border-box;
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
 }
 
-body {
-    margin: 0;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #ffd6e8, #fff0f6, #f8c6df);
-    color: #6b2145;
+body{
+    font-family:'Prompt',sans-serif;
+    min-height:100vh;
+    background:
+        radial-gradient(circle at 10% 10%,rgba(171,71,255,.35),transparent 30%),
+        radial-gradient(circle at 90% 90%,rgba(255,193,7,.18),transparent 30%),
+        linear-gradient(135deg,#10051d,#24103d,#13051f);
+    color:white;
+    overflow-x:hidden;
 }
 
-.card {
-    width: 90%;
-    max-width: 500px;
-    padding: 35px 25px;
-    text-align: center;
-    background: rgba(255,255,255,0.9);
-    border-radius: 28px;
-    box-shadow: 0 20px 60px rgba(177,62,112,0.25);
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    background-image:
+        radial-gradient(circle,rgba(255,255,255,.12) 1px,transparent 1px);
+    background-size:35px 35px;
+    opacity:.25;
 }
 
-.heart {
-    font-size: 50px;
+/* ================= HEADER ================= */
+
+header{
+    width:100%;
+    padding:22px 7%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    position:relative;
+    z-index:10;
 }
 
-h1 {
-    color: #d43d82;
-    margin: 10px 0;
+.logo-area{
+    display:flex;
+    align-items:center;
+    gap:15px;
 }
 
-.sub {
-    color: #9b5276;
+.logo{
+    width:62px;
+    height:62px;
+    border-radius:50%;
+    border:2px solid #e8c66a;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-family:'Playfair Display',serif;
+    font-size:25px;
+    color:#e8c66a;
+    background:rgba(255,255,255,.05);
+    box-shadow:0 0 25px rgba(232,198,106,.25);
 }
 
-.countdown {
-    font-size: 40px;
-    font-weight: bold;
-    color: #c72f76;
-    background: #fff4f8;
-    padding: 15px;
-    border-radius: 18px;
-    margin: 20px 0;
+.school-name{
+    font-family:'Playfair Display',serif;
+    font-size:22px;
+    letter-spacing:1px;
 }
 
-.status {
-    font-weight: bold;
-    margin-bottom: 15px;
+.school-sub{
+    font-size:11px;
+    color:#d9cde7;
+    letter-spacing:2px;
 }
 
-input {
-    width: 100%;
-    padding: 15px;
-    border: 2px solid #f0a5c5;
-    border-radius: 14px;
-    font-size: 18px;
-    text-align: center;
-    outline: none;
+/* ================= MAIN ================= */
+
+.container{
+    width:min(1100px,90%);
+    margin:auto;
+    position:relative;
+    z-index:2;
 }
 
-input:focus {
-    border-color: #d83f83;
+.hero{
+    text-align:center;
+    padding:65px 20px 45px;
 }
 
-button {
-    width: 100%;
-    margin-top: 12px;
-    padding: 15px;
-    border: none;
-    border-radius: 14px;
-    background: linear-gradient(90deg, #e94d91, #c92f77);
-    color: white;
-    font-size: 18px;
-    font-weight: bold;
-    cursor: pointer;
+.hero small{
+    color:#e8c66a;
+    letter-spacing:5px;
+    font-size:12px;
 }
 
-button:hover {
-    opacity: 0.9;
+.hero h1{
+    font-family:'Playfair Display',serif;
+    font-size:clamp(42px,7vw,75px);
+    margin:12px 0;
+    background:linear-gradient(90deg,#fff,#e8c66a,#fff);
+    -webkit-background-clip:text;
+    color:transparent;
+    text-shadow:0 0 35px rgba(255,255,255,.08);
 }
 
-.result {
-    display: none;
-    margin-top: 20px;
-    padding: 18px;
-    border-radius: 18px;
-    font-size: 19px;
-    font-weight: bold;
+.hero p{
+    color:#d8cde3;
+    font-size:15px;
 }
 
-.pass {
-    display: block;
-    background: #ffe1ef;
-    color: #b51f64;
+/* ================= MENU ================= */
+
+.menu{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:22px;
+    padding-bottom:70px;
 }
 
-.fail {
-    display: block;
-    background: #f3f3f3;
-    color: #777;
+.menu-card{
+    min-height:210px;
+    padding:30px;
+    border-radius:25px;
+    border:1px solid rgba(255,255,255,.15);
+    background:rgba(255,255,255,.07);
+    backdrop-filter:blur(18px);
+    box-shadow:0 20px 50px rgba(0,0,0,.25);
+    cursor:pointer;
+    transition:.35s;
+    position:relative;
+    overflow:hidden;
 }
 
-.hidden {
-    display: none;
+.menu-card::after{
+    content:"";
+    position:absolute;
+    width:180px;
+    height:180px;
+    border-radius:50%;
+    right:-80px;
+    bottom:-80px;
+    background:rgba(232,198,106,.12);
 }
 
-.hint {
-    margin-top: 15px;
-    font-size: 13px;
-    color: #a36b87;
+.menu-card:hover{
+    transform:translateY(-8px);
+    border-color:#e8c66a;
+    box-shadow:0 25px 70px rgba(232,198,106,.14);
+}
+
+.icon{
+    font-size:42px;
+    margin-bottom:18px;
+}
+
+.menu-card h2{
+    font-family:'Playfair Display',serif;
+    font-size:27px;
+    margin-bottom:8px;
+}
+
+.menu-card p{
+    color:#cfc1dc;
+    font-size:14px;
+}
+
+.number{
+    position:absolute;
+    top:22px;
+    right:25px;
+    color:#e8c66a;
+    font-family:'Playfair Display',serif;
+    font-size:30px;
+}
+
+/* ================= PAGE ================= */
+
+.page{
+    display:none;
+    animation:fade .5s ease;
+    padding-bottom:70px;
+}
+
+.page.active{
+    display:block;
+}
+
+@keyframes fade{
+    from{
+        opacity:0;
+        transform:translateY(15px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+.back{
+    border:1px solid rgba(255,255,255,.2);
+    background:rgba(255,255,255,.08);
+    color:white;
+    padding:10px 18px;
+    border-radius:30px;
+    cursor:pointer;
+    margin-bottom:25px;
+    font-family:'Prompt';
+}
+
+.back:hover{
+    border-color:#e8c66a;
+}
+
+.page-title{
+    text-align:center;
+    margin-bottom:35px;
+}
+
+.page-title h1{
+    font-family:'Playfair Display',serif;
+    font-size:43px;
+    color:#e8c66a;
+}
+
+.page-title p{
+    color:#cbbfd4;
+}
+
+/* ================= SEARCH ================= */
+
+.search-box{
+    max-width:650px;
+    margin:auto;
+    padding:30px;
+    background:rgba(255,255,255,.07);
+    border:1px solid rgba(255,255,255,.14);
+    border-radius:25px;
+    backdrop-filter:blur(20px);
+}
+
+.input-group{
+    margin-bottom:17px;
+}
+
+.input-group label{
+    display:block;
+    font-size:13px;
+    margin-bottom:7px;
+    color:#d8cce2;
+}
+
+.input-group input{
+    width:100%;
+    padding:14px 17px;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,.2);
+    background:rgba(0,0,0,.2);
+    color:white;
+    outline:none;
+    font-family:'Prompt';
+    font-size:15px;
+}
+
+.input-group input:focus{
+    border-color:#e8c66a;
+    box-shadow:0 0 15px rgba(232,198,106,.12);
+}
+
+.search-btn{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    background:linear-gradient(90deg,#d4aa4a,#f4db8b,#d4aa4a);
+    color:#25152e;
+    font-weight:700;
+    font-family:'Prompt';
+    cursor:pointer;
+    font-size:15px;
+    transition:.25s;
+}
+
+.search-btn:hover{
+    transform:scale(1.02);
+}
+
+/* ================= RESULT ================= */
+
+.result{
+    margin:30px auto 0;
+    max-width:850px;
+    display:none;
+}
+
+.result.show{
+    display:block;
+    animation:fade .5s ease;
+}
+
+.student-header{
+    text-align:center;
+    padding:30px;
+    border-radius:25px;
+    background:rgba(255,255,255,.07);
+    border:1px solid rgba(232,198,106,.25);
+    margin-bottom:20px;
+}
+
+.student-header h2{
+    font-family:'Playfair Display',serif;
+    font-size:29px;
+}
+
+.exam-number{
+    color:#e8c66a;
+    margin-top:5px;
+}
+
+.score-table{
+    width:100%;
+    border-collapse:collapse;
+    overflow:hidden;
+    border-radius:18px;
+    background:rgba(255,255,255,.06);
+}
+
+.score-table th,
+.score-table td{
+    padding:15px;
+    border-bottom:1px solid rgba(255,255,255,.1);
+    text-align:center;
+}
+
+.score-table th{
+    color:#e8c66a;
+    font-weight:500;
+}
+
+.score-table tr:last-child td{
+    border-bottom:none;
+}
+
+.total{
+    margin-top:20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:20px;
+    border-radius:18px;
+    background:rgba(232,198,106,.1);
+    border:1px solid rgba(232,198,106,.25);
+}
+
+.total strong{
+    font-size:28px;
+    color:#e8c66a;
+}
+
+.pass{
+    margin-top:20px;
+    padding:18px;
+    border-radius:15px;
+    text-align:center;
+    background:rgba(80,200,120,.1);
+    border:1px solid rgba(80,200,120,.4);
+    color:#8ff0b0;
+    font-size:19px;
+    font-weight:600;
+}
+
+.fail{
+    margin-top:20px;
+    padding:18px;
+    border-radius:15px;
+    text-align:center;
+    background:rgba(255,80,100,.1);
+    border:1px solid rgba(255,80,100,.35);
+    color:#ff9da9;
+    font-size:18px;
+    font-weight:600;
+}
+
+.rank{
+    text-align:center;
+    margin-top:14px;
+    color:#e8c66a;
+}
+
+.hidden-score{
+    text-align:center;
+    padding:35px;
+    border-radius:20px;
+    background:rgba(255,80,100,.08);
+    border:1px solid rgba(255,80,100,.3);
+    color:#ffadb7;
+    font-size:19px;
+}
+
+/* ================= NOTICE ================= */
+
+.notice{
+    max-width:650px;
+    margin:30px auto;
+    padding:40px;
+    text-align:center;
+    border-radius:25px;
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.15);
+}
+
+.notice .big{
+    font-size:55px;
+}
+
+.notice h2{
+    font-family:'Playfair Display',serif;
+    color:#e8c66a;
+    margin:15px 0 8px;
+}
+
+/* ================= FOOTER ================= */
+
+footer{
+    text-align:center;
+    padding:30px;
+    border-top:1px solid rgba(255,255,255,.1);
+    color:#9e91aa;
+    font-size:12px;
+}
+
+@media(max-width:700px){
+    .menu{
+        grid-template-columns:1fr;
+    }
+
+    .hero{
+        padding-top:35px;
+    }
+
+    .hero h1{
+        font-size:44px;
+    }
+
+    .school-name{
+        font-size:17px;
+    }
+
+    .logo{
+        width:50px;
+        height:50px;
+    }
+
+    .score-table{
+        font-size:13px;
+    }
+
+    .score-table th,
+    .score-table td{
+        padding:10px 5px;
+    }
 }
 </style>
 </head>
 
 <body>
 
-<div class="card">
+<header>
+    <div class="logo-area">
+        <div class="logo">จว</div>
+        <div>
+            <div class="school-name">โรงเรียนจุไรรัตน์วิทยา</div>
+            <div class="school-sub">JURAIWAT WITTAYA SCHOOL</div>
+        </div>
+    </div>
+</header>
 
-    <div class="heart">💗</div>
+<main class="container">
 
-    <h1>ประกาศผลสโม</h1>
+<!-- ================= HOME ================= -->
 
-    <p class="sub">
-        ตรวจสอบผลการคัดเลือกของคุณ
-    </p>
+<section id="home" class="page active">
 
-    <!-- เวลานับถอยหลัง -->
-    <div id="countdown" class="countdown">
-        --:--:--
+    <div class="hero">
+        <small>OFFICIAL EXAMINATION RESULT SYSTEM</small>
+
+        <h1>ประกาศผลสอบ</h1>
+
+        <p>
+            โรงเรียนจุไรรัตน์วิทยา
+            <br>
+            ระบบตรวจสอบผลการสอบและประกาศผลอย่างเป็นทางการ
+        </p>
     </div>
 
-    <div id="status" class="status">
-        กำลังรอถึงเวลา 12:50 น.
+    <div class="menu">
+
+        <div class="menu-card" onclick="openPage('grade')">
+            <span class="number">01</span>
+            <div class="icon">🎓</div>
+            <h2>ประกาศผลเกรด</h2>
+            <p>ตรวจสอบผลการเรียนและผลการศึกษา</p>
+        </div>
+
+        <div class="menu-card" onclick="openPage('m1')">
+            <span class="number">02</span>
+            <div class="icon">🏛️</div>
+            <h2>ประกาศผลสอบเข้า ม.1</h2>
+            <p>ตรวจสอบผลการคัดเลือกนักเรียนระดับชั้นมัธยมศึกษาปีที่ 1</p>
+        </div>
+
+        <div class="menu-card" onclick="openPage('m4')">
+            <span class="number">03</span>
+            <div class="icon">📜</div>
+            <h2>ประกาศผลสอบเข้า ม.4</h2>
+            <p>ตรวจสอบผลการคัดเลือกนักเรียนระดับชั้นมัธยมศึกษาปีที่ 4</p>
+        </div>
+
+        <div class="menu-card" onclick="openPage('documents')">
+            <span class="number">04</span>
+            <div class="icon">📂</div>
+            <h2>ขอเอกสารเพิ่มเติม</h2>
+            <p>ระบบยื่นคำร้องและขอเอกสารจากทางโรงเรียน</p>
+        </div>
+
     </div>
 
-    <!-- ช่องกรอกหมายเลข -->
-    <div id="form" class="hidden">
+</section>
 
-        <input
-            id="number"
-            type="text"
-            inputmode="numeric"
-            placeholder="กรอกหมายเลขของคุณ"
-        >
 
-        <button onclick="checkResult()">
-            ตรวจสอบผลคะแนน
+<!-- ================= M1 ================= -->
+
+<section id="m1" class="page">
+
+    <button class="back" onclick="openPage('home')">← กลับหน้าหลัก</button>
+
+    <div class="page-title">
+        <h1>ประกาศผลสอบเข้า ม.1</h1>
+        <p>กรุณากรอกข้อมูลให้ตรงกับข้อมูลที่ใช้สมัครสอบ</p>
+    </div>
+
+    <div class="search-box">
+
+        <div class="input-group">
+            <label>เลขประจำตัวสอบ</label>
+            <input id="examNumber" type="text"
+                   placeholder="กรอกเลขประจำตัวสอบ">
+        </div>
+
+        <div class="input-group">
+            <label>ชื่อ</label>
+            <input id="firstName" type="text"
+                   placeholder="กรอกชื่อ">
+        </div>
+
+        <div class="input-group">
+            <label>นามสกุล</label>
+            <input id="lastName" type="text"
+                   placeholder="กรอกนามสกุล">
+        </div>
+
+        <button class="search-btn" onclick="searchStudent()">
+            🔎 ค้นหาผลการสอบ
         </button>
 
-        <div id="result" class="result"></div>
-
     </div>
 
-    <div class="hint">
-        กรุณากรอกหมายเลขของตัวเองเพื่อดูผล
+    <div id="result" class="result"></div>
+
+</section>
+
+
+<!-- ================= OTHER PAGES ================= -->
+
+<section id="grade" class="page">
+
+    <button class="back" onclick="openPage('home')">← กลับหน้าหลัก</button>
+
+    <div class="notice">
+        <div class="big">🎓</div>
+        <h2>ประกาศผลเกรด</h2>
+        <p>ระบบยังไม่เปิดให้ลงทะเบียนหรือกรอกข้อมูลในขณะนี้</p>
     </div>
 
-</div>
+</section>
+
+
+<section id="m4" class="page">
+
+    <button class="back" onclick="openPage('home')">← กลับหน้าหลัก</button>
+
+    <div class="notice">
+        <div class="big">📜</div>
+        <h2>ประกาศผลสอบเข้า ม.4</h2>
+        <p>ระบบยังไม่เปิดให้ลงทะเบียนหรือกรอกข้อมูลในขณะนี้</p>
+    </div>
+
+</section>
+
+
+<section id="documents" class="page">
+
+    <button class="back" onclick="openPage('home')">← กลับหน้าหลัก</button>
+
+    <div class="notice">
+        <div class="big">📂</div>
+        <h2>ขอเอกสารเพิ่มเติม</h2>
+        <p>ระบบยังไม่เปิดให้ลงทะเบียนหรือกรอกข้อมูลในขณะนี้</p>
+    </div>
+
+</section>
+
+</main>
+
+
+<footer>
+    © 2026 โรงเรียนจุไรรัตน์วิทยา
+    <br>
+    ระบบประกาศผลสอบออนไลน์
+</footer>
 
 
 <script>
 
-/* =====================================================
-   ✏️ แก้ข้อมูลตรงนี้
-   ใส่ "หมายเลขคนที่ติด" ลงไป
-   ===================================================== */
+/* ==========================================
+   STUDENT DATA
+========================================== */
 
-const results = {
+const students = {
 
-    "007": true,
-    "170": true,
-    "080": true
+    "114115": {
+        first:"เด็กหญิงจรรยมนฑน์",
+        last:"บุญฉ่ำ",
+        hidden:true
+    },
+
+    "174356": {
+        first:"เด็กหญิงกฤติญดา",
+        last:"ถีรวงศ์",
+        scores:[34,40,18,40]
+    },
+
+    "156234": {
+        first:"เด็กหญิงภวรัญชน์",
+        last:"ต่อวิวรรธน์",
+        scores:[38,40,17,40]
+    },
+
+    "348901": {
+        first:"เด็กหญิงศิริวีรินทร์",
+        last:"วันเชียง",
+        scores:[35,38,16,38]
+    },
+
+    "441234": {
+        first:"เด็กหญิงไอลดา",
+        last:"สิงห์จันทร์",
+        scores:[22,32,14,29]
+    }
 
 };
 
 
-/* =====================================================
-   ⏰ เวลาประกาศผล
-   12:40 น.
-   ===================================================== */
+/* ==========================================
+   CALCULATE RANK
+========================================== */
 
-const target = new Date();
+function getTotal(student){
 
-target.setHours(12, 45, 00, 0);
+    if(!student.scores) return null;
+
+    return student.scores.reduce((a,b)=>a+b,0);
+}
+
+const rankedStudents = Object.entries(students)
+    .filter(([id,s]) => s.scores)
+    .map(([id,s]) => ({
+        id:id,
+        total:getTotal(s)
+    }))
+    .sort((a,b)=>b.total-a.total);
 
 
-/* =====================================================
-   ระบบนับถอยหลัง
-   ===================================================== */
+/* ==========================================
+   OPEN PAGE
+========================================== */
 
-function updateCountdown() {
+function openPage(page){
 
-    const now = new Date();
+    document.querySelectorAll('.page')
+        .forEach(p => p.classList.remove('active'));
 
-    const difference = target - now;
+    document.getElementById(page)
+        .classList.add('active');
 
-    // ถ้าถึงเวลาแล้ว
-    if (difference <= 0) {
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
 
-        document.getElementById("countdown").textContent =
-            "เปิดแล้ว! 💗";
+    const result = document.getElementById("result");
 
-        document.getElementById("status").textContent =
-            "สามารถตรวจสอบผลได้แล้ว";
-
-        document.getElementById("form").classList.remove("hidden");
-
-        return;
+    if(result){
+        result.classList.remove("show");
+        result.innerHTML="";
     }
-
-
-    const hours =
-        Math.floor(difference / 3600000);
-
-    const minutes =
-        Math.floor(
-            (difference % 3600000) / 60000
-        );
-
-    const seconds =
-        Math.floor(
-            (difference % 60000) / 1000
-        );
-
-
-    document.getElementById("countdown").textContent =
-
-        String(hours).padStart(2, "0")
-        + ":"
-        +
-        String(minutes).padStart(2, "0")
-        + ":"
-        +
-        String(seconds).padStart(2, "0");
-
 }
 
 
-/* =====================================================
-   🔎 ตรวจสอบผล
-   ===================================================== */
+/* ==========================================
+   SEARCH STUDENT
+========================================== */
 
-function checkResult() {
+function searchStudent(){
 
-    const number =
-        document.getElementById("number").value.trim();
+    const id =
+        document.getElementById("examNumber")
+        .value.trim();
+
+    const first =
+        document.getElementById("firstName")
+        .value.trim();
+
+    const last =
+        document.getElementById("lastName")
+        .value.trim();
 
     const result =
         document.getElementById("result");
 
+    result.innerHTML="";
+    result.classList.remove("show");
 
-    // ยังไม่ได้กรอก
-    if (!number) {
 
-        result.className = "result fail";
+    if(!id || !first || !last){
 
-        result.textContent =
-            "กรุณากรอกหมายเลขก่อนนะ 💗";
+        result.innerHTML = `
+            <div class="notice">
+                <div class="big">⚠️</div>
+                <h2>กรุณากรอกข้อมูลให้ครบ</h2>
+                <p>กรุณากรอกเลขประจำตัวสอบ ชื่อ และนามสกุล</p>
+            </div>
+        `;
 
+        result.classList.add("show");
         return;
     }
 
 
-    // ถ้าหมายเลขอยู่ในรายชื่อที่ติด
-    if (results[number] === true) {
+    const student = students[id];
 
-        result.className = "result pass";
 
-        result.innerHTML =
-            "🎉 ยินดีด้วย!<br>" +
-            "คุณผ่านการคัดเลือก 💗";
+    /* ไม่พบข้อมูล */
 
+    if(
+        !student ||
+        student.first !== first ||
+        student.last !== last
+    ){
+
+        result.innerHTML = `
+            <div class="notice">
+                <div class="big">🔍</div>
+                <h2>ไม่พบข้อมูล</h2>
+                <p>
+                    กรุณาตรวจสอบเลขประจำตัวสอบ
+                    ชื่อ และนามสกุลอีกครั้ง
+                </p>
+            </div>
+        `;
+
+        result.classList.add("show");
+        return;
     }
 
-    // ถ้าไม่อยู่ในรายชื่อ
-    else {
 
-        result.className = "result fail";
+    /* นักเรียนที่ไม่แสดงคะแนน */
 
-        result.innerHTML =
-            "ขอแสดงความเสียใจ<br>" +
-            "หมายเลขนี้ไม่ผ่านการคัดเลือก";
+    if(student.hidden){
 
+        result.innerHTML = `
+
+            <div class="student-header">
+                <h2>${student.first} ${student.last}</h2>
+                <div class="exam-number">
+                    เลขประจำตัวสอบ ${id}
+                </div>
+            </div>
+
+            <div class="hidden-score">
+                เสียใจด้วยค่ะ<br>
+                <strong>ท่านไม่ผ่านการคัดเลือก</strong>
+                <br><br>
+                ไม่แสดงผลคะแนนตามประกาศของโรงเรียน
+            </div>
+        `;
+
+        result.classList.add("show");
+        return;
     }
 
-}
+
+    /* คะแนน */
+
+    const total = getTotal(student);
+
+    const rank =
+        rankedStudents.findIndex(x=>x.id===id)+1;
+
+    const passed = total >= 100;
 
 
-/* =====================================================
-   เริ่มระบบ
-   ===================================================== */
+    result.innerHTML = `
 
-updateCountdown();
+        <div class="student-header">
 
-setInterval(updateCountdown, 1000);
+            <h2>
+                ${student.first} ${student.last}
+            </h2>
+
+            <div class="exam-number">
+                เลขประจำตัวสอบ ${id}
+            </div>
+
+        </div>
 
 
-/* กด Enter เพื่อตรวจสอบได้ */
+        <table class="score-table">
 
-document
-    .getElementById("number")
-    .addEventListener("keydown", function(event) {
+            <thead>
+                <tr>
+                    <th>วิชา</th>
+                    <th>คะแนนที่ได้</th>
+                    <th>คะแนนเต็ม</th>
+                </tr>
+            </thead>
 
-        if (event.key === "Enter") {
+            <tbody>
 
-            checkResult();
+                <tr>
+                    <td>วิชาที่ 1</td>
+                    <td>${student.scores[0]}</td>
+                    <td>40</td>
+                </tr>
 
+                <tr>
+                    <td>วิชาที่ 2</td>
+                    <td>${student.scores[1]}</td>
+                    <td>40</td>
+                </tr>
+
+                <tr>
+                    <td>วิชาที่ 3</td>
+                    <td>${student.scores[2]}</td>
+                    <td>20</td>
+                </tr>
+
+                <tr>
+                    <td>วิชาที่ 4</td>
+                    <td>${student.scores[3]}</td>
+                    <td>40</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+
+        <div class="total">
+
+            <span>คะแนนรวม</span>
+
+            <strong>
+                ${total} / 140
+            </strong>
+
+        </div>
+
+
+        ${
+            passed
+
+            ?
+
+            `
+            <div class="pass">
+                🎉 ท่านผ่านการคัดเลือกค่ะ
+            </div>
+
+            <div class="rank">
+                🏆 อันดับที่ ${rank}
+            </div>
+            `
+
+            :
+
+            `
+            <div class="fail">
+                เสียใจด้วยค่ะ<br>
+                ท่านไม่ผ่านการคัดเลือก
+            </div>
+
+            <div class="rank">
+                อันดับที่ ${rank}
+            </div>
+            `
         }
 
-    });
+    `;
+
+    result.classList.add("show");
+}
 
 </script>
 
