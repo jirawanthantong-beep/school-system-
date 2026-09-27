@@ -1,537 +1,1741 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>โรงเรียนจุไรรัตน์วิทยา | ระบบประกาศผลสอบ</title>
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
-<!-- Luxury Fonts -->
+<title>
+    โรงเรียนจุไรรัตน์วิทยา | ระบบประกาศผล
+</title>
+
+
+<!-- =====================================================
+     FONTS
+===================================================== -->
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+>
+
+
+<!-- =====================================================
+     CSS
+===================================================== -->
 
 <style>
+
 *{
     box-sizing:border-box;
     margin:0;
     padding:0;
 }
 
+
 body{
+
     font-family:'Prompt',sans-serif;
+
     min-height:100vh;
-    background:
-        radial-gradient(circle at 10% 10%,rgba(171,71,255,.35),transparent 30%),
-        radial-gradient(circle at 90% 90%,rgba(255,193,7,.18),transparent 30%),
-        linear-gradient(135deg,#10051d,#24103d,#13051f);
+
     color:white;
-    overflow-x:hidden;
+
+    background:
+
+        radial-gradient(
+            circle at 10% 10%,
+            rgba(143,56,220,.35),
+            transparent 30%
+        ),
+
+        radial-gradient(
+            circle at 90% 90%,
+            rgba(232,198,106,.16),
+            transparent 30%
+        ),
+
+        linear-gradient(
+            135deg,
+            #0d0616,
+            #24103b 55%,
+            #10061b
+        );
+
+    background-attachment:fixed;
+
 }
+
 
 body::before{
+
     content:"";
+
     position:fixed;
+
     inset:0;
+
     pointer-events:none;
+
+    opacity:.16;
+
     background-image:
-        radial-gradient(circle,rgba(255,255,255,.12) 1px,transparent 1px);
+
+        radial-gradient(
+            white 1px,
+            transparent 1px
+        );
+
     background-size:35px 35px;
-    opacity:.25;
+
 }
 
-/* ================= HEADER ================= */
+
+/* =====================================================
+   HEADER
+===================================================== */
 
 header{
-    width:100%;
-    padding:22px 7%;
+
+    height:82px;
+
+    padding:
+        14px 6%;
+
     display:flex;
+
     align-items:center;
+
     justify-content:space-between;
-    position:relative;
-    z-index:10;
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.08);
+
+    backdrop-filter:
+        blur(18px);
+
+    position:sticky;
+
+    top:0;
+
+    z-index:100;
+
 }
 
-.logo-area{
+
+.brand{
+
     display:flex;
+
     align-items:center;
-    gap:15px;
+
+    gap:13px;
+
 }
 
-.logo{
-    width:62px;
-    height:62px;
+
+.crest{
+
+    width:53px;
+
+    height:53px;
+
+    border:
+        2px solid
+        #e9c96c;
+
     border-radius:50%;
-    border:2px solid #e8c66a;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-family:'Playfair Display',serif;
-    font-size:25px;
-    color:#e8c66a;
-    background:rgba(255,255,255,.05);
-    box-shadow:0 0 25px rgba(232,198,106,.25);
+
+    display:grid;
+
+    place-items:center;
+
+    color:#e9c96c;
+
+    font:
+        800 20px
+        "Playfair Display";
+
+    box-shadow:
+        0 0 25px
+        rgba(233,201,108,.2);
+
 }
 
-.school-name{
-    font-family:'Playfair Display',serif;
-    font-size:22px;
-    letter-spacing:1px;
+
+.brand h2{
+
+    font:
+        700 20px
+        "Playfair Display";
+
 }
 
-.school-sub{
-    font-size:11px;
-    color:#d9cde7;
+
+.brand small{
+
+    display:block;
+
+    color:#cbbbd4;
+
+    font-size:9px;
+
     letter-spacing:2px;
+
 }
 
-/* ================= MAIN ================= */
+
+nav{
+
+    display:flex;
+
+    gap:8px;
+
+}
+
+
+.nav-btn{
+
+    padding:
+        9px 15px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.15);
+
+    background:
+        rgba(255,255,255,.06);
+
+    color:white;
+
+    border-radius:30px;
+
+    cursor:pointer;
+
+    font-family:'Prompt';
+
+    transition:.25s;
+
+}
+
+
+.nav-btn:hover{
+
+    color:#e9c96c;
+
+    border-color:#e9c96c;
+
+}
+
+
+/* =====================================================
+   LAYOUT
+===================================================== */
 
 .container{
-    width:min(1100px,90%);
+
+    width:min(
+        1120px,
+        92%
+    );
+
     margin:auto;
-    position:relative;
-    z-index:2;
+
 }
 
-.hero{
-    text-align:center;
-    padding:65px 20px 45px;
-}
-
-.hero small{
-    color:#e8c66a;
-    letter-spacing:5px;
-    font-size:12px;
-}
-
-.hero h1{
-    font-family:'Playfair Display',serif;
-    font-size:clamp(42px,7vw,75px);
-    margin:12px 0;
-    background:linear-gradient(90deg,#fff,#e8c66a,#fff);
-    -webkit-background-clip:text;
-    color:transparent;
-    text-shadow:0 0 35px rgba(255,255,255,.08);
-}
-
-.hero p{
-    color:#d8cde3;
-    font-size:15px;
-}
-
-/* ================= MENU ================= */
-
-.menu{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:22px;
-    padding-bottom:70px;
-}
-
-.menu-card{
-    min-height:210px;
-    padding:30px;
-    border-radius:25px;
-    border:1px solid rgba(255,255,255,.15);
-    background:rgba(255,255,255,.07);
-    backdrop-filter:blur(18px);
-    box-shadow:0 20px 50px rgba(0,0,0,.25);
-    cursor:pointer;
-    transition:.35s;
-    position:relative;
-    overflow:hidden;
-}
-
-.menu-card::after{
-    content:"";
-    position:absolute;
-    width:180px;
-    height:180px;
-    border-radius:50%;
-    right:-80px;
-    bottom:-80px;
-    background:rgba(232,198,106,.12);
-}
-
-.menu-card:hover{
-    transform:translateY(-8px);
-    border-color:#e8c66a;
-    box-shadow:0 25px 70px rgba(232,198,106,.14);
-}
-
-.icon{
-    font-size:42px;
-    margin-bottom:18px;
-}
-
-.menu-card h2{
-    font-family:'Playfair Display',serif;
-    font-size:27px;
-    margin-bottom:8px;
-}
-
-.menu-card p{
-    color:#cfc1dc;
-    font-size:14px;
-}
-
-.number{
-    position:absolute;
-    top:22px;
-    right:25px;
-    color:#e8c66a;
-    font-family:'Playfair Display',serif;
-    font-size:30px;
-}
-
-/* ================= PAGE ================= */
 
 .page{
+
     display:none;
-    animation:fade .5s ease;
-    padding-bottom:70px;
+
+    padding:
+        45px 0
+        80px;
+
 }
+
 
 .page.active{
+
     display:block;
+
+    animation:
+        pageIn .45s ease;
+
 }
 
-@keyframes fade{
+
+@keyframes pageIn{
+
     from{
+
         opacity:0;
-        transform:translateY(15px);
+
+        transform:
+            translateY(15px);
+
     }
+
     to{
+
         opacity:1;
-        transform:translateY(0);
+
+        transform:
+            translateY(0);
+
     }
+
 }
 
-.back{
-    border:1px solid rgba(255,255,255,.2);
-    background:rgba(255,255,255,.08);
-    color:white;
-    padding:10px 18px;
-    border-radius:30px;
+
+/* =====================================================
+   HERO
+===================================================== */
+
+.hero{
+
+    text-align:center;
+
+    padding:
+        55px 10px
+        45px;
+
+}
+
+
+.eyebrow{
+
+    color:#e9c96c;
+
+    font-size:11px;
+
+    letter-spacing:5px;
+
+}
+
+
+.hero h1{
+
+    margin:
+        12px 0;
+
+    font:
+        800 clamp(
+            45px,
+            7vw,
+            76px
+        )
+        "Playfair Display";
+
+    background:
+
+        linear-gradient(
+            90deg,
+            #fff,
+            #e9c96c,
+            #fff
+        );
+
+    color:transparent;
+
+    background-clip:text;
+
+}
+
+
+.hero p{
+
+    color:#cfc1d8;
+
+    font-size:14px;
+
+}
+
+
+/* =====================================================
+   MENU
+===================================================== */
+
+.menu-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(2,1fr);
+
+    gap:20px;
+
+}
+
+
+.menu-card{
+
+    position:relative;
+
+    overflow:hidden;
+
+    min-height:205px;
+
+    padding:30px;
+
+    border-radius:25px;
+
+    background:
+        rgba(255,255,255,.07);
+
+    border:
+        1px solid
+        rgba(255,255,255,.14);
+
+    backdrop-filter:
+        blur(20px);
+
+    box-shadow:
+        0 20px 50px
+        rgba(0,0,0,.25);
+
     cursor:pointer;
-    margin-bottom:25px;
-    font-family:'Prompt';
+
+    transition:.3s;
+
 }
 
-.back:hover{
-    border-color:#e8c66a;
+
+.menu-card:hover{
+
+    transform:
+        translateY(-7px);
+
+    border-color:
+        rgba(233,201,108,.6);
+
+    box-shadow:
+        0 25px 70px
+        rgba(233,201,108,.12);
+
 }
+
+
+.menu-number{
+
+    position:absolute;
+
+    right:22px;
+
+    top:18px;
+
+    color:#e9c96c;
+
+    font:
+        700 29px
+        "Playfair Display";
+
+}
+
+
+.menu-icon{
+
+    font-size:42px;
+
+    margin-bottom:15px;
+
+}
+
+
+.menu-card h2{
+
+    font:
+        700 27px
+        "Playfair Display";
+
+    margin-bottom:7px;
+
+}
+
+
+.menu-card p{
+
+    color:#c9bdd3;
+
+    font-size:13px;
+
+    line-height:1.7;
+
+}
+
+
+/* =====================================================
+   TITLES
+===================================================== */
 
 .page-title{
+
     text-align:center;
-    margin-bottom:35px;
+
+    margin-bottom:30px;
+
 }
+
 
 .page-title h1{
-    font-family:'Playfair Display',serif;
-    font-size:43px;
-    color:#e8c66a;
+
+    font:
+        700 47px
+        "Playfair Display";
+
+    color:#e9c96c;
+
 }
+
 
 .page-title p{
-    color:#cbbfd4;
-}
 
-/* ================= SEARCH ================= */
+    color:#c9bdd3;
 
-.search-box{
-    max-width:650px;
-    margin:auto;
-    padding:30px;
-    background:rgba(255,255,255,.07);
-    border:1px solid rgba(255,255,255,.14);
-    border-radius:25px;
-    backdrop-filter:blur(20px);
-}
-
-.input-group{
-    margin-bottom:17px;
-}
-
-.input-group label{
-    display:block;
     font-size:13px;
-    margin-bottom:7px;
-    color:#d8cce2;
+
 }
 
-.input-group input{
-    width:100%;
-    padding:14px 17px;
-    border-radius:12px;
-    border:1px solid rgba(255,255,255,.2);
-    background:rgba(0,0,0,.2);
+
+/* =====================================================
+   BUTTON
+===================================================== */
+
+.back-btn{
+
+    margin-bottom:25px;
+
+    padding:
+        9px 17px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.15);
+
+    background:
+        rgba(255,255,255,.06);
+
     color:white;
-    outline:none;
-    font-family:'Prompt';
-    font-size:15px;
-}
 
-.input-group input:focus{
-    border-color:#e8c66a;
-    box-shadow:0 0 15px rgba(232,198,106,.12);
-}
+    border-radius:30px;
 
-.search-btn{
-    width:100%;
-    padding:14px;
-    border:none;
-    border-radius:12px;
-    background:linear-gradient(90deg,#d4aa4a,#f4db8b,#d4aa4a);
-    color:#25152e;
-    font-weight:700;
-    font-family:'Prompt';
     cursor:pointer;
-    font-size:15px;
-    transition:.25s;
+
+    font-family:'Prompt';
+
 }
 
-.search-btn:hover{
-    transform:scale(1.02);
+
+.back-btn:hover{
+
+    color:#e9c96c;
+
+    border-color:#e9c96c;
+
 }
 
-/* ================= RESULT ================= */
+
+/* =====================================================
+   PANEL
+===================================================== */
+
+.panel{
+
+    max-width:720px;
+
+    margin:auto;
+
+    padding:28px;
+
+    border-radius:25px;
+
+    background:
+        rgba(255,255,255,.07);
+
+    border:
+        1px solid
+        rgba(255,255,255,.14);
+
+    backdrop-filter:
+        blur(20px);
+
+    box-shadow:
+        0 20px 50px
+        rgba(0,0,0,.25);
+
+}
+
+
+label{
+
+    display:block;
+
+    color:#d9cde1;
+
+    font-size:12px;
+
+    margin:
+        13px 0 7px;
+
+}
+
+
+input{
+
+    width:100%;
+
+    padding:
+        13px 15px;
+
+    border-radius:11px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.18);
+
+    background:
+        rgba(0,0,0,.25);
+
+    color:white;
+
+    outline:none;
+
+    font-family:'Prompt';
+
+}
+
+
+input:focus{
+
+    border-color:#e9c96c;
+
+    box-shadow:
+        0 0 15px
+        rgba(233,201,108,.1);
+
+}
+
+
+.gold-btn{
+
+    width:100%;
+
+    margin-top:18px;
+
+    padding:14px;
+
+    border:none;
+
+    border-radius:11px;
+
+    background:
+
+        linear-gradient(
+            90deg,
+            #c99e3d,
+            #f4db8b,
+            #c99e3d
+        );
+
+    color:#211228;
+
+    font:
+        700 14px
+        Prompt;
+
+    cursor:pointer;
+
+}
+
+
+.gold-btn:hover{
+
+    transform:scale(1.01);
+
+}
+
+
+/* =====================================================
+   RESULT
+===================================================== */
 
 .result{
-    margin:30px auto 0;
+
     max-width:850px;
-    display:none;
+
+    margin:
+        28px auto
+        0;
+
 }
 
-.result.show{
-    display:block;
-    animation:fade .5s ease;
-}
 
-.student-header{
+.student-box{
+
     text-align:center;
-    padding:30px;
-    border-radius:25px;
-    background:rgba(255,255,255,.07);
-    border:1px solid rgba(232,198,106,.25);
-    margin-bottom:20px;
+
+    padding:25px;
+
+    border-radius:22px;
+
+    background:
+        rgba(255,255,255,.06);
+
+    border:
+        1px solid
+        rgba(233,201,108,.25);
+
+    margin-bottom:18px;
+
 }
 
-.student-header h2{
-    font-family:'Playfair Display',serif;
-    font-size:29px;
+
+.student-box h2{
+
+    font:
+        700 28px
+        "Playfair Display";
+
 }
 
-.exam-number{
-    color:#e8c66a;
-    margin-top:5px;
+
+.muted{
+
+    color:#bbaec7;
+
+    font-size:12px;
+
 }
 
-.score-table{
+
+.table-box{
+
+    overflow:auto;
+
+    border-radius:18px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.12);
+
+}
+
+
+table{
+
     width:100%;
+
     border-collapse:collapse;
-    overflow:hidden;
-    border-radius:18px;
-    background:rgba(255,255,255,.06);
+
 }
 
-.score-table th,
-.score-table td{
-    padding:15px;
-    border-bottom:1px solid rgba(255,255,255,.1);
+
+th,
+td{
+
+    padding:14px;
+
     text-align:center;
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.09);
+
+    font-size:13px;
+
 }
 
-.score-table th{
-    color:#e8c66a;
-    font-weight:500;
+
+th{
+
+    color:#e9c96c;
+
 }
 
-.score-table tr:last-child td{
-    border-bottom:none;
-}
 
-.total{
-    margin-top:20px;
+.total-box{
+
     display:flex;
+
     justify-content:space-between;
+
     align-items:center;
-    padding:20px;
-    border-radius:18px;
-    background:rgba(232,198,106,.1);
-    border:1px solid rgba(232,198,106,.25);
+
+    margin-top:15px;
+
+    padding:19px;
+
+    border-radius:17px;
+
+    background:
+        rgba(233,201,108,.09);
+
+    border:
+        1px solid
+        rgba(233,201,108,.2);
+
 }
 
-.total strong{
-    font-size:28px;
-    color:#e8c66a;
+
+.total-box strong{
+
+    color:#e9c96c;
+
+    font-size:27px;
+
 }
+
 
 .pass{
-    margin-top:20px;
-    padding:18px;
-    border-radius:15px;
+
+    margin-top:15px;
+
+    padding:17px;
+
     text-align:center;
-    background:rgba(80,200,120,.1);
-    border:1px solid rgba(80,200,120,.4);
-    color:#8ff0b0;
-    font-size:19px;
-    font-weight:600;
+
+    border-radius:15px;
+
+    color:#92f0b1;
+
+    background:
+        rgba(75,220,130,.1);
+
+    border:
+        1px solid
+        rgba(75,220,130,.3);
+
 }
+
 
 .fail{
-    margin-top:20px;
-    padding:18px;
-    border-radius:15px;
+
+    margin-top:15px;
+
+    padding:17px;
+
     text-align:center;
-    background:rgba(255,80,100,.1);
-    border:1px solid rgba(255,80,100,.35);
-    color:#ff9da9;
-    font-size:18px;
-    font-weight:600;
+
+    border-radius:15px;
+
+    color:#ffabb5;
+
+    background:
+        rgba(255,80,100,.1);
+
+    border:
+        1px solid
+        rgba(255,80,100,.3);
+
 }
+
 
 .rank{
+
     text-align:center;
-    margin-top:14px;
-    color:#e8c66a;
+
+    color:#e9c96c;
+
+    margin-top:11px;
+
 }
 
-.hidden-score{
-    text-align:center;
-    padding:35px;
-    border-radius:20px;
-    background:rgba(255,80,100,.08);
-    border:1px solid rgba(255,80,100,.3);
-    color:#ffadb7;
-    font-size:19px;
+
+/* =====================================================
+   GRADE IMAGE
+===================================================== */
+
+.grade-result{
+
+    max-width:950px;
+
+    margin:
+        30px auto;
+
 }
 
-/* ================= NOTICE ================= */
+
+.grade-card{
+
+    padding:25px;
+
+    border-radius:25px;
+
+    background:
+        rgba(255,255,255,.07);
+
+    border:
+        1px solid
+        rgba(233,201,108,.3);
+
+    box-shadow:
+        0 20px 60px
+        rgba(0,0,0,.4);
+
+}
+
+
+.grade-card h2{
+
+    text-align:center;
+
+    color:#e9c96c;
+
+    font:
+        700 30px
+        "Playfair Display";
+
+}
+
+
+.grade-student{
+
+    text-align:center;
+
+    color:#cbbdd5;
+
+    font-size:13px;
+
+    margin:
+        7px 0 20px;
+
+}
+
+
+.grade-image-container{
+
+    background:#08040d;
+
+    border-radius:18px;
+
+    padding:15px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.12);
+
+    text-align:center;
+
+    overflow:auto;
+
+}
+
+
+.grade-image{
+
+    max-width:100%;
+
+    height:auto;
+
+    display:block;
+
+    margin:auto;
+
+    border-radius:10px;
+
+    box-shadow:
+        0 10px 40px
+        rgba(0,0,0,.6);
+
+}
+
+
+.grade-actions{
+
+    display:flex;
+
+    gap:10px;
+
+    margin-top:15px;
+
+}
+
+
+.grade-actions button{
+
+    flex:1;
+
+    padding:12px;
+
+    border-radius:11px;
+
+    cursor:pointer;
+
+    font-family:'Prompt';
+
+}
+
+
+.print-btn{
+
+    background:
+        rgba(255,255,255,.08);
+
+    color:white;
+
+    border:
+        1px solid
+        rgba(255,255,255,.18);
+
+}
+
+
+.close-btn{
+
+    background:
+        rgba(255,80,100,.1);
+
+    color:#ffadb6;
+
+    border:
+        1px solid
+        rgba(255,80,100,.3);
+
+}
+
+
+/* =====================================================
+   NOTICE
+===================================================== */
 
 .notice{
-    max-width:650px;
-    margin:30px auto;
-    padding:40px;
+
+    max-width:700px;
+
+    margin:auto;
+
     text-align:center;
+
+    padding:50px 25px;
+
     border-radius:25px;
-    background:rgba(255,255,255,.06);
-    border:1px solid rgba(255,255,255,.15);
+
+    background:
+        rgba(255,255,255,.06);
+
+    border:
+        1px solid
+        rgba(255,255,255,.14);
+
 }
 
-.notice .big{
+
+.notice-icon{
+
     font-size:55px;
+
 }
+
 
 .notice h2{
-    font-family:'Playfair Display',serif;
-    color:#e8c66a;
-    margin:15px 0 8px;
+
+    color:#e9c96c;
+
+    font:
+        700 30px
+        "Playfair Display";
+
+    margin:
+        12px 0;
+
 }
 
-/* ================= FOOTER ================= */
+
+/* =====================================================
+   RANKING
+===================================================== */
+
+.ranking-panel{
+
+    max-width:900px;
+
+    margin:auto;
+
+    padding:10px 20px;
+
+    border-radius:22px;
+
+    background:
+        rgba(255,255,255,.06);
+
+    border:
+        1px solid
+        rgba(255,255,255,.12);
+
+}
+
+
+.rank-row{
+
+    display:grid;
+
+    grid-template-columns:
+        65px 1fr 120px 100px;
+
+    align-items:center;
+
+    gap:10px;
+
+    padding:16px 8px;
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.08);
+
+}
+
+
+.rank-row:last-child{
+
+    border-bottom:none;
+
+}
+
+
+.rank-number{
+
+    color:#e9c96c;
+
+    font:
+        700 26px
+        "Playfair Display";
+
+}
+
+
+.rank-score{
+
+    color:#e9c96c;
+
+    font-weight:600;
+
+}
+
+
+/* =====================================================
+   STATS
+===================================================== */
+
+.stats-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap:15px;
+
+    margin-bottom:20px;
+
+}
+
+
+.stat-card{
+
+    text-align:center;
+
+    padding:22px;
+
+    border-radius:18px;
+
+    background:
+        rgba(255,255,255,.06);
+
+    border:
+        1px solid
+        rgba(255,255,255,.1);
+
+}
+
+
+.stat-card strong{
+
+    display:block;
+
+    color:#e9c96c;
+
+    font-size:28px;
+
+}
+
+
+/* =====================================================
+   ADMIN
+===================================================== */
+
+.admin-panel{
+
+    max-width:900px;
+
+    margin:auto;
+
+}
+
+
+.admin-section{
+
+    padding:25px;
+
+    margin-bottom:20px;
+
+    border-radius:22px;
+
+    background:
+        rgba(255,255,255,.06);
+
+    border:
+        1px solid
+        rgba(255,255,255,.12);
+
+}
+
+
+.admin-section h2{
+
+    color:#e9c96c;
+
+    font:
+        700 25px
+        "Playfair Display";
+
+    margin-bottom:10px;
+
+}
+
+
+.file-input{
+
+    padding:15px;
+
+    border:
+        1px dashed
+        rgba(233,201,108,.5);
+
+    border-radius:12px;
+
+    text-align:center;
+
+    background:
+        rgba(233,201,108,.04);
+
+}
+
+
+.file-input input{
+
+    border:none;
+
+    background:none;
+
+}
+
+
+.preview{
+
+    margin-top:15px;
+
+    text-align:center;
+
+}
+
+
+.preview img{
+
+    max-width:250px;
+
+    max-height:300px;
+
+    border-radius:10px;
+
+}
+
+
+.admin-student{
+
+    display:grid;
+
+    grid-template-columns:
+        1fr 100px 80px;
+
+    gap:10px;
+
+    align-items:center;
+
+    padding:14px 0;
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.08);
+
+}
+
+
+.delete-btn{
+
+    background:
+        rgba(255,70,90,.12);
+
+    color:#ffadb7;
+
+    border:
+        1px solid
+        rgba(255,70,90,.3);
+
+    border-radius:8px;
+
+    padding:8px;
+
+    cursor:pointer;
+
+}
+
+
+.admin-note{
+
+    color:#a99bad;
+
+    font-size:11px;
+
+    line-height:1.7;
+
+    margin-top:12px;
+
+}
+
+
+/* =====================================================
+   FOOTER
+===================================================== */
 
 footer{
+
     text-align:center;
-    padding:30px;
-    border-top:1px solid rgba(255,255,255,.1);
-    color:#9e91aa;
-    font-size:12px;
+
+    padding:28px;
+
+    border-top:
+        1px solid
+        rgba(255,255,255,.08);
+
+    color:#8f8299;
+
+    font-size:11px;
+
 }
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
 
 @media(max-width:700px){
-    .menu{
-        grid-template-columns:1fr;
+
+    header{
+
+        padding:
+            12px 4%;
+
     }
 
-    .hero{
-        padding-top:35px;
+
+    .brand h2{
+
+        font-size:16px;
+
     }
 
-    .hero h1{
-        font-size:44px;
+
+    .brand small{
+
+        font-size:7px;
+
     }
 
-    .school-name{
+
+    .crest{
+
+        width:45px;
+
+        height:45px;
+
         font-size:17px;
+
     }
 
-    .logo{
-        width:50px;
-        height:50px;
+
+    nav{
+
+        gap:4px;
+
     }
 
-    .score-table{
-        font-size:13px;
+
+    .nav-btn{
+
+        padding:
+            7px 10px;
+
+        font-size:10px;
+
     }
 
-    .score-table th,
-    .score-table td{
-        padding:10px 5px;
+
+    .menu-grid{
+
+        grid-template-columns:1fr;
+
     }
+
+
+    .stats-grid{
+
+        grid-template-columns:
+            repeat(2,1fr);
+
+    }
+
+
+    .rank-row{
+
+        grid-template-columns:
+            45px 1fr 80px;
+
+    }
+
+
+    .rank-row span:last-child{
+
+        display:none;
+
+    }
+
+
+    .admin-student{
+
+        grid-template-columns:
+            1fr 70px;
+
+    }
+
+
 }
+
+
+/* =====================================================
+   PRINT
+===================================================== */
+
+@media print{
+
+    body{
+
+        background:white;
+
+        color:black;
+
+    }
+
+
+    header,
+    footer,
+    .no-print{
+
+        display:none!important;
+
+    }
+
+
+    .page{
+
+        display:none!important;
+
+    }
+
+
+    .page.printing{
+
+        display:block!important;
+
+        padding:0;
+
+    }
+
+
+    .grade-card{
+
+        color:black;
+
+        background:white;
+
+        border:1px solid #aaa;
+
+    }
+
+
+    .grade-card h2,
+    .grade-student{
+
+        color:black;
+
+    }
+
+}
+
 </style>
+
 </head>
+
 
 <body>
 
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
 <header>
-    <div class="logo-area">
-        <div class="logo">จว</div>
-        <div>
-            <div class="school-name">โรงเรียนจุไรรัตน์วิทยา</div>
-            <div class="school-sub">JURAIWAT WITTAYA SCHOOL</div>
+
+    <div class="brand">
+
+        <div class="crest">
+            จว
         </div>
+
+        <div>
+
+            <h2>
+                โรงเรียนจุไรรัตน์วิทยา
+            </h2>
+
+            <small>
+                JURAIWAT WITTAYA SCHOOL
+            </small>
+
+        </div>
+
     </div>
+
+
+    <nav class="no-print">
+
+        <button
+            class="nav-btn"
+            onclick="openPage('home')"
+        >
+            หน้าหลัก
+        </button>
+
+        <button
+            class="nav-btn"
+            onclick="openPage('admin')"
+        >
+            Admin
+        </button>
+
+    </nav>
+
 </header>
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
 
 <main class="container">
 
-<!-- ================= HOME ================= -->
 
-<section id="home" class="page active">
+<!-- =====================================================
+     HOME
+===================================================== -->
+
+<section
+    id="home"
+    class="page active"
+>
 
     <div class="hero">
-        <small>OFFICIAL EXAMINATION RESULT SYSTEM</small>
 
-        <h1>ประกาศผลสอบ</h1>
+        <div class="eyebrow">
+            OFFICIAL EXAMINATION RESULT SYSTEM
+        </div>
+
+        <h1>
+            ประกาศผลสอบ
+        </h1>
 
         <p>
             โรงเรียนจุไรรัตน์วิทยา
             <br>
-            ระบบตรวจสอบผลการสอบและประกาศผลอย่างเป็นทางการ
+            ระบบตรวจสอบผลการเรียนและผลการสอบออนไลน์
         </p>
+
     </div>
 
-    <div class="menu">
 
-        <div class="menu-card" onclick="openPage('grade')">
-            <span class="number">01</span>
-            <div class="icon">🎓</div>
-            <h2>ประกาศผลเกรด</h2>
-            <p>ตรวจสอบผลการเรียนและผลการศึกษา</p>
+    <div class="menu-grid">
+
+
+        <!-- 01 -->
+
+        <div
+            class="menu-card"
+            onclick="openPage('grade')"
+        >
+
+            <span class="menu-number">
+                01
+            </span>
+
+            <div class="menu-icon">
+                🎓
+            </div>
+
+            <h2>
+                ประกาศผลเกรด
+            </h2>
+
+            <p>
+                ตรวจสอบใบแสดงผลการเรียน
+                ด้วยรหัสนักเรียนและชื่อ-นามสกุล
+            </p>
+
         </div>
 
-        <div class="menu-card" onclick="openPage('m1')">
-            <span class="number">02</span>
-            <div class="icon">🏛️</div>
-            <h2>ประกาศผลสอบเข้า ม.1</h2>
-            <p>ตรวจสอบผลการคัดเลือกนักเรียนระดับชั้นมัธยมศึกษาปีที่ 1</p>
+
+        <!-- 02 -->
+
+        <div
+            class="menu-card"
+            onclick="openPage('m1')"
+        >
+
+            <span class="menu-number">
+                02
+            </span>
+
+            <div class="menu-icon">
+                🏛️
+            </div>
+
+            <h2>
+                ประกาศผลสอบเข้า ม.1
+            </h2>
+
+            <p>
+                ตรวจสอบคะแนนและผลการคัดเลือก
+            </p>
+
         </div>
 
-        <div class="menu-card" onclick="openPage('m4')">
-            <span class="number">03</span>
-            <div class="icon">📜</div>
-            <h2>ประกาศผลสอบเข้า ม.4</h2>
-            <p>ตรวจสอบผลการคัดเลือกนักเรียนระดับชั้นมัธยมศึกษาปีที่ 4</p>
+
+        <!-- 03 -->
+
+        <div
+            class="menu-card"
+            onclick="openPage('m4')"
+        >
+
+            <span class="menu-number">
+                03
+            </span>
+
+            <div class="menu-icon">
+                📜
+            </div>
+
+            <h2>
+                ประกาศผลสอบเข้า ม.4
+            </h2>
+
+            <p>
+                ระบบตรวจสอบผลการคัดเลือก ม.4
+            </p>
+
         </div>
 
-        <div class="menu-card" onclick="openPage('documents')">
-            <span class="number">04</span>
-            <div class="icon">📂</div>
-            <h2>ขอเอกสารเพิ่มเติม</h2>
-            <p>ระบบยื่นคำร้องและขอเอกสารจากทางโรงเรียน</p>
+
+        <!-- 04 -->
+
+        <div
+            class="menu-card"
+            onclick="openPage('documents')"
+        >
+
+            <span class="menu-number">
+                04
+            </span>
+
+            <div class="menu-icon">
+                📂
+            </div>
+
+            <h2>
+                ขอเอกสารเพิ่มเติม
+            </h2>
+
+            <p>
+                ระบบคำร้องและขอเอกสารจากโรงเรียน
+            </p>
+
+        </div>
+
+
+        <!-- 05 -->
+
+        <div
+            class="menu-card"
+            onclick="openPage('ranking')"
+        >
+
+            <span class="menu-number">
+                05
+            </span>
+
+            <div class="menu-icon">
+                🏆
+            </div>
+
+            <h2>
+                อันดับคะแนน ม.1
+            </h2>
+
+            <p>
+                ดูอันดับคะแนนของผู้สมัคร
+            </p>
+
+        </div>
+
+
+        <!-- 06 -->
+
+        <div
+            class="menu-card"
+            onclick="openPage('statistics')"
+        >
+
+            <span class="menu-number">
+                06
+            </span>
+
+            <div class="menu-icon">
+                📊
+            </div>
+
+            <h2>
+                สถิติการสอบ
+            </h2>
+
+            <p>
+                ดูสถิติและภาพรวมผลการสอบ
+            </p>
+
         </div>
 
     </div>
@@ -539,229 +1743,893 @@ footer{
 </section>
 
 
-<!-- ================= M1 ================= -->
 
-<section id="m1" class="page">
+<!-- =====================================================
+     GRADE PAGE
+===================================================== -->
 
-    <button class="back" onclick="openPage('home')">← กลับหน้าหลัก</button>
+<section
+    id="grade"
+    class="page"
+>
+
+    <button
+        class="back-btn no-print"
+        onclick="openPage('home')"
+    >
+        ← กลับหน้าหลัก
+    </button>
+
 
     <div class="page-title">
-        <h1>ประกาศผลสอบเข้า ม.1</h1>
-        <p>กรุณากรอกข้อมูลให้ตรงกับข้อมูลที่ใช้สมัครสอบ</p>
+
+        <h1>
+            ประกาศผลเกรด
+        </h1>
+
+        <p>
+            กรุณากรอกรหัสนักเรียนและข้อมูลส่วนตัว
+        </p>
+
     </div>
 
-    <div class="search-box">
 
-        <div class="input-group">
-            <label>เลขประจำตัวสอบ</label>
-            <input id="examNumber" type="text"
-                   placeholder="กรอกเลขประจำตัวสอบ">
-        </div>
+    <div class="panel no-print">
 
-        <div class="input-group">
-            <label>ชื่อ</label>
-            <input id="firstName" type="text"
-                   placeholder="กรอกชื่อ">
-        </div>
 
-        <div class="input-group">
-            <label>นามสกุล</label>
-            <input id="lastName" type="text"
-                   placeholder="กรอกนามสกุล">
-        </div>
+        <label>
+            รหัสนักเรียน
+        </label>
 
-        <button class="search-btn" onclick="searchStudent()">
+        <input
+            id="gradeId"
+            type="text"
+            placeholder="กรอกรหัสนักเรียน"
+        >
+
+
+        <label>
+            ชื่อ
+        </label>
+
+        <input
+            id="gradeFirst"
+            type="text"
+            placeholder="กรอกชื่อ"
+        >
+
+
+        <label>
+            นามสกุล
+        </label>
+
+        <input
+            id="gradeLast"
+            type="text"
+            placeholder="กรอกนามสกุล"
+        >
+
+
+        <button
+            class="gold-btn"
+            onclick="searchGrade()"
+        >
+            📜 ดูใบเกรด
+        </button>
+
+    </div>
+
+
+    <div
+        id="gradeResult"
+        class="grade-result"
+    ></div>
+
+</section>
+
+
+
+<!-- =====================================================
+     M1 PAGE
+===================================================== -->
+
+<section
+    id="m1"
+    class="page"
+>
+
+    <button
+        class="back-btn no-print"
+        onclick="openPage('home')"
+    >
+        ← กลับหน้าหลัก
+    </button>
+
+
+    <div class="page-title">
+
+        <h1>
+            ประกาศผลสอบเข้า ม.1
+        </h1>
+
+        <p>
+            กรอกข้อมูลให้ตรงกับข้อมูลที่สมัครสอบ
+        </p>
+
+    </div>
+
+
+    <div class="panel no-print">
+
+        <label>
+            เลขประจำตัวสอบ
+        </label>
+
+        <input
+            id="examNumber"
+            type="text"
+            placeholder="เช่น 174356"
+        >
+
+
+        <label>
+            ชื่อ
+        </label>
+
+        <input
+            id="examFirst"
+            type="text"
+            placeholder="เช่น เด็กหญิงกฤติญดา"
+        >
+
+
+        <label>
+            นามสกุล
+        </label>
+
+        <input
+            id="examLast"
+            type="text"
+            placeholder="เช่น ถีรวงศ์"
+        >
+
+
+        <button
+            class="gold-btn"
+            onclick="searchExam()"
+        >
             🔎 ค้นหาผลการสอบ
         </button>
 
     </div>
 
-    <div id="result" class="result"></div>
+
+    <div
+        id="examResult"
+        class="result"
+    ></div>
 
 </section>
 
 
-<!-- ================= OTHER PAGES ================= -->
 
-<section id="grade" class="page">
+<!-- =====================================================
+     RANKING PAGE
+===================================================== -->
 
-    <button class="back" onclick="openPage('home')">← กลับหน้าหลัก</button>
+<section
+    id="ranking"
+    class="page"
+>
+
+    <button
+        class="back-btn no-print"
+        onclick="openPage('home')"
+    >
+        ← กลับหน้าหลัก
+    </button>
+
+
+    <div class="page-title">
+
+        <h1>
+            อันดับคะแนน ม.1
+        </h1>
+
+        <p>
+            เรียงตามคะแนนรวมจากมากไปน้อย
+        </p>
+
+    </div>
+
+
+    <div
+        id="rankingResult"
+        class="ranking-panel"
+    ></div>
+
+</section>
+
+
+
+<!-- =====================================================
+     STATISTICS PAGE
+===================================================== -->
+
+<section
+    id="statistics"
+    class="page"
+>
+
+    <button
+        class="back-btn no-print"
+        onclick="openPage('home')"
+    >
+        ← กลับหน้าหลัก
+    </button>
+
+
+    <div class="page-title">
+
+        <h1>
+            สถิติการสอบ
+        </h1>
+
+        <p>
+            ภาพรวมผลการสอบเข้า ม.1
+        </p>
+
+    </div>
+
+
+    <div
+        id="statisticsResult"
+    ></div>
+
+</section>
+
+
+
+<!-- =====================================================
+     M4 PAGE
+===================================================== -->
+
+<section
+    id="m4"
+    class="page"
+>
+
+    <button
+        class="back-btn no-print"
+        onclick="openPage('home')"
+    >
+        ← กลับหน้าหลัก
+    </button>
+
 
     <div class="notice">
-        <div class="big">🎓</div>
-        <h2>ประกาศผลเกรด</h2>
-        <p>ระบบยังไม่เปิดให้ลงทะเบียนหรือกรอกข้อมูลในขณะนี้</p>
+
+        <div class="notice-icon">
+            📜
+        </div>
+
+        <h2>
+            ประกาศผลสอบเข้า ม.4
+        </h2>
+
+        <p>
+            ระบบยังไม่เปิดให้ลงทะเบียน
+            หรือกรอกข้อมูลในขณะนี้
+        </p>
+
     </div>
 
 </section>
 
 
-<section id="m4" class="page">
 
-    <button class="back" onclick="openPage('home')">← กลับหน้าหลัก</button>
+<!-- =====================================================
+     DOCUMENT PAGE
+===================================================== -->
+
+<section
+    id="documents"
+    class="page"
+>
+
+    <button
+        class="back-btn no-print"
+        onclick="openPage('home')"
+    >
+        ← กลับหน้าหลัก
+    </button>
+
 
     <div class="notice">
-        <div class="big">📜</div>
-        <h2>ประกาศผลสอบเข้า ม.4</h2>
-        <p>ระบบยังไม่เปิดให้ลงทะเบียนหรือกรอกข้อมูลในขณะนี้</p>
+
+        <div class="notice-icon">
+            📂
+        </div>
+
+        <h2>
+            ขอเอกสารเพิ่มเติม
+        </h2>
+
+        <p>
+            ระบบยังไม่เปิดให้ลงทะเบียน
+            หรือกรอกข้อมูลในขณะนี้
+        </p>
+
     </div>
 
 </section>
 
 
-<section id="documents" class="page">
 
-    <button class="back" onclick="openPage('home')">← กลับหน้าหลัก</button>
+<!-- =====================================================
+     ADMIN PAGE
+===================================================== -->
 
-    <div class="notice">
-        <div class="big">📂</div>
-        <h2>ขอเอกสารเพิ่มเติม</h2>
-        <p>ระบบยังไม่เปิดให้ลงทะเบียนหรือกรอกข้อมูลในขณะนี้</p>
+<section
+    id="admin"
+    class="page"
+>
+
+    <button
+        class="back-btn no-print"
+        onclick="openPage('home')"
+    >
+        ← กลับหน้าหลัก
+    </button>
+
+
+    <div class="page-title">
+
+        <h1>
+            Admin Panel
+        </h1>
+
+        <p>
+            ระบบจัดการข้อมูลนักเรียนและใบเกรด
+        </p>
+
+    </div>
+
+
+    <!-- LOGIN -->
+
+    <div
+        id="adminLogin"
+        class="panel no-print"
+    >
+
+        <label>
+            รหัสผ่าน Admin
+        </label>
+
+        <input
+            id="adminPassword"
+            type="password"
+            placeholder="กรอกรหัสผ่าน"
+        >
+
+
+        <button
+            class="gold-btn"
+            onclick="adminLogin()"
+        >
+            🔐 เข้าสู่ระบบ
+        </button>
+
+
+        <p
+            class="admin-note"
+        >
+            รหัสผ่านเริ่มต้นสำหรับระบบเดโม:
+            <strong>
+                admin123
+            </strong>
+        </p>
+
+    </div>
+
+
+    <!-- ADMIN CONTENT -->
+
+    <div
+        id="adminContent"
+        class="admin-panel"
+        style="display:none"
+    >
+
+
+        <!-- ADD GRADE -->
+
+        <div class="admin-section">
+
+            <h2>
+                📜 เพิ่มใบเกรด
+            </h2>
+
+            <p class="admin-note">
+                กรอกข้อมูลนักเรียน
+                และเลือกรูปใบเกรดจากเครื่อง
+            </p>
+
+
+            <label>
+                รหัสนักเรียน
+            </label>
+
+            <input
+                id="newGradeId"
+                type="text"
+                placeholder="เช่น 650001"
+            >
+
+
+            <label>
+                ชื่อ
+            </label>
+
+            <input
+                id="newGradeFirst"
+                type="text"
+                placeholder="ชื่อ"
+            >
+
+
+            <label>
+                นามสกุล
+            </label>
+
+            <input
+                id="newGradeLast"
+                type="text"
+                placeholder="นามสกุล"
+            >
+
+
+            <label>
+                รูปใบเกรด
+            </label>
+
+            <div class="file-input">
+
+                <input
+                    id="gradeImage"
+                    type="file"
+                    accept="image/*"
+                    onchange="previewGradeImage()"
+                >
+
+            </div>
+
+
+            <div
+                id="imagePreview"
+                class="preview"
+            ></div>
+
+
+            <button
+                class="gold-btn"
+                onclick="saveGrade()"
+            >
+                💾 บันทึกใบเกรด
+            </button>
+
+        </div>
+
+
+
+        <!-- GRADE LIST -->
+
+        <div class="admin-section">
+
+            <h2>
+                📋 รายการใบเกรด
+            </h2>
+
+            <div
+                id="gradeList"
+            ></div>
+
+        </div>
+
+
+
+        <!-- EXAM DATA -->
+
+        <div class="admin-section">
+
+            <h2>
+                🏛️ ข้อมูลสอบเข้า ม.1
+            </h2>
+
+            <p class="admin-note">
+                ส่วนนี้ใช้จัดการข้อมูลคะแนนสอบเข้า
+            </p>
+
+
+            <label>
+                เลขประจำตัวสอบ
+            </label>
+
+            <input
+                id="newExamId"
+                type="text"
+            >
+
+
+            <label>
+                ชื่อ
+            </label>
+
+            <input
+                id="newExamFirst"
+                type="text"
+            >
+
+
+            <label>
+                นามสกุล
+            </label>
+
+            <input
+                id="newExamLast"
+                type="text"
+            >
+
+
+            <label>
+                วิชาที่ 1 / 40
+            </label>
+
+            <input
+                id="score1"
+                type="number"
+                min="0"
+                max="40"
+            >
+
+
+            <label>
+                วิชาที่ 2 / 40
+            </label>
+
+            <input
+                id="score2"
+                type="number"
+                min="0"
+                max="40"
+            >
+
+
+            <label>
+                วิชาที่ 3 / 20
+            </label>
+
+            <input
+                id="score3"
+                type="number"
+                min="0"
+                max="20"
+            >
+
+
+            <label>
+                วิชาที่ 4 / 40
+            </label>
+
+            <input
+                id="score4"
+                type="number"
+                min="0"
+                max="40"
+            >
+
+
+            <button
+                class="gold-btn"
+                onclick="saveExamStudent()"
+            >
+                💾 บันทึกข้อมูลผู้สมัคร
+            </button>
+
+        </div>
+
+
     </div>
 
 </section>
+
 
 </main>
 
 
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
 <footer>
+
     © 2026 โรงเรียนจุไรรัตน์วิทยา
+
     <br>
-    ระบบประกาศผลสอบออนไลน์
+
+    Official Examination & Grade Result System
+
 </footer>
 
 
+
+<!-- =====================================================
+     JAVASCRIPT
+===================================================== -->
+
 <script>
 
-/* ==========================================
-   STUDENT DATA
-========================================== */
 
-const students = {
+/* =====================================================
+   GRADE DATABASE
+===================================================== */
 
-    "114115": {
+let gradeDatabase =
+    JSON.parse(
+        localStorage.getItem(
+            "juraiwatGradeDatabase"
+        )
+    ) || {};
+
+
+/* =====================================================
+   EXAM DATABASE
+===================================================== */
+
+const defaultExamDatabase = {
+
+    "114115":{
+
         first:"เด็กหญิงจรรยมนฑน์",
+
         last:"บุญฉ่ำ",
+
         hidden:true
+
     },
 
-    "174356": {
+
+    "174356":{
+
         first:"เด็กหญิงกฤติญดา",
+
         last:"ถีรวงศ์",
-        scores:[34,40,18,40]
+
+        scores:[
+            34,
+            40,
+            18,
+            40
+        ]
+
     },
 
-    "156234": {
+
+    "156234":{
+
         first:"เด็กหญิงภวรัญชน์",
+
         last:"ต่อวิวรรธน์",
-        scores:[38,40,17,40]
+
+        scores:[
+            38,
+            40,
+            17,
+            40
+        ]
+
     },
 
-    "348901": {
+
+    "348901":{
+
         first:"เด็กหญิงศิริวีรินทร์",
+
         last:"วันเชียง",
-        scores:[35,38,16,38]
+
+        scores:[
+            35,
+            38,
+            16,
+            38
+        ]
+
     },
 
-    "441234": {
+
+    "441234":{
+
         first:"เด็กหญิงไอลดา",
+
         last:"สิงห์จันทร์",
-        scores:[22,32,14,29]
+
+        scores:[
+            22,
+            32,
+            14,
+            29
+        ]
+
     }
 
 };
 
 
-/* ==========================================
-   CALCULATE RANK
-========================================== */
+let examDatabase =
+    JSON.parse(
+        localStorage.getItem(
+            "juraiwatExamDatabase"
+        )
+    ) || defaultExamDatabase;
 
-function getTotal(student){
 
-    if(!student.scores) return null;
+/* =====================================================
+   SAVE DATABASE
+===================================================== */
 
-    return student.scores.reduce((a,b)=>a+b,0);
+function saveGradeDatabase(){
+
+    localStorage.setItem(
+
+        "juraiwatGradeDatabase",
+
+        JSON.stringify(
+            gradeDatabase
+        )
+
+    );
+
 }
 
-const rankedStudents = Object.entries(students)
-    .filter(([id,s]) => s.scores)
-    .map(([id,s]) => ({
-        id:id,
-        total:getTotal(s)
-    }))
-    .sort((a,b)=>b.total-a.total);
+
+function saveExamDatabase(){
+
+    localStorage.setItem(
+
+        "juraiwatExamDatabase",
+
+        JSON.stringify(
+            examDatabase
+        )
+
+    );
+
+}
 
 
-/* ==========================================
-   OPEN PAGE
-========================================== */
+/* =====================================================
+   PAGE NAVIGATION
+===================================================== */
 
-function openPage(page){
+function openPage(pageId){
 
-    document.querySelectorAll('.page')
-        .forEach(p => p.classList.remove('active'));
+    document
+        .querySelectorAll(".page")
+        .forEach(
+            page =>
+                page.classList.remove("active")
+        );
 
-    document.getElementById(page)
-        .classList.add('active');
+
+    document
+        .getElementById(pageId)
+        .classList.add("active");
+
 
     window.scrollTo({
+
         top:0,
+
         behavior:"smooth"
+
     });
 
-    const result = document.getElementById("result");
 
-    if(result){
-        result.classList.remove("show");
-        result.innerHTML="";
+    if(pageId === "ranking"){
+
+        renderRanking();
+
     }
+
+
+    if(pageId === "statistics"){
+
+        renderStatistics();
+
+    }
+
+
+    if(pageId === "admin"){
+
+        renderGradeList();
+
+    }
+
 }
 
 
-/* ==========================================
-   SEARCH STUDENT
-========================================== */
+/* =====================================================
+   GRADE SEARCH
+===================================================== */
 
-function searchStudent(){
+function searchGrade(){
 
     const id =
-        document.getElementById("examNumber")
-        .value.trim();
+        document
+            .getElementById("gradeId")
+            .value
+            .trim();
+
 
     const first =
-        document.getElementById("firstName")
-        .value.trim();
+        document
+            .getElementById("gradeFirst")
+            .value
+            .trim();
+
 
     const last =
-        document.getElementById("lastName")
-        .value.trim();
+        document
+            .getElementById("gradeLast")
+            .value
+            .trim();
+
 
     const result =
-        document.getElementById("result");
+        document
+            .getElementById("gradeResult");
+
 
     result.innerHTML="";
-    result.classList.remove("show");
 
 
-    if(!id || !first || !last){
+    if(
+        !id ||
+        !first ||
+        !last
+    ){
 
         result.innerHTML = `
+
             <div class="notice">
-                <div class="big">⚠️</div>
-                <h2>กรุณากรอกข้อมูลให้ครบ</h2>
-                <p>กรุณากรอกเลขประจำตัวสอบ ชื่อ และนามสกุล</p>
+
+                <div class="notice-icon">
+                    ⚠️
+                </div>
+
+                <h2>
+                    กรุณากรอกข้อมูลให้ครบ
+                </h2>
+
+                <p>
+                    กรุณากรอกรหัสนักเรียน
+                    ชื่อ และนามสกุล
+                </p>
+
             </div>
+
         `;
 
-        result.classList.add("show");
         return;
+
     }
 
 
-    const student = students[id];
+    const student =
+        gradeDatabase[id];
 
-
-    /* ไม่พบข้อมูล */
 
     if(
         !student ||
@@ -770,116 +2638,855 @@ function searchStudent(){
     ){
 
         result.innerHTML = `
+
             <div class="notice">
-                <div class="big">🔍</div>
-                <h2>ไม่พบข้อมูล</h2>
+
+                <div class="notice-icon">
+                    🔍
+                </div>
+
+                <h2>
+                    ไม่พบข้อมูล
+                </h2>
+
                 <p>
-                    กรุณาตรวจสอบเลขประจำตัวสอบ
+                    กรุณาตรวจสอบรหัสนักเรียน
                     ชื่อ และนามสกุลอีกครั้ง
                 </p>
+
             </div>
+
         `;
 
-        result.classList.add("show");
         return;
+
     }
 
 
-    /* นักเรียนที่ไม่แสดงคะแนน */
+    if(!student.image){
+
+        result.innerHTML = `
+
+            <div class="notice">
+
+                <div class="notice-icon">
+                    📂
+                </div>
+
+                <h2>
+                    ยังไม่มีใบเกรด
+                </h2>
+
+                <p>
+                    ขณะนี้ยังไม่มีไฟล์ใบเกรด
+                    สำหรับนักเรียนรายนี้
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    result.innerHTML = `
+
+        <div
+            class="grade-card"
+        >
+
+            <h2>
+                ใบแสดงผลการเรียน
+            </h2>
+
+
+            <div
+                class="grade-student"
+            >
+
+                ${student.first}
+                ${student.last}
+
+                <br>
+
+                รหัสนักเรียน:
+                ${id}
+
+            </div>
+
+
+            <div
+                class="grade-image-container"
+            >
+
+                <img
+                    src="${student.image}"
+                    class="grade-image"
+                    alt="ใบเกรด"
+                >
+
+            </div>
+
+
+            <div
+                class="grade-actions no-print"
+            >
+
+                <button
+                    class="print-btn"
+                    onclick="printGrade()"
+                >
+                    🖨️ พิมพ์ใบเกรด
+                </button>
+
+
+                <button
+                    class="close-btn"
+                    onclick="closeGrade()"
+                >
+                    ปิด
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+/* =====================================================
+   CLOSE GRADE
+===================================================== */
+
+function closeGrade(){
+
+    document
+        .getElementById("gradeResult")
+        .innerHTML="";
+
+}
+
+
+/* =====================================================
+   PRINT GRADE
+===================================================== */
+
+function printGrade(){
+
+    document
+        .getElementById("grade")
+        .classList.add("printing");
+
+
+    window.print();
+
+
+    setTimeout(()=>{
+
+        document
+            .getElementById("grade")
+            .classList.remove("printing");
+
+    },500);
+
+}
+
+
+/* =====================================================
+   ADMIN LOGIN
+===================================================== */
+
+function adminLogin(){
+
+    const password =
+        document
+            .getElementById("adminPassword")
+            .value;
+
+
+    if(password === "admin123"){
+
+        document
+            .getElementById("adminLogin")
+            .style.display="none";
+
+
+        document
+            .getElementById("adminContent")
+            .style.display="block";
+
+
+        renderGradeList();
+
+    }
+
+    else{
+
+        alert(
+            "รหัสผ่าน Admin ไม่ถูกต้อง"
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   IMAGE PREVIEW
+===================================================== */
+
+function previewGradeImage(){
+
+    const file =
+        document
+            .getElementById("gradeImage")
+            .files[0];
+
+
+    const preview =
+        document
+            .getElementById("imagePreview");
+
+
+    preview.innerHTML="";
+
+
+    if(!file){
+
+        return;
+
+    }
+
+
+    if(
+        !file.type.startsWith(
+            "image/"
+        )
+    ){
+
+        alert(
+            "กรุณาเลือกไฟล์รูปภาพ"
+        );
+
+        return;
+
+    }
+
+
+    const reader =
+        new FileReader();
+
+
+    reader.onload =
+        function(event){
+
+            preview.innerHTML = `
+
+                <img
+                    src="${event.target.result}"
+                    alt="Preview"
+                >
+
+            `;
+
+        };
+
+
+    reader.readAsDataURL(file);
+
+}
+
+
+/* =====================================================
+   SAVE GRADE
+===================================================== */
+
+function saveGrade(){
+
+    const id =
+        document
+            .getElementById("newGradeId")
+            .value
+            .trim();
+
+
+    const first =
+        document
+            .getElementById("newGradeFirst")
+            .value
+            .trim();
+
+
+    const last =
+        document
+            .getElementById("newGradeLast")
+            .value
+            .trim();
+
+
+    const file =
+        document
+            .getElementById("gradeImage")
+            .files[0];
+
+
+    if(
+        !id ||
+        !first ||
+        !last
+    ){
+
+        alert(
+            "กรุณากรอกข้อมูลนักเรียนให้ครบ"
+        );
+
+        return;
+
+    }
+
+
+    if(!file){
+
+        alert(
+            "กรุณาเลือกรูปใบเกรด"
+        );
+
+        return;
+
+    }
+
+
+    const reader =
+        new FileReader();
+
+
+    reader.onload =
+        function(event){
+
+            gradeDatabase[id] = {
+
+                first:first,
+
+                last:last,
+
+                image:event.target.result
+
+            };
+
+
+            saveGradeDatabase();
+
+
+            alert(
+                "บันทึกใบเกรดเรียบร้อยแล้ว"
+            );
+
+
+            document
+                .getElementById(
+                    "newGradeId"
+                )
+                .value="";
+
+
+            document
+                .getElementById(
+                    "newGradeFirst"
+                )
+                .value="";
+
+
+            document
+                .getElementById(
+                    "newGradeLast"
+                )
+                .value="";
+
+
+            document
+                .getElementById(
+                    "gradeImage"
+                )
+                .value="";
+
+
+            document
+                .getElementById(
+                    "imagePreview"
+                )
+                .innerHTML="";
+
+
+            renderGradeList();
+
+        };
+
+
+    reader.readAsDataURL(file);
+
+}
+
+
+/* =====================================================
+   GRADE LIST IN ADMIN
+===================================================== */
+
+function renderGradeList(){
+
+    const box =
+        document
+            .getElementById(
+                "gradeList"
+            );
+
+
+    if(!box){
+
+        return;
+
+    }
+
+
+    const entries =
+        Object.entries(
+            gradeDatabase
+        );
+
+
+    if(entries.length === 0){
+
+        box.innerHTML = `
+
+            <p class="admin-note">
+                ยังไม่มีข้อมูลใบเกรด
+            </p>
+
+        `;
+
+        return;
+
+    }
+
+
+    box.innerHTML = "";
+
+
+    entries.forEach(
+        ([id,student]) => {
+
+            const row =
+                document.createElement(
+                    "div"
+                );
+
+
+            row.className =
+                "admin-student";
+
+
+            row.innerHTML = `
+
+                <div>
+
+                    <strong>
+                        ${student.first}
+                        ${student.last}
+                    </strong>
+
+                    <small
+                        class="muted"
+                        style="display:block"
+                    >
+                        รหัส:
+                        ${id}
+                    </small>
+
+                </div>
+
+
+                <button
+                    class="nav-btn"
+                    onclick="previewAdminGrade('${id}')"
+                >
+                    👁️ ดู
+                </button>
+
+
+                <button
+                    class="delete-btn"
+                    onclick="deleteGrade('${id}')"
+                >
+                    ลบ
+                </button>
+
+            `;
+
+
+            box.appendChild(row);
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   ADMIN GRADE PREVIEW
+===================================================== */
+
+function previewAdminGrade(id){
+
+    const student =
+        gradeDatabase[id];
+
+
+    if(!student){
+
+        return;
+
+    }
+
+
+    const win =
+        window.open();
+
+
+    win.document.write(`
+
+        <html>
+
+        <head>
+
+            <title>
+                ใบเกรด
+                ${student.first}
+                ${student.last}
+            </title>
+
+            <style>
+
+                body{
+
+                    margin:0;
+
+                    padding:30px;
+
+                    text-align:center;
+
+                    background:#111;
+
+                }
+
+                img{
+
+                    max-width:95%;
+
+                    max-height:90vh;
+
+                }
+
+            </style>
+
+        </head>
+
+        <body>
+
+            <img
+                src="${student.image}"
+            >
+
+        </body>
+
+        </html>
+
+    `);
+
+}
+
+
+/* =====================================================
+   DELETE GRADE
+===================================================== */
+
+function deleteGrade(id){
+
+    const ok =
+        confirm(
+            "ต้องการลบใบเกรดของนักเรียนคนนี้หรือไม่?"
+        );
+
+
+    if(!ok){
+
+        return;
+
+    }
+
+
+    delete gradeDatabase[id];
+
+
+    saveGradeDatabase();
+
+
+    renderGradeList();
+
+}
+
+
+/* =====================================================
+   EXAM SEARCH
+===================================================== */
+
+function searchExam(){
+
+    const id =
+        document
+            .getElementById("examNumber")
+            .value
+            .trim();
+
+
+    const first =
+        document
+            .getElementById("examFirst")
+            .value
+            .trim();
+
+
+    const last =
+        document
+            .getElementById("examLast")
+            .value
+            .trim();
+
+
+    const result =
+        document
+            .getElementById("examResult");
+
+
+    result.innerHTML="";
+
+
+    const student =
+        examDatabase[id];
+
+
+    if(
+        !student ||
+        student.first !== first ||
+        student.last !== last
+    ){
+
+        result.innerHTML = `
+
+            <div class="notice">
+
+                <div class="notice-icon">
+                    🔍
+                </div>
+
+                <h2>
+                    ไม่พบข้อมูล
+                </h2>
+
+                <p>
+                    กรุณาตรวจสอบข้อมูลอีกครั้ง
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
 
     if(student.hidden){
 
         result.innerHTML = `
 
-            <div class="student-header">
-                <h2>${student.first} ${student.last}</h2>
-                <div class="exam-number">
+            <div class="student-box">
+
+                <h2>
+                    ${student.first}
+                    ${student.last}
+                </h2>
+
+                <div class="muted">
                     เลขประจำตัวสอบ ${id}
                 </div>
+
             </div>
 
-            <div class="hidden-score">
-                เสียใจด้วยค่ะ<br>
-                <strong>ท่านไม่ผ่านการคัดเลือก</strong>
+
+            <div class="fail">
+
+                เสียใจด้วยค่ะ
+
+                <br>
+
+                <strong>
+                    ท่านไม่ผ่านการคัดเลือก
+                </strong>
+
                 <br><br>
-                ไม่แสดงผลคะแนนตามประกาศของโรงเรียน
+
+                ไม่แสดงผลคะแนน
+
             </div>
+
         `;
 
-        result.classList.add("show");
         return;
+
     }
 
 
-    /* คะแนน */
+    const total =
+        student.scores
+            .reduce(
+                (a,b)=>a+b,
+                0
+            );
 
-    const total = getTotal(student);
 
-    const rank =
-        rankedStudents.findIndex(x=>x.id===id)+1;
+    const ranking =
+        getRank(id);
 
-    const passed = total >= 100;
+
+    const passed =
+        total >= 100;
 
 
     result.innerHTML = `
 
-        <div class="student-header">
+        <div class="student-box">
 
             <h2>
-                ${student.first} ${student.last}
+                ${student.first}
+                ${student.last}
             </h2>
 
-            <div class="exam-number">
+            <div class="muted">
                 เลขประจำตัวสอบ ${id}
             </div>
 
         </div>
 
 
-        <table class="score-table">
+        <div class="table-box">
 
-            <thead>
-                <tr>
-                    <th>วิชา</th>
-                    <th>คะแนนที่ได้</th>
-                    <th>คะแนนเต็ม</th>
-                </tr>
-            </thead>
+            <table>
 
-            <tbody>
+                <thead>
 
-                <tr>
-                    <td>วิชาที่ 1</td>
-                    <td>${student.scores[0]}</td>
-                    <td>40</td>
-                </tr>
+                    <tr>
 
-                <tr>
-                    <td>วิชาที่ 2</td>
-                    <td>${student.scores[1]}</td>
-                    <td>40</td>
-                </tr>
+                        <th>
+                            วิชา
+                        </th>
 
-                <tr>
-                    <td>วิชาที่ 3</td>
-                    <td>${student.scores[2]}</td>
-                    <td>20</td>
-                </tr>
+                        <th>
+                            คะแนนที่ได้
+                        </th>
 
-                <tr>
-                    <td>วิชาที่ 4</td>
-                    <td>${student.scores[3]}</td>
-                    <td>40</td>
-                </tr>
+                        <th>
+                            คะแนนเต็ม
+                        </th>
 
-            </tbody>
+                    </tr>
 
-        </table>
+                </thead>
 
 
-        <div class="total">
+                <tbody>
 
-            <span>คะแนนรวม</span>
+                    <tr>
+
+                        <td>
+                            วิชาที่ 1
+                        </td>
+
+                        <td>
+                            ${student.scores[0]}
+                        </td>
+
+                        <td>
+                            40
+                        </td>
+
+                    </tr>
+
+
+                    <tr>
+
+                        <td>
+                            วิชาที่ 2
+                        </td>
+
+                        <td>
+                            ${student.scores[1]}
+                        </td>
+
+                        <td>
+                            40
+                        </td>
+
+                    </tr>
+
+
+                    <tr>
+
+                        <td>
+                            วิชาที่ 3
+                        </td>
+
+                        <td>
+                            ${student.scores[2]}
+                        </td>
+
+                        <td>
+                            20
+                        </td>
+
+                    </tr>
+
+
+                    <tr>
+
+                        <td>
+                            วิชาที่ 4
+                        </td>
+
+                        <td>
+                            ${student.scores[3]}
+                        </td>
+
+                        <td>
+                            40
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <div class="total-box">
+
+            <span>
+                คะแนนรวม
+            </span>
 
             <strong>
                 ${total} / 140
@@ -888,41 +3495,544 @@ function searchStudent(){
         </div>
 
 
-        ${
-            passed
+        <div
+            class="${passed ? "pass" : "fail"}"
+        >
 
-            ?
+            ${
+                passed
 
-            `
-            <div class="pass">
-                🎉 ท่านผ่านการคัดเลือกค่ะ
-            </div>
+                ?
 
-            <div class="rank">
-                🏆 อันดับที่ ${rank}
-            </div>
-            `
+                "🎉 ท่านผ่านการคัดเลือกค่ะ"
 
-            :
+                :
 
-            `
-            <div class="fail">
-                เสียใจด้วยค่ะ<br>
-                ท่านไม่ผ่านการคัดเลือก
-            </div>
+                "เสียใจด้วยค่ะ<br>ท่านไม่ผ่านการคัดเลือก"
+            }
 
-            <div class="rank">
-                อันดับที่ ${rank}
-            </div>
-            `
-        }
+        </div>
+
+
+        <div class="rank">
+
+            🏆 อันดับที่
+            ${ranking}
+
+        </div>
 
     `;
 
-    result.classList.add("show");
 }
 
+
+/* =====================================================
+   RANKING
+===================================================== */
+
+function getRank(id){
+
+    const ranking =
+        Object.entries(
+            examDatabase
+        )
+
+        .filter(
+            ([key,student]) =>
+                student.scores
+        )
+
+        .map(
+            ([key,student]) => ({
+
+                id:key,
+
+                total:
+                    student.scores
+                        .reduce(
+                            (a,b)=>a+b,
+                            0
+                        )
+
+            })
+        )
+
+        .sort(
+            (a,b)=>
+                b.total-a.total
+        );
+
+
+    return (
+        ranking.findIndex(
+            student =>
+                student.id === id
+        ) + 1
+    );
+
+}
+
+
+/* =====================================================
+   RENDER RANKING
+===================================================== */
+
+function renderRanking(){
+
+    const box =
+        document
+            .getElementById(
+                "rankingResult"
+            );
+
+
+    const ranking =
+        Object.entries(
+            examDatabase
+        )
+
+        .filter(
+            ([id,s]) =>
+                s.scores
+        )
+
+        .map(
+            ([id,s]) => ({
+
+                id:id,
+
+                student:s,
+
+                total:
+                    s.scores
+                        .reduce(
+                            (a,b)=>a+b,
+                            0
+                        )
+
+            })
+        )
+
+        .sort(
+            (a,b)=>
+                b.total-a.total
+        );
+
+
+    box.innerHTML="";
+
+
+    ranking.forEach(
+        (item,index)=>{
+
+            const row =
+                document.createElement(
+                    "div"
+                );
+
+
+            row.className =
+                "rank-row";
+
+
+            row.innerHTML = `
+
+                <div
+                    class="rank-number"
+                >
+                    ${index+1}
+                </div>
+
+
+                <div>
+
+                    <strong>
+                        ${item.student.first}
+                        ${item.student.last}
+                    </strong>
+
+                    <small
+                        class="muted"
+                        style="display:block"
+                    >
+                        ${item.id}
+                    </small>
+
+                </div>
+
+
+                <div
+                    class="rank-score"
+                >
+                    ${item.total}/140
+                </div>
+
+
+                <span>
+
+                    ${
+                        item.total >= 100
+                        ? "ผ่าน"
+                        : "ไม่ผ่าน"
+                    }
+
+                </span>
+
+            `;
+
+
+            box.appendChild(row);
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   STATISTICS
+===================================================== */
+
+function renderStatistics(){
+
+    const box =
+        document
+            .getElementById(
+                "statisticsResult"
+            );
+
+
+    const students =
+        Object.values(
+            examDatabase
+        );
+
+
+    const scored =
+        students.filter(
+            s=>s.scores
+        );
+
+
+    const passed =
+        scored.filter(
+            s=>
+                s.scores
+                    .reduce(
+                        (a,b)=>a+b,
+                        0
+                    ) >= 100
+        );
+
+
+    const totals =
+        scored.map(
+            s=>
+                s.scores
+                    .reduce(
+                        (a,b)=>a+b,
+                        0
+                    )
+        );
+
+
+    const average =
+        totals.length
+
+        ?
+
+        (
+            totals.reduce(
+                (a,b)=>a+b,
+                0
+            )
+            /
+            totals.length
+        ).toFixed(1)
+
+        :
+
+        0;
+
+
+    const highest =
+        totals.length
+
+        ?
+
+        Math.max(...totals)
+
+        :
+
+        0;
+
+
+    box.innerHTML = `
+
+        <div class="stats-grid">
+
+
+            <div class="stat-card">
+
+                <strong>
+                    ${students.length}
+                </strong>
+
+                ผู้สมัครทั้งหมด
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <strong>
+                    ${passed.length}
+                </strong>
+
+                ผ่าน
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <strong>
+                    ${scored.length - passed.length}
+                </strong>
+
+                ไม่ผ่าน
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <strong>
+                    ${average}
+                </strong>
+
+                คะแนนเฉลี่ย
+
+            </div>
+
+        </div>
+
+
+        <div class="notice">
+
+            <h2>
+                คะแนนสูงสุด
+            </h2>
+
+            <p>
+                <strong
+                    style="
+                        color:#e9c96c;
+                        font-size:30px;
+                    "
+                >
+                    ${highest}/140
+                </strong>
+            </p>
+
+            <p>
+                มีผู้สมัคร
+                ${students.length}
+                รายในระบบ
+            </p>
+
+        </div>
+
+    `;
+
+}
+
+
+/* =====================================================
+   ADMIN SAVE EXAM STUDENT
+===================================================== */
+
+function saveExamStudent(){
+
+    const id =
+        document
+            .getElementById(
+                "newExamId"
+            )
+            .value
+            .trim();
+
+
+    const first =
+        document
+            .getElementById(
+                "newExamFirst"
+            )
+            .value
+            .trim();
+
+
+    const last =
+        document
+            .getElementById(
+                "newExamLast"
+            )
+            .value
+            .trim();
+
+
+    const s1 =
+        Number(
+            document
+                .getElementById(
+                    "score1"
+                )
+                .value
+        );
+
+
+    const s2 =
+        Number(
+            document
+                .getElementById(
+                    "score2"
+                )
+                .value
+        );
+
+
+    const s3 =
+        Number(
+            document
+                .getElementById(
+                    "score3"
+                )
+                .value
+        );
+
+
+    const s4 =
+        Number(
+            document
+                .getElementById(
+                    "score4"
+                )
+                .value
+        );
+
+
+    if(
+        !id ||
+        !first ||
+        !last
+    ){
+
+        alert(
+            "กรุณากรอกข้อมูลให้ครบ"
+        );
+
+        return;
+
+    }
+
+
+    if(
+        s1 < 0 ||
+        s1 > 40 ||
+        s2 < 0 ||
+        s2 > 40 ||
+        s3 < 0 ||
+        s3 > 20 ||
+        s4 < 0 ||
+        s4 > 40
+    ){
+
+        alert(
+            "ตรวจสอบคะแนนอีกครั้ง"
+        );
+
+        return;
+
+    }
+
+
+    examDatabase[id] = {
+
+        first:first,
+
+        last:last,
+
+        scores:[
+            s1,
+            s2,
+            s3,
+            s4
+        ]
+
+    };
+
+
+    saveExamDatabase();
+
+
+    alert(
+        "บันทึกข้อมูลผู้สมัครเรียบร้อยแล้ว"
+    );
+
+
+    document
+        .getElementById(
+            "newExamId"
+        )
+        .value="";
+
+
+    document
+        .getElementById(
+            "newExamFirst"
+        )
+        .value="";
+
+
+    document
+        .getElementById(
+            "newExamLast"
+        )
+        .value="";
+
+
+    document
+        .getElementById(
+            "score1"
+        )
+        .value="";
+
+
+    document
+        .getElementById(
+            "score2"
+        )
+        .value="";
+
+
+    document
+        .getElementById(
+            "score3"
+        )
+        .value="";
+
+
+    document
+        .getElementById(
+            "score4"
+        )
+        .value="";
+
+}
+
+
 </script>
+
 
 </body>
 </html>
